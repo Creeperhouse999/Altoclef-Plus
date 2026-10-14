@@ -50,7 +50,7 @@ public final class Plus {
 
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> onTick());
@@ -69,6 +69,7 @@ public final class Plus {
         }
         ui = new UiModule(targetEyes);
         modules.register(ui, config.modules.ui);
+        modules.register(new altoclefplus.camera.CameraModule(), config.modules.camera);
     }
 
     /** Baritone: no chat commands, and its messages go to the Plus log. */

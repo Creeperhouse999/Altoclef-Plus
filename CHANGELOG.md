@@ -8,6 +8,30 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-15
+
+Travel and pearls. Built and unit-tested; please report anything odd you see in-game.
+
+### Added
+- Enderman hunting with a boat trap: in a warped forest the bot puts a boat down, stares at an enderman so
+  it comes over, and once it sits in the boat (it can't teleport out) kills it with jump critical hits. If
+  the trap doesn't work in 20 seconds, or there's no boat, it fights with crits anyway. Nether wood can't
+  make boats, so the bot brings one from the Overworld. Also a *Hunt endermen* button in the panel.
+- Boats across oceans and big lakes: when 24+ blocks of open water lie straight ahead on a long trip, the
+  bot crosses by boat and picks the boat back up on the other side. Rivers and ponds are ignored.
+- Safety stashes (each optional, once per run): set spawn with a bed by the Nether portal (on by default),
+  leave valuables in a chest before the Nether, leave a spare iron kit in a chest before the Nether or
+  the End.
+
+### Fixed
+- Stronghold estimates like "y = 1620": the eye-of-ender throws are now intersected on the ground plane,
+  unreliable throws are rejected and re-thrown, and the second throw is farther to the side.
+- Nether back-and-forth on the way to the stronghold: walking vs. the Nether is decided once per trip,
+  and obsidian plus flint and steel are collected *before* entering the Nether.
+- Lava "crosses" in the Nether: AltoClef tried to make obsidian with water in the Nether (water
+  evaporates) — it now only does that in the Overworld.
+- Exact Nether coordinates for negative positions (they were one block off).
+
 ## [0.4.0] - 2026-10-14
 
 Stuck recovery and getting items back after dying. Built and unit-tested; please report anything odd you
@@ -100,7 +124,8 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
   stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
 - Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
 
-[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.1.0...v0.2.0

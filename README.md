@@ -49,9 +49,9 @@ goal is to fix the things that make watching the bot frustrating:
 | Bounces between the Nether and the Overworld on the way to the stronghold | Gathers obsidian first, then uses the Nether once to come out right at the stronghold |
 
 > [!NOTE]
-> AltoClef Plus is **in early development**. Features marked ✅ below are built, but nothing has had
-> wide in-game testing yet. Everything marked 🚧 or 🗓️ is still being built or planned and is **not
-> available yet** — see the [roadmap](#roadmap).
+> AltoClef Plus is **in early development**. All features below are built and unit-tested, but they
+> haven't had wide in-game testing yet — please [report anything odd](https://github.com/Creeperhouse999/Altoclef-Plus/issues/new/choose).
+> Every feature can be switched off in *Settings*.
 
 ## Features
 
@@ -87,7 +87,7 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - Fixes items getting stuck on the cursor and the eye-of-ender crafting bug.
 - Places a new crafting table instead of walking hundreds of blocks back to an old one.
 
-### Safer progression and survival ✅ / 🗓️
+### Safer progression and survival ✅
 - **Fair combat:** no more hitting mobs through walls or while looking the other way. ✅
 - **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
   full iron armor before hunting diamonds; armor and food before entering the Nether. ✅
@@ -96,13 +96,13 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - **Better projectile dodging** (only onto safe ground). ✅
 - **Water bucket clutch:** always carries water so falls don't kill it. ✅
 - **Death recovery:** goes back to its death spot and picks its items up before they despawn. ✅
-- **Enderman hunting with a boat trap** in a warped forest, killed with jump critical hits. 🗓️
-- **Boats across oceans** and large lakes (not small ponds or narrow rivers). 🗓️
+- **Enderman hunting with a boat trap** in a warped forest, killed with jump critical hits. ✅
+- **Boats across oceans** and large lakes (not small ponds or narrow rivers). ✅
 - **Safety stashes (optional):** leave a bed by the Nether portal, store valuables in a chest before the
-  Nether, keep a backup gear set in a chest before the Nether or the End. 🗓️
+  Nether, keep a backup gear set in a chest before the Nether or the End. ✅
 - **Precise Nether travel to the stronghold:** brings obsidian and flint and steel, travels to the exact
   matching Nether coordinates, and builds an exit portal that drops it right next to the stronghold —
-  one trip, no back-and-forth. 🗓️
+  one trip, no back-and-forth. ✅
 
 ### Stuck recovery ✅
 - Detects: no progress, endless pillaring (the "Nether elevator"), mining the same block, walking back and
@@ -194,7 +194,8 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | ✅ Released |
 | **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | ✅ Released |
 | **0.4** | Stuck recovery and death item recovery | ✅ Released |
-| **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | 🚧 Next |
+| **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | ✅ Released |
+| **0.6** | In-game testing feedback, polish and fixes | 🚧 Next |
 | Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
 
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.

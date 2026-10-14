@@ -7,13 +7,16 @@ set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 JAVAP="${JAVA_HOME:-/c/Program Files/Microsoft/jdk-17.0.16.8-hotspot}/bin/javap"
 MC=$(ls "$HOME"/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged/1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2/minecraft-merged-1.18.2-*.jar | head -1)
+MCI=$(ls "$HOME"/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged-intermediary/1.18.2-*/minecraft-merged-intermediary-1.18.2-*.jar | head -1)
 AC=$(ls "$ROOT"/.gradle/loom-cache/remapped_mods/*/unspecified/altoclef-0.4.0/*/altoclef-*.jar | head -1)
 BA=$(ls "$ROOT"/.gradle/loom-cache/remapped_mods/*/unspecified/baritone*/*/baritone*.jar | head -1)
 SEP=":"
 case "$(uname -s)" in
-  MINGW*|MSYS*|CYGWIN*) SEP=";"; MC=$(cygpath -w "$MC"); AC=$(cygpath -w "$AC"); BA=$(cygpath -w "$BA");;
+  MINGW*|MSYS*|CYGWIN*) SEP=";"; MC=$(cygpath -w "$MC"); MCI=$(cygpath -w "$MCI"); AC=$(cygpath -w "$AC"); BA=$(cygpath -w "$BA");;
 esac
-CP="$MC$SEP$AC$SEP$BA"
+# Intermediary Minecraft is included because mixins into AltoClef (remap = false) name MC members the way
+# AltoClef's bytecode does: net/minecraft/class_XXXX;method_XXXX.
+CP="$MC$SEP$MCI$SEP$AC$SEP$BA"
 MIXDIR="$ROOT/src/main/java/altoclefplus/mixin"
 miss=0
 checked=0

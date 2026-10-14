@@ -135,6 +135,10 @@ public final class PlusConfig {
         public boolean backupGearBeforeNether = false;
         public boolean backupGearBeforeEnd = false;
 
+        /** Validated stronghold estimates, decide-once Nether travel, obsidian before entering. */
+        public boolean preciseNetherTravel = true;
+        public int netherTravelMinDistance = 800;
+
         public boolean endermanBoatHunt = true;
         public boolean boatTravel = true;
         public int boatMinWaterRun = 24;

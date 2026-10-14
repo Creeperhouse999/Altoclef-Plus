@@ -12,11 +12,14 @@
     "CraftGridSlotsMixin",
     "DebugLogMixin",
     "FairCombatMixin",
+    "FastTravelMixin",
     "FurnaceCostMixin",
     "GameOptionsMixin",
     "InteractionFixChainMixin",
     "KeyBindingAccessor",
+    "ObsidianCastMixin",
     "SlotHandlerMixin",
+    "StrongholdLocateMixin",
     "ToolSelectMixin"
   ],
   "injectors": {

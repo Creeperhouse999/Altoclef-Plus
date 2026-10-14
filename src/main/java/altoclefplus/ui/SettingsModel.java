@@ -73,6 +73,8 @@ public final class SettingsModel {
         r.add(new Toggle("Better projectile dodging", () -> c.survival.dodge, v -> c.survival.dodge = v));
         r.add(new Toggle("Carry water for fall clutch", () -> c.survival.waterClutch, v -> c.survival.waterClutch = v));
         r.add(new Toggle("Recover items after death", () -> c.survival.deathRecovery, v -> c.survival.deathRecovery = v));
+        r.add(new Toggle("Precise Nether travel to stronghold", () -> c.survival.preciseNetherTravel, v -> c.survival.preciseNetherTravel = v));
+        r.add(new Value("Use the Nether for trips over (blocks)", () -> c.survival.netherTravelMinDistance, v -> c.survival.netherTravelMinDistance = v, 200, 3000, 100));
         r.add(new Toggle("Hunt endermen with boat trap", () -> c.survival.endermanBoatHunt, v -> c.survival.endermanBoatHunt = v));
         r.add(new Toggle("Boats across oceans", () -> c.survival.boatTravel, v -> c.survival.boatTravel = v));
         r.add(new Value("Boat: min water length", () -> c.survival.boatMinWaterRun, v -> c.survival.boatMinWaterRun = v, 8, 96, 4));

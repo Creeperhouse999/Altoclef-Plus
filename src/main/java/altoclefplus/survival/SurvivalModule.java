@@ -3,7 +3,10 @@ package altoclefplus.survival;
 import adris.altoclef.AltoClef;
 import adris.altoclef.Settings;
 import adris.altoclef.TaskCatalogue;
+import adris.altoclef.tasks.container.StoreInAnyContainerTask;
+import adris.altoclef.tasks.misc.PlaceBedAndSetSpawnTask;
 import adris.altoclef.tasks.movement.RunAwayFromHostilesTask;
+import adris.altoclef.util.ItemTarget;
 import adris.altoclef.tasks.resources.CollectFoodTask;
 import adris.altoclef.tasksystem.Task;
 import altoclefplus.Plus;
@@ -16,6 +19,8 @@ import altoclefplus.core.logic.ItemInfo;
 import altoclefplus.survival.logic.BoatTravel;
 import altoclefplus.survival.logic.CautionPolicy;
 import altoclefplus.survival.logic.GatePlanner;
+import altoclefplus.survival.logic.StashPlanner;
+import net.minecraft.block.Blocks;
 import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalBlock;
 import baritone.api.pathing.goals.GoalGetToBlock;
@@ -42,6 +47,9 @@ public final class SurvivalModule implements Module {
     private final PlusChain gateChain;
     private final PlusChain cautionChain;
     private final PlusChain boatChain;
+    private final PlusChain stashChain;
+    private final StashPlanner stashes = new StashPlanner();
+    private String lastCommand = "";
     private final GatePlanner gates = new GatePlanner();
     private final CautionPolicy caution = new CautionPolicy();
     private final CombatAssist combat = new CombatAssist();
@@ -56,6 +64,7 @@ public final class SurvivalModule implements Module {
         gateChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus gear gates", 51f);
         cautionChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus caution", 53f);
         boatChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus boat", 52.5f);
+        stashChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus stashes", 51.5f);
         Plus.bus().subscribe(StuckDetected.class, e -> {
             if (gateChain.isActive() && runningGate != null) failGate("stuck: " + e.kind());
         });
@@ -92,8 +101,13 @@ public final class SurvivalModule implements Module {
             return;
         }
 
-        if (gateChain.isActive() || boatChain.isActive()) {
-            status = gateChain.isActive() ? gateChain.jobLabel() : boatChain.jobLabel();
+        String cmd = Plus.control().lastCommand();
+        if (!cmd.equals(lastCommand)) {
+            stashes.reset();
+            lastCommand = cmd;
+        }
+        if (gateChain.isActive() || boatChain.isActive() || stashChain.isActive()) {
+            status = gateChain.isActive() ? gateChain.jobLabel() : boatChain.isActive() ? boatChain.jobLabel() : stashChain.jobLabel();
             return;
         }
         if (cfg.boatTravel && tryBoat(s, cfg)) return;
@@ -104,6 +118,7 @@ public final class SurvivalModule implements Module {
         Optional<GatePlanner.Need> need = gates.next(s, cfg, now);
         if (need.isEmpty()) {
             status = "idle";
+            tryStash(s, cfg);
             return;
         }
         GatePlanner.Need n = need.get();
@@ -117,6 +132,38 @@ public final class SurvivalModule implements Module {
             runningGate = n.gate();
             status = label;
         }
+    }
+
+    /** Bed by the portal, valuables chest, backup gear - each once per run, all optional. */
+    private void tryStash(Snapshot s, PlusConfig.Survival cfg) {
+        Optional<StashPlanner.Job> job = stashes.next(s, cfg, portalNearby());
+        if (job.isEmpty()) return;
+        StashPlanner.Job j = job.get();
+        stashes.markDone(j); // once, even if it fails - never loops
+        Task task = switch (j) {
+            case BED_AT_PORTAL -> new PlaceBedAndSetSpawnTask();
+            case VALUABLES -> new StoreInAnyContainerTask(false, StashPlanner.VALUABLES.stream()
+                    .filter(s::has)
+                    .map(id -> new ItemTarget(Registry.ITEM.get(new Identifier("minecraft", id)), s.count(id)))
+                    .toArray(ItemTarget[]::new));
+            case BACKUP_BEFORE_NETHER, BACKUP_BEFORE_END -> new BackupGearTask();
+        };
+        String label = switch (j) {
+            case BED_AT_PORTAL -> "Setting spawn with a bed by the portal";
+            case VALUABLES -> "Leaving valuables in a chest";
+            case BACKUP_BEFORE_NETHER -> "Leaving backup gear before the Nether";
+            case BACKUP_BEFORE_END -> "Leaving backup gear before the End";
+        };
+        stashChain.startJob(task, label, null);
+    }
+
+    private boolean portalNearby() {
+        BlockPos c = mod.getPlayer().getBlockPos();
+        var w = mod.getWorld();
+        for (BlockPos b : BlockPos.iterate(c.add(-8, -4, -8), c.add(8, 4, 8))) {
+            if (w.getBlockState(b).isOf(Blocks.NETHER_PORTAL)) return true;
+        }
+        return false;
     }
 
     /** Big water straight ahead on the way to a far goal, and a boat in the bag: cross by boat. */
@@ -198,6 +245,7 @@ public final class SurvivalModule implements Module {
     @Override
     public void onDisable() {
         gateChain.cancelJob();
+        stashChain.cancelJob();
         boatChain.cancelJob();
         cautionChain.cancelJob();
         combat.stop(mod);

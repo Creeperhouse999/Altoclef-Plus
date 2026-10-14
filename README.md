@@ -181,6 +181,10 @@ settings from *Mods → AltoClef Plus → ⚙*.
 was doing, and *Resume* starts the same command again. Nothing in your inventory is lost. *Stop* forgets
 the command.
 
+### Trying everything out
+
+[docs/TESTING.md](docs/TESTING.md) is a short checklist that walks through every feature in a test world.
+
 ### Settings file
 
 Everything in the Settings tab is saved to `.minecraft/altoclef/altoclefplus.json`. You can edit it by

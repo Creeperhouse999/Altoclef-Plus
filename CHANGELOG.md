@@ -24,5 +24,7 @@ as its notes.
 - Mod Menu support: icon, description and links in the mod list (optional dependency).
 - Bug report and feature request forms; automatic builds, and releases built from tags.
 
-### In progress
-- Control panel (Right Shift), HUD and the Mod Menu settings button.
+- Control panel (Right Shift) with Tasks, Plan, Status and Settings tabs; searchable item grid; presets.
+- HUD: state badge, current task, next milestones, alerts and key item counts.
+- Stop (K) and Pause/Resume (P) keys, rebindable in Controls.
+- Settings editors for protected items, junk items and hotbar layout; Mod Menu settings button.

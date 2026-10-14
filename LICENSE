@@ -1,32 +1,51 @@
-AltoClef Plus
-Copyright (c) 2026 Creeperhouse999. All rights reserved.
+AltoClef Plus License (source-available)
 
-The source code in this repository is published so it can be read, reviewed
-and built for personal use. No other rights are granted.
+Copyright (c) 2026 Creeperhouse999. All rights reserved, except for the
+permissions expressly granted below.
 
-You MAY:
-  - read the source code;
-  - build the mod from this source code and use it yourself;
-  - download official releases from this repository's Releases page and use them.
+1. Permissions granted
 
-You MAY NOT, without prior written permission from the copyright holder:
-  - redistribute this software or any part of it, in source or binary form,
-    including re-uploading release jars to other websites or modpacks;
-  - publish modified versions or derivative works;
-  - use this software or any part of it in another project;
-  - remove or alter this notice.
+   The copyright holder grants you a free, personal, non-exclusive,
+   non-transferable and revocable license to:
 
-Forks created on GitHub exist only because GitHub's Terms of Service allow
-viewing and forking public repositories. A fork grants no additional rights
-under this license.
+     a) view and read the source code in this repository;
+     b) compile the source code and run the resulting mod for your own
+        personal use;
+     c) download the official release files published on this repository's
+        Releases page and use them for your own personal use;
+     d) make private modifications for your own personal use, as long as you
+        do not share them with anyone.
 
-THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THIS SOFTWARE.
+2. Restrictions
 
-Third-party software
---------------------
-This mod requires, but does not include, the following projects. They are
-distributed by their own authors under their own licenses:
-  - AltoClef  (https://github.com/gaucho-matrero/altoclef) — CC0-1.0
-  - Baritone  (https://github.com/cabaletta/baritone)      — LGPL-3.0
+   Without prior written permission from the copyright holder, you may not:
+
+     a) redistribute this software or any part of it, in source or binary
+        form, including re-uploading release files to other websites,
+        mirrors or modpacks;
+     b) publish, distribute or share modified versions or derivative works;
+     c) use this software or any part of it in another project;
+     d) sell, sublicense or otherwise commercially exploit this software;
+     e) remove or alter this license or the copyright notice.
+
+3. GitHub forks
+
+   GitHub's Terms of Service allow users to view and fork public
+   repositories on GitHub. A fork created under those terms grants no rights
+   beyond section 1; in particular it may not be used to distribute or
+   publish the software or modified versions of it.
+
+4. No warranty
+
+   THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+5. Third-party software
+
+   This mod requires, but does not include, the following projects. They are
+   distributed by their own authors under their own licenses:
+     - AltoClef  (https://github.com/gaucho-matrero/altoclef) - CC0-1.0
+     - Baritone  (https://github.com/cabaletta/baritone)      - LGPL-3.0

@@ -33,10 +33,10 @@ safer progression and automatic recovery when the bot gets stuck.
 [AltoClef](https://github.com/gaucho-matrero/altoclef) is a bot that plays Minecraft by itself — it can
 even beat the game with `@gamer`. It moves around using [Baritone](https://github.com/cabaletta/baritone).
 
-AltoClef Plus is a **separate mod you add next to them**. It doesn't replace or modify their files. It
-fixes the things that make watching the bot frustrating:
+AltoClef Plus is a **separate mod you add next to them**. It doesn't replace or modify their files. Its
+goal is to fix the things that make watching the bot frustrating:
 
-| Without AltoClef Plus | With AltoClef Plus |
+| Today, without AltoClef Plus | The goal with AltoClef Plus |
 |---|---|
 | You type `@` commands in chat | You click buttons in a control panel |
 | Chat floods with bot messages | Messages go to a log you can open when you want |
@@ -45,10 +45,16 @@ fixes the things that make watching the bot frustrating:
 | Runs for diamonds with no armor and no sword | Gears up first: stone sword, then iron kit and armor |
 | Gets stuck pillaring or mining the same block forever | Notices, tries something else, never gives up |
 | Dies and starts over | Goes back for its items before they despawn |
+| Bounces between the Nether and the Overworld on the way to the stronghold | Gathers obsidian first, then uses the Nether once to come out right at the stronghold |
+
+> [!NOTE]
+> AltoClef Plus is **in early development**. Features marked ✅ below are built, but nothing has had
+> wide in-game testing yet. Everything marked 🚧 or 🗓️ is still being built or planned and is **not
+> available yet** — see the [roadmap](#roadmap).
 
 ## Features
 
-Legend: ✅ done · 🚧 being built now · 🗓️ planned
+Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 
 ### Control panel and HUD 🚧
 - **Control panel** (Right Shift) with tabs: *Tasks*, *Plan*, *Status*, *Settings*.
@@ -92,6 +98,9 @@ Legend: ✅ done · 🚧 being built now · 🗓️ planned
 - **Boats across oceans** and large lakes (not small ponds or narrow rivers).
 - **Safety stashes (optional):** leave a bed by the Nether portal, store valuables in a chest before the
   Nether, keep a backup gear set in a chest before the Nether or the End.
+- **Precise Nether travel to the stronghold:** brings obsidian and flint and steel, travels to the exact
+  matching Nether coordinates, and builds an exit portal that drops it right next to the stronghold —
+  one trip, no back-and-forth.
 
 ### Stuck recovery 🗓️
 - Detects: no progress, endless pillaring (the "Nether elevator"), mining the same block, walking back and
@@ -100,6 +109,8 @@ Legend: ✅ done · 🚧 being built now · 🗓️ planned
 - If nothing works after a few rounds, it goes into **safe mode**: gets to safe ground, eats, tells you,
   and retries every few minutes instead of risking your run.
 - Avoids areas where it keeps dying instead of walking back into the same trap.
+- Catches dimension ping-pong (Overworld → Nether → Overworld with no progress) and impossible stronghold
+  estimates, and picks a sane route instead.
 - Doesn't stop the bot unless you want it to (there's a setting for that); every action shows in the HUD
   and log.
 
@@ -110,7 +121,7 @@ Legend: ✅ done · 🚧 being built now · 🗓️ planned
 | Minecraft | **1.18.2** (Java Edition) |
 | Mod loader | [Fabric Loader](https://fabricmc.net/use/installer/) 0.14 or newer |
 | [AltoClef](https://github.com/gaucho-matrero/altoclef) | **0.4.1** — [download the official release](https://github.com/gaucho-matrero/altoclef/releases/tag/v0.4.1) |
-| [Baritone](https://github.com/cabaletta/baritone) | Comes inside the AltoClef 0.4.1 release |
+| [Baritone](https://github.com/cabaletta/baritone) | Included in the AltoClef 0.4.1 release (see below) |
 | Fabric API | **Not needed** |
 | [Mod Menu](https://modrinth.com/mod/modmenu/versions?g=1.18.2) | Optional — adds AltoClef Plus to the mod list with a config button |
 
@@ -125,8 +136,10 @@ Legend: ✅ done · 🚧 being built now · 🗓️ planned
 4. Start the game and join a world. Press **Right Shift** to open the control panel.
 
 > [!TIP]
-> The AltoClef jar already contains Baritone, so the separate Baritone jar is optional. Having both is fine:
-> Fabric loads Baritone only once.
+> **About Baritone:** the AltoClef 0.4.1 release zip contains two jars. `altoclef-0.4.0.jar` also carries
+> a copy of Baritone inside it, and `baritone-unoptimized-fabric-1.18.2.jar` is the same Baritone as a
+> separate file. Installing both (as the AltoClef release intends) is the recommended setup and what
+> AltoClef Plus is tested with — Fabric notices it's the same mod and loads Baritone only once.
 
 Your `mods` folder should look like this:
 
@@ -179,7 +192,7 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | 🗓️ Planned |
 | **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | 🗓️ Planned |
 | **0.4** | Stuck recovery and death item recovery | 🗓️ Planned |
-| **0.5** | Enderman boat-trap hunting, boat travel, safety stashes | 🗓️ Planned |
+| **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | 🗓️ Planned |
 | Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
 
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
@@ -237,6 +250,6 @@ The control panel replaces chat commands. If you prefer chat, turn off
 
 ## License
 
-Copyright © 2026 Creeperhouse999. **All rights reserved.** You may read the code, build it for yourself
-and use official releases. Redistributing it or publishing modified versions is not allowed without
-permission. See [LICENSE](LICENSE).
+Copyright © 2026 Creeperhouse999. This is **source-available, not open source**: the
+[LICENSE](LICENSE) explicitly allows you to read the code, build it and use it for yourself, and use the
+official releases. Redistributing it or publishing modified versions is not allowed without permission.

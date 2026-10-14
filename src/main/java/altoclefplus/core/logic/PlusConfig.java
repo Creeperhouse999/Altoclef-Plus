@@ -166,6 +166,9 @@ public final class PlusConfig {
         public int deathLoopDeaths = 2;
         public int deathLoopMinutes = 10;
         public int deathLoopRadius = 32;
+        /** Overworld -> Nether -> Overworld round trips within the window that count as ping-pong. */
+        public int pingPongRoundTrips = 2;
+        public int pingPongMinutes = 10;
         /** Leaf task name fragments during which the watchdog stays quiet. */
         public List<String> longWaitTasks = new ArrayList<>(List.of(
                 "Smelt", "Furnace", "WaitForDragon", "Sleep", "Eat", "Idle"));

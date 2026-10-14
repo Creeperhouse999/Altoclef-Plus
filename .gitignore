@@ -1,10 +1,14 @@
+# Gradle / build output
 build/
 .gradle/
 run/
 out/
+
+# IDE
 .idea/
 *.iml
+.vscode/
+
+# Third-party mod jars (download them yourself, see README)
 libs/*.jar
 /*.jar
-.ref/
-.superpowers/build.log

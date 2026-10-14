@@ -53,7 +53,7 @@ public final class SettingsModel {
         r.add(new Toggle("Keep spare tools", () -> c.inventory.spareTools, v -> c.inventory.spareTools = v));
         r.add(new Toggle("Drop junk when full", () -> c.inventory.dropJunk, v -> c.inventory.dropJunk = v));
         r.add(new Toggle("Unstick cursor items", () -> c.inventory.cursorGuard, v -> c.inventory.cursorGuard = v));
-        r.add(new Toggle("New crafting table when far", () -> c.inventory.placeNearCraftingTable, v -> c.inventory.placeNearCraftingTable = v));
+        r.add(new Toggle("New table/furnace instead of long walks", () -> c.inventory.placeNearCraftingTable, v -> c.inventory.placeNearCraftingTable = v));
         r.add(new Value("Drop junk when free slots <=", () -> c.inventory.junkFreeSlotThreshold, v -> c.inventory.junkFreeSlotThreshold = v, 0, 10, 1));
         r.add(new Value("Max crafting table distance", () -> c.inventory.craftingTableMaxDistance, v -> c.inventory.craftingTableMaxDistance = v, 8, 256, 8));
         r.add(new Action("Edit protected items...", openProtected));

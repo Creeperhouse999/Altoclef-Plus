@@ -6,3 +6,5 @@ out/
 *.iml
 libs/*.jar
 /*.jar
+.ref/
+.superpowers/build.log

@@ -27,7 +27,6 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
 - Step history: the list of steps the bot worked on and how long each took.
 - Mod Menu support: icon, description and links in the mod list (optional dependency).
 - Bug report and feature request forms; automatic builds, and releases built from tags.
-
 - Control panel (Right Shift) with Tasks, Plan, Status and Settings tabs; searchable item grid; presets.
 - HUD: state badge, current task, next milestones, alerts and key item counts.
 - Stop (K) and Pause/Resume (P) keys, rebindable in Controls.

@@ -48,9 +48,14 @@ public final class Plus {
         EventBus.subscribe(TaskFinishedEvent.class, evt -> control.onTaskFinished());
         configureBaritoneChat();
 
+        try {
+            AltoClef.getCommandExecutor().registerNewCommand(new altoclefplus.survival.HuntEndermenCommand());
+        } catch (Exception e) {
+            LOG.add("plus", "Could not register huntendermen command: " + e.getMessage());
+        }
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> onTick());

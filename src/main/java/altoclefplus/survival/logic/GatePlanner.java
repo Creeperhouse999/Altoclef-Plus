@@ -53,6 +53,10 @@ public final class GatePlanner {
             if (ItemInfo.totalFoodUnits(s) < cfg.netherMinFoodUnits) {
                 return Optional.of(new Need(Gate.NETHER_ENTRY, "food", cfg.netherMinFoodUnits));
             }
+            // Nether wood can't make boats, so bring one for the enderman boat trap.
+            if (cfg.endermanBoatHunt && ItemInfo.countMatching(s, id -> id.endsWith("_boat")) == 0) {
+                return need(Gate.NETHER_ENTRY, "oak_boat");
+            }
         }
         return Optional.empty();
     }

@@ -90,6 +90,20 @@ class GatePlannerTest {
     }
 
     @Test
+    void netherEntryBringsABoatForEndermanHunting() {
+        GatePlanner g = new GatePlanner();
+        Snapshot s = Snapshot.builder().item("iron_pickaxe", 1).item("iron_sword", 1).item("stone_axe", 1)
+                .item("stone_shovel", 1).offhand("shield").item("water_bucket", 1)
+                .armor("chest", "iron_chestplate").armor("legs", "iron_leggings").armor("head", "iron_helmet")
+                .armor("feet", "iron_boots").item("cooked_beef", 5)
+                .taskChain(List.of("<Beat Minecraft> Going to Nether")).build();
+        assertEquals("oak_boat", item(next(g, s)));
+        assertEquals("none", item(next(g, s.toBuilder().item("birch_boat", 1).build())));
+        cfg.endermanBoatHunt = false;
+        assertEquals("none", item(next(g, s)));
+    }
+
+    @Test
     void netherGateQuietWhenNotHeadingThere() {
         GatePlanner g = new GatePlanner();
         Snapshot s = Snapshot.builder().item("bread", 1).taskChain(List.of("<Beat Minecraft> Collecting beds.")).build();

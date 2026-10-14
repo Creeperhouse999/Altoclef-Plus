@@ -4,7 +4,9 @@ import adris.altoclef.AltoClef;
 import adris.altoclef.tasks.speedrun.BeatMinecraft2Task;
 import adris.altoclef.trackers.BlockTracker;
 import altoclefplus.Plus;
+import adris.altoclef.tasksystem.Task;
 import altoclefplus.core.Hooks;
+import altoclefplus.survival.EndermanBoatHuntTask;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -15,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Predicate;
 
@@ -43,6 +46,18 @@ public abstract class BeatMinecraftFixesMixin {
     @Inject(method = "onStart", at = @At("RETURN"), require = 0)
     private void altoclefplus$protectPowder(AltoClef mod, CallbackInfo ci) {
         if (Plus.config().modules.inventory) mod.getBehaviour().addProtectedItems(Items.BLAZE_POWDER);
+    }
+
+    /**
+     * Pearls: replace "wander until an enderman shows up, then chase it" with the boat-trap hunt in a warped
+     * forest. Bartering (if chosen in AltoClef's @gamer config) is left alone.
+     */
+    @Inject(method = "getEnderPearlTask", at = @At("HEAD"), cancellable = true, require = 0)
+    private void altoclefplus$boatTrapPearls(AltoClef mod, int count, CallbackInfoReturnable<Task> cir) {
+        Hooks.hit("enderman-hunt");
+        if (!Plus.config().modules.survival || !Plus.config().survival.endermanBoatHunt) return;
+        if (BeatMinecraft2Task.getConfig().barterPearlsInsteadOfEndermanHunt) return;
+        cir.setReturnValue(new EndermanBoatHuntTask(count));
     }
 
     private static boolean contains(Block[] blocks, Block wanted) {

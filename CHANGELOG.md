@@ -8,6 +8,10 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-14
+
+First preview. Built and unit-tested; not yet widely tested in-game — please report anything odd.
+
 ### Added
 - Project setup: Fabric mod for Minecraft 1.18.2 that loads on top of AltoClef 0.4.1 and Baritone.
 - The build downloads the official AltoClef v0.4.1 release automatically and verifies its checksum.
@@ -28,3 +32,9 @@ as its notes.
 - HUD: state badge, current task, next milestones, alerts and key item counts.
 - Stop (K) and Pause/Resume (P) keys, rebindable in Controls.
 - Settings editors for protected items, junk items and hotbar layout; Mod Menu settings button.
+- Smooth camera (experimental): the view turns smoothly while the bot is in control; the bot's real aim
+  stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
+- Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
+
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Creeperhouse999/Altoclef-Plus/releases/tag/v0.1.0

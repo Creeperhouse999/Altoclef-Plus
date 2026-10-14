@@ -9,7 +9,8 @@ safer progression and automatic recovery when the bot gets stuck.
 ![Minecraft 1.18.2](https://img.shields.io/badge/Minecraft-1.18.2-62B47A?style=flat-square)
 ![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4?style=flat-square)
 ![Requires AltoClef 0.4.1](https://img.shields.io/badge/Requires-AltoClef%200.4.1-5865F2?style=flat-square)
-![Status: in development](https://img.shields.io/badge/Status-in%20development-orange?style=flat-square)
+[![Latest release](https://img.shields.io/github/v/release/Creeperhouse999/Altoclef-Plus?include_prereleases&style=flat-square&label=Release)](https://github.com/Creeperhouse999/Altoclef-Plus/releases)
+[![Build](https://img.shields.io/github/actions/workflow/status/Creeperhouse999/Altoclef-Plus/build.yml?branch=main&style=flat-square)](https://github.com/Creeperhouse999/Altoclef-Plus/actions/workflows/build.yml)
 
 [Download](https://github.com/Creeperhouse999/Altoclef-Plus/releases) ·
 [Install](#install) ·
@@ -56,20 +57,20 @@ goal is to fix the things that make watching the bot frustrating:
 
 Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 
-### Control panel and HUD 🚧
-- **Control panel** (Right Shift) with tabs: *Tasks*, *Plan*, *Status*, *Settings*.
+### Control panel and HUD ✅
+- **Control panel** (Right Shift) with tabs: *Tasks*, *Plan*, *Status*, *Settings*. ✅
 - **Start anything with a click:** Beat the game (`@gamer`), get any item from a searchable item grid,
-  presets like "Iron gear" or "Food", or any other AltoClef command.
+  presets like "Iron gear" or "Food", or any other AltoClef command. ✅
 - **Stop, Pause and Resume** buttons and hotkeys. ✅
-- **Plan view:** a checklist of what the bot is doing in `@gamer` — ✓ done, ▶ now, ○ next. ✅ (logic)
-- **Step history:** every step the bot worked on and how long it took. ✅ (logic)
+- **Plan view:** a checklist of what the bot is doing in `@gamer` — ✓ done, ▶ now, ○ next. ✅
+- **Step history:** every step the bot worked on and how long it took. ✅
 - **Small HUD:** current task, state (Running / Paused / Recovering / Idle), next milestones, alerts and
-  key items (food, pearls, blaze rods, eyes, beds).
+  key items (food, pearls, blaze rods, eyes, beds). ✅
 - **Quiet chat:** AltoClef and Baritone messages go to the panel log; `@` / `#` chat commands are turned
   off (you can turn them back on). ✅
 - AltoClef's own overlay text is hidden. ✅
 
-### Smooth camera 🗓️ *(experimental)*
+### Smooth camera ✅ *(experimental)*
 - Your view turns smoothly instead of snapping.
 - Only what *you see* is smoothed — the bot still aims, mines and fights instantly.
 - One click to turn off if you prefer the raw view.
@@ -86,7 +87,8 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - Fixes items getting stuck on the cursor and the eye-of-ender crafting bug.
 - Places a new crafting table instead of walking hundreds of blocks back to an old one.
 
-### Safer progression and survival 🗓️
+### Safer progression and survival 🚧
+- **Fair combat:** no more hitting mobs through walls or while looking the other way. ✅
 - **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
   full iron armor before hunting diamonds; armor and food before entering the Nether.
 - **Caution:** stops to eat and heal when low, flees when in danger, avoids caves when weak.
@@ -188,8 +190,8 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 
 | Version | Focus | Status |
 |---|---|---|
-| **0.1** | Control panel, HUD, quiet chat, `@gamer` plan view, smooth camera | 🚧 In progress |
-| **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | 🗓️ Planned |
+| **0.1** | Control panel, HUD, quiet chat, `@gamer` plan view, smooth camera, fair combat | ✅ Released |
+| **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | 🚧 Next |
 | **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | 🗓️ Planned |
 | **0.4** | Stuck recovery and death item recovery | 🗓️ Planned |
 | **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | 🗓️ Planned |

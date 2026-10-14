@@ -4,7 +4,11 @@
   "package": "altoclefplus.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
-  "client": [],
+  "client": [
+    "ChatSendMixin",
+    "CommandStatusOverlayMixin",
+    "DebugLogMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

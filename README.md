@@ -95,7 +95,7 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - **Shield:** puts one in the offhand and blocks arrows, fireballs and creepers. ✅
 - **Better projectile dodging** (only onto safe ground). ✅
 - **Water bucket clutch:** always carries water so falls don't kill it. ✅
-- **Death recovery:** goes back to its death spot and picks its items up before they despawn. 🗓️
+- **Death recovery:** goes back to its death spot and picks its items up before they despawn. ✅
 - **Enderman hunting with a boat trap** in a warped forest, killed with jump critical hits. 🗓️
 - **Boats across oceans** and large lakes (not small ponds or narrow rivers). 🗓️
 - **Safety stashes (optional):** leave a bed by the Nether portal, store valuables in a chest before the
@@ -104,7 +104,7 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
   matching Nether coordinates, and builds an exit portal that drops it right next to the stronghold —
   one trip, no back-and-forth. 🗓️
 
-### Stuck recovery 🗓️
+### Stuck recovery ✅
 - Detects: no progress, endless pillaring (the "Nether elevator"), mining the same block, walking back and
   forth, restarting the same task over and over.
 - Fixes it step by step: new path → avoid that spot → restart the task → walk away and try again.
@@ -193,8 +193,8 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.1** | Control panel, HUD, quiet chat, `@gamer` plan view, smooth camera, fair combat | ✅ Released |
 | **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | ✅ Released |
 | **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | ✅ Released |
-| **0.4** | Stuck recovery and death item recovery | 🚧 Next |
-| **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | 🗓️ Planned |
+| **0.4** | Stuck recovery and death item recovery | ✅ Released |
+| **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | 🚧 Next |
 | Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
 
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.

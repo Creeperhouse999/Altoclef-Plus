@@ -8,6 +8,25 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-14
+
+Stuck recovery and getting items back after dying. Built and unit-tested; please report anything odd you
+see in-game.
+
+### Added
+- Stuck detection while a task runs: no progress, endless pillaring (including the Nether ceiling and
+  bobbing up and down), breaking the same block over and over, pacing back and forth, a task restarting
+  again and again, and Nether back-and-forth. Menus, eating, fights, smelting and AltoClef Plus side jobs
+  never count as stuck.
+- Step-by-step recovery: new path → skip that block or spot (or climb back down) → restart the task →
+  walk away and try again, with longer pauses each round.
+- Safe mode after several failed rounds: leaves caves, rests and heals, then tries again. The bot is only
+  stopped if you turn on *Stop bot after safe modes*.
+- Nether back-and-forth turns off Nether fast travel for the rest of the session, so the bot walks.
+- Death recovery: goes back for its items before they despawn (quick wooden tools first when the spot is
+  far or deep). Skips lava and void deaths and places where it keeps dying.
+- Every recovery action shows in the HUD and the log.
+
 ## [0.3.0] - 2026-10-14
 
 Safer progression: the bot gears up before taking risks instead of rushing and dying.
@@ -81,7 +100,8 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
   stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
 - Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
 
-[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Creeperhouse999/Altoclef-Plus/releases/tag/v0.1.0

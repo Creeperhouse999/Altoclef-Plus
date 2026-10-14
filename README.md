@@ -75,9 +75,9 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - Only what *you see* is smoothed — the bot still aims, mines and fights instantly.
 - One click to turn off if you prefer the raw view.
 
-### Smarter inventory 🗓️
+### Smarter inventory ✅
 - Uses the right tool: axe for wood, shovel for dirt and sand, pickaxe for stone.
-- Fixed hotbar layout (sword, pickaxe, axe, shovel, blocks, food, water bucket) — no more slot swapping.
+- Fixed hotbar layout (pickaxe, sword, axe, shovel, food, water bucket … blocks last) — no more slot swapping.
 - Wears better armor as soon as it has it.
 - Crafts armor **piece by piece** as materials come in, instead of waiting for a full set.
 - Keeps spare tools and replaces them before they break.
@@ -191,8 +191,8 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | Version | Focus | Status |
 |---|---|---|
 | **0.1** | Control panel, HUD, quiet chat, `@gamer` plan view, smooth camera, fair combat | ✅ Released |
-| **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | 🚧 Next |
-| **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | 🗓️ Planned |
+| **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | ✅ Released |
+| **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | 🚧 Next |
 | **0.4** | Stuck recovery and death item recovery | 🗓️ Planned |
 | **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | 🗓️ Planned |
 | Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |

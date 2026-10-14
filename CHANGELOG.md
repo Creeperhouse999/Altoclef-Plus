@@ -8,6 +8,32 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-14
+
+Smarter inventory. Built and unit-tested; please report anything odd you see in-game.
+
+### Added
+- Wears better armor as soon as it has it. Golden boots stay on in the Nether (piglins).
+- Crafts armor piece by piece as soon as leftover iron or diamonds allow, after keeping enough for the
+  pickaxe, sword, shield and bucket.
+- Keeps a cheap spare axe and shovel (wood or stone) and replaces them before they break — only from
+  materials it already carries.
+- Drops junk when the inventory is nearly full: only items on the junk list (gunpowder, rotten flesh,
+  seeds, ...) and extra stacks of cobblestone/dirt-like blocks. Never tools, armor, named or enchanted
+  items, protected items, or anything the current task needs.
+- Puts away items that get stuck on the cursor.
+
+### Fixed
+- Hotbar items bouncing between hand and inventory forever (AltoClef and Baritone fought over the same
+  slot). Items already on the hotbar are now just selected; the default layout matches Baritone's slots.
+- Mining logs and dirt with a helmet or crafting table in hand: the best tool is now held on every
+  block-break tick.
+- Eye of ender crafting looping forever when the recipe book placed the ingredients.
+- Tunnelling hundreds of blocks back to an old crafting table (`@gamer` now only goes back for tables
+  within the configured distance).
+- Walking to far-away furnaces instead of placing a new one.
+- Blaze powder could be thrown away during `@gamer`.
+
 ## [0.1.0] - 2026-10-14
 
 First preview. Built and unit-tested; not yet widely tested in-game — please report anything odd.
@@ -35,5 +61,6 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
   stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
 - Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
 
-[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Creeperhouse999/Altoclef-Plus/releases/tag/v0.1.0

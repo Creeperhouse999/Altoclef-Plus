@@ -7,7 +7,10 @@
   "client": [
     "ChatSendMixin",
     "CommandStatusOverlayMixin",
-    "DebugLogMixin"
+    "DebugLogMixin",
+    "GameOptionsMixin",
+    "InteractionFixChainMixin",
+    "KeyBindingAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,6 +2,7 @@ package altoclefplus;
 
 import adris.altoclef.AltoClef;
 import adris.altoclef.eventbus.EventBus;
+import adris.altoclef.eventbus.events.ClientRenderEvent;
 import adris.altoclef.eventbus.events.ClientTickEvent;
 import adris.altoclef.eventbus.events.TaskFinishedEvent;
 import altoclefplus.core.StateSampler;
@@ -12,7 +13,10 @@ import altoclefplus.core.logic.PlusConfig;
 import altoclefplus.core.logic.PlusEventBus;
 import altoclefplus.core.logic.Snapshot;
 import altoclefplus.core.logic.events.ModuleError;
+import altoclefplus.core.Hooks;
 import altoclefplus.ui.AltoClefCommandRunner;
+import altoclefplus.ui.Hud;
+import altoclefplus.ui.UiModule;
 import altoclefplus.ui.logic.BotControl;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -27,6 +31,7 @@ public final class Plus {
     private static StateSampler sampler;
     private static Snapshot last = Snapshot.builder().build();
     private static BotControl control;
+    private static UiModule ui;
 
     private Plus() {}
 
@@ -44,8 +49,26 @@ public final class Plus {
         configureBaritoneChat();
 
         sampler = new StateSampler(control::lastCommand);
+        registerModules();
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open"}) {
+            Hooks.expect(hook);
+        }
         EventBus.subscribe(ClientTickEvent.class, evt -> onTick());
+        EventBus.subscribe(ClientRenderEvent.class, evt -> {
+            if (modules.isEnabled("ui") && AltoClef.inGame()) Hud.render(evt.stack, ui);
+        });
         LOG.add("plus", "AltoClef Plus ready");
+    }
+
+    private static void registerModules() {
+        int targetEyes = 12;
+        try {
+            targetEyes = adris.altoclef.tasks.speedrun.BeatMinecraft2Task.getConfig().targetEyes;
+        } catch (RuntimeException e) {
+            LOG.add("plus", "Could not read @gamer config, assuming 12 eyes");
+        }
+        ui = new UiModule(targetEyes);
+        modules.register(ui, config.modules.ui);
     }
 
     /** Baritone: no chat commands, and its messages go to the Plus log. */
@@ -92,6 +115,10 @@ public final class Plus {
 
     public static ModuleRegistry modules() {
         return modules;
+    }
+
+    public static UiModule ui() {
+        return ui;
     }
 
     public static BotControl control() {

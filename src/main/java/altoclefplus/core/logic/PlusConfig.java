@@ -83,6 +83,16 @@ public final class PlusConfig {
                 "diamond", "iron_ingot", "gold_ingot", "ender_pearl", "ender_eye", "blaze_rod", "blaze_powder",
                 "obsidian", "flint_and_steel", "bucket", "water_bucket", "lava_bucket", "shield",
                 "crafting_table", "furnace", "golden_apple", "enchanted_golden_apple"));
+        /** Only these items (plus building blocks above their cap) may ever be dropped as junk. */
+        public List<String> junkItems = new ArrayList<>(List.of(
+                "gunpowder", "spider_eye", "rotten_flesh", "poisonous_potato", "bone", "feather", "egg",
+                "ink_sac", "wheat_seeds", "beetroot_seeds", "pumpkin_seeds", "melon_seeds",
+                "oak_sapling", "birch_sapling", "spruce_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling"));
+        /** Building blocks kept up to the per-type cap; extra stacks may be dropped. */
+        public List<String> buildingBlocks = new ArrayList<>(List.of(
+                "cobblestone", "dirt", "gravel", "netherrack", "diorite", "andesite", "granite", "tuff",
+                "cobbled_deepslate", "blackstone", "basalt", "end_stone", "sand", "red_sand", "soul_sand", "soul_soil"));
+        public boolean dropUnknownItems = false;
         /** Category -> hotbar slot index (0-8). */
         public Map<String, Integer> hotbarLayout = new LinkedHashMap<>(Map.of(
                 "sword", 0, "pickaxe", 1, "axe", 2, "shovel", 3, "blocks", 4, "food", 5, "water_bucket", 6));
@@ -113,6 +123,11 @@ public final class PlusConfig {
         public int deathKitBelowY = 50;
         public int deathPickupRadius = 8;
 
+        public boolean bedNearPortal = true;
+        public boolean stashValuablesBeforeNether = false;
+        public boolean backupGearBeforeNether = false;
+        public boolean backupGearBeforeEnd = false;
+
         public boolean endermanBoatHunt = true;
         public boolean boatTravel = true;
         public int boatMinWaterRun = 24;
@@ -139,6 +154,14 @@ public final class PlusConfig {
         public int baseCooldownSeconds = 10;
         public int maxCooldownSeconds = 120;
         public int resetAfterCleanSeconds = 120;
+        /** Full ladder cycles without progress before safe mode. */
+        public int safeModeAfterCycles = 3;
+        public int safeModeRetryMinutes = 5;
+        /** 0 = never stop the bot; otherwise stop after this many safe-mode rounds. */
+        public int stopAfterSafeModeCycles = 0;
+        public int deathLoopDeaths = 2;
+        public int deathLoopMinutes = 10;
+        public int deathLoopRadius = 32;
         /** Leaf task name fragments during which the watchdog stays quiet. */
         public List<String> longWaitTasks = new ArrayList<>(List.of(
                 "Smelt", "Furnace", "WaitForDragon", "Sleep", "Eat", "Idle"));
@@ -156,6 +179,8 @@ public final class PlusConfig {
         if (ui.hudResourceItems == null) ui.hudResourceItems = d.ui.hudResourceItems;
         if (ui.presets == null) ui.presets = d.ui.presets;
         if (inventory.protectedItems == null) inventory.protectedItems = d.inventory.protectedItems;
+        if (inventory.junkItems == null) inventory.junkItems = d.inventory.junkItems;
+        if (inventory.buildingBlocks == null) inventory.buildingBlocks = d.inventory.buildingBlocks;
         if (inventory.hotbarLayout == null) inventory.hotbarLayout = d.inventory.hotbarLayout;
         if (recovery.longWaitTasks == null) recovery.longWaitTasks = d.recovery.longWaitTasks;
         return this;

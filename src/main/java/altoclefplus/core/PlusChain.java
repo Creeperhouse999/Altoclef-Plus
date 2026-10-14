@@ -17,6 +17,10 @@ public class PlusChain extends SingleTaskChain {
     private final float priority;
     private String jobLabel = "";
     private Runnable onFinish = () -> {};
+    private long deadlineMs = Long.MAX_VALUE;
+
+    /** No side job may hold the bot longer than this. */
+    public static final long MAX_JOB_MS = 5 * 60_000L;
 
     public PlusChain(TaskRunner runner, String name, float priority) {
         super(runner);
@@ -29,6 +33,7 @@ public class PlusChain extends SingleTaskChain {
         if (isActive()) return false;
         jobLabel = label;
         onFinish = whenDone == null ? () -> {} : whenDone;
+        deadlineMs = System.currentTimeMillis() + MAX_JOB_MS;
         setTask(task);
         Plus.bus().publish(new Notice(name, label));
         return true;
@@ -47,6 +52,11 @@ public class PlusChain extends SingleTaskChain {
     @Override
     public float getPriority(AltoClef mod) {
         if (!AltoClef.inGame() || !isActive()) return Float.NEGATIVE_INFINITY;
+        if (System.currentTimeMillis() > deadlineMs) {
+            Plus.log().add(name, "Gave up on '" + jobLabel + "' (took too long)");
+            cancelJob();
+            return Float.NEGATIVE_INFINITY;
+        }
         return priority;
     }
 

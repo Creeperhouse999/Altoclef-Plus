@@ -71,6 +71,7 @@ public final class Plus {
         modules.register(ui, config.modules.ui);
         modules.register(new altoclefplus.camera.CameraModule(), config.modules.camera);
         modules.register(new altoclefplus.inventory.InventoryModule(mod), config.modules.inventory);
+        modules.register(new altoclefplus.survival.SurvivalModule(mod), config.modules.survival);
     }
 
     /** Baritone: no chat commands, and its messages go to the Plus log. */

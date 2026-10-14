@@ -93,9 +93,12 @@ public final class PlusConfig {
                 "cobblestone", "dirt", "gravel", "netherrack", "diorite", "andesite", "granite", "tuff",
                 "cobbled_deepslate", "blackstone", "basalt", "end_stone", "sand", "red_sand", "soul_sand", "soul_soil"));
         public boolean dropUnknownItems = false;
-        /** Category -> hotbar slot index (0-8). */
+        /**
+         * Category -> hotbar slot index (0-8). Pickaxe in slot 0 and blocks in slot 8 match where Baritone puts
+         * them itself, so the two never fight over a slot.
+         */
         public Map<String, Integer> hotbarLayout = new LinkedHashMap<>(Map.of(
-                "sword", 0, "pickaxe", 1, "axe", 2, "shovel", 3, "blocks", 4, "food", 5, "water_bucket", 6));
+                "pickaxe", 0, "sword", 1, "axe", 2, "shovel", 3, "food", 4, "water_bucket", 5, "blocks", 8));
     }
 
     public static final class Survival {

@@ -50,7 +50,7 @@ public final class Plus {
 
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> onTick());
@@ -90,6 +90,7 @@ public final class Plus {
 
     private static void onTick() {
         if (!AltoClef.inGame()) return;
+        altoclefplus.inventory.HotbarManager.onTick();
         last = sampler.sample(mod);
         modules.tickAll(last);
     }

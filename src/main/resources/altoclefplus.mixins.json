@@ -15,7 +15,9 @@
     "FurnaceCostMixin",
     "GameOptionsMixin",
     "InteractionFixChainMixin",
-    "KeyBindingAccessor"
+    "KeyBindingAccessor",
+    "SlotHandlerMixin",
+    "ToolSelectMixin"
   ],
   "injectors": {
     "defaultRequire": 1

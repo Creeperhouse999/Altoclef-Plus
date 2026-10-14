@@ -66,6 +66,7 @@ public final class HotbarLayoutScreen extends PlusScreen {
 
     @Override
     public void close() {
+        altoclefplus.inventory.HotbarManager.invalidate();
         Plus.saveConfig();
         client.setScreen(parent);
     }

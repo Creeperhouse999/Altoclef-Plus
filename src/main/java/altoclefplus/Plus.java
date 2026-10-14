@@ -70,6 +70,7 @@ public final class Plus {
         ui = new UiModule(targetEyes);
         modules.register(ui, config.modules.ui);
         modules.register(new altoclefplus.camera.CameraModule(), config.modules.camera);
+        modules.register(new altoclefplus.inventory.InventoryModule(mod), config.modules.inventory);
     }
 
     /** Baritone: no chat commands, and its messages go to the Plus log. */

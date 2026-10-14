@@ -1,0 +1,166 @@
+package altoclefplus.inventory;
+
+import adris.altoclef.AltoClef;
+import adris.altoclef.TaskCatalogue;
+import adris.altoclef.eventbus.EventBus;
+import adris.altoclef.eventbus.events.SlotClickChangedEvent;
+import adris.altoclef.tasks.ResourceTask;
+import adris.altoclef.tasks.misc.EquipArmorTask;
+import adris.altoclef.tasks.slot.EnsureFreeCursorSlotTask;
+import adris.altoclef.tasksystem.Task;
+import adris.altoclef.util.ItemTarget;
+import altoclefplus.Plus;
+import altoclefplus.core.PlusChain;
+import altoclefplus.core.StateSampler;
+import altoclefplus.core.logic.ItemInfo;
+import altoclefplus.core.logic.Module;
+import altoclefplus.core.logic.PlusConfig;
+import altoclefplus.core.logic.Snapshot;
+import altoclefplus.core.logic.events.Notice;
+import altoclefplus.inventory.logic.ArmorPlanner;
+import altoclefplus.inventory.logic.CursorGuard;
+import altoclefplus.inventory.logic.JunkClassifier;
+import altoclefplus.inventory.logic.SpareToolPlanner;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+/** Armor, piecewise armor crafting, spare tools, junk disposal and the cursor guard. */
+public final class InventoryModule implements Module {
+    private static final int DECIDE_EVERY_TICKS = 20;
+
+    private final PlusChain chain;
+    private final CursorGuard cursorGuard = new CursorGuard(40);
+    private boolean clickedThisTick;
+    private long ticks;
+    private String status = "idle";
+
+    public InventoryModule(AltoClef mod) {
+        chain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus inventory", 52f);
+        EventBus.subscribe(SlotClickChangedEvent.class, e -> clickedThisTick = true);
+    }
+
+    @Override
+    public String id() {
+        return "inventory";
+    }
+
+    @Override
+    public void tick(Snapshot s) {
+        boolean clicked = clickedThisTick;
+        clickedThisTick = false;
+        PlusConfig.Inventory cfg = Plus.config().inventory;
+
+        if (cfg.cursorGuard && cursorGuard.tick(s.cursorEmpty, clicked) == CursorGuard.Action.STASH) {
+            if (s.userTaskRunning) chain.startJob(new EnsureFreeCursorSlotTask(), "Putting away a stuck cursor item", null);
+        }
+        if (++ticks % DECIDE_EVERY_TICKS != 0) return;
+        if (!s.userTaskRunning || s.mobDefenseActive || s.eating || s.screenOpen || s.dead || "the_end".equals(s.dimension)) return;
+        if (chain.isActive()) {
+            status = chain.jobLabel();
+            return;
+        }
+        status = "idle";
+
+        if (cfg.equipArmor && tryEquipArmor(s)) return;
+        if (cfg.dropJunk && tryDropJunk(s, cfg)) return;
+        if (cfg.craftArmorPiecewise) {
+            Optional<String> piece = ArmorPlanner.nextPiece(s);
+            if (piece.isPresent() && start(TaskCatalogue.getItemTask(piece.get(), 1), "Crafting " + pretty(piece.get()))) return;
+        }
+        if (cfg.spareTools) {
+            Optional<String> tool = SpareToolPlanner.next(s);
+            if (tool.isPresent()) start(TaskCatalogue.getItemTask(tool.get(), 1), "Making a spare " + pretty(tool.get()));
+        }
+    }
+
+    private boolean start(Task task, String label) {
+        if (task == null) return false;
+        status = label;
+        return chain.startJob(task, label, null);
+    }
+
+    private boolean tryEquipArmor(Snapshot s) {
+        List<String> carried = new ArrayList<>();
+        for (String id : s.items.keySet()) if (!ItemInfo.armorSlot(id).isEmpty()) carried.add(id);
+        if (carried.isEmpty()) return false;
+        for (String slot : ItemInfo.ARMOR_SLOTS) {
+            String wear = ArmorPlanner.bestToWear(slot, s.armor.getOrDefault(slot, ""), carried, s.dimension);
+            if (!wear.isEmpty()) {
+                Item item = Registry.ITEM.get(new Identifier("minecraft", wear));
+                return start(new EquipArmorTask(item), "Putting on " + pretty(wear));
+            }
+        }
+        return false;
+    }
+
+    /** Drops one junk stack per decision, straight from the player inventory. */
+    private boolean tryDropJunk(Snapshot s, PlusConfig.Inventory cfg) {
+        ClientPlayerEntity p = MinecraftClient.getInstance().player;
+        if (p == null || p.currentScreenHandler != p.playerScreenHandler || !s.cursorEmpty) return false;
+        JunkClassifier classifier = new JunkClassifier(new HashSet<>(cfg.protectedItems), new HashSet<>(cfg.junkItems),
+                new HashSet<>(cfg.buildingBlocks), cfg.buildingBlockCapPerType, cfg.buildingBlockCapTotal, cfg.junkFreeSlotThreshold);
+        List<JunkClassifier.Drop> drops = classifier.toDrop(s.items, neededByTask(), s.freeSlots);
+        for (JunkClassifier.Drop d : drops) {
+            Item item = Registry.ITEM.get(new Identifier("minecraft", d.id()));
+            if (Plus.mod().getModSettings().isImportant(item)) continue;
+            int slot = findDroppableSlot(p, d.id(), s.selectedSlot);
+            if (slot < 0) continue;
+            int window = slot < 9 ? 36 + slot : slot;
+            MinecraftClient.getInstance().interactionManager.clickSlot(p.playerScreenHandler.syncId, window, 1, SlotActionType.THROW, p);
+            Plus.bus().publish(new Notice("inventory", "Dropped junk: " + pretty(d.id())));
+            return true;
+        }
+        return false;
+    }
+
+    /** Main inventory first, never the held slot, never named or enchanted stacks. */
+    private static int findDroppableSlot(ClientPlayerEntity p, String id, int selected) {
+        var main = p.getInventory().main;
+        for (int pass = 0; pass < 2; pass++) {
+            for (int i = pass == 0 ? 9 : 0; i < (pass == 0 ? 36 : 9); i++) {
+                if (i == selected) continue;
+                ItemStack st = main.get(i);
+                if (StateSampler.id(st).equals(id) && !st.hasCustomName() && !st.hasEnchantments()) return i;
+            }
+        }
+        return -1;
+    }
+
+    /** Items any resource task in the running chain is collecting. */
+    private static Set<String> neededByTask() {
+        Set<String> needed = new HashSet<>();
+        for (Task t : Plus.mod().getUserTaskChain().getTasks()) {
+            if (t instanceof ResourceTask rt) {
+                for (ItemTarget target : rt.getItemTargets()) {
+                    for (Item it : target.getMatches()) needed.add(Registry.ITEM.getId(it).getPath());
+                }
+            }
+        }
+        return needed;
+    }
+
+    private static String pretty(String id) {
+        return id.replace('_', ' ');
+    }
+
+    @Override
+    public String status() {
+        return status;
+    }
+
+    @Override
+    public void onDisable() {
+        chain.cancelJob();
+    }
+}

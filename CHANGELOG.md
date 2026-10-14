@@ -8,6 +8,26 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-14
+
+Safer progression: the bot gears up before taking risks instead of rushing and dying.
+Built and unit-tested; please report anything odd you see in-game.
+
+### Added
+- Gear gates (each can be switched off):
+  - stone sword, axe and shovel as soon as it has a stone pickaxe — no more mining iron without a sword;
+  - iron sword, shield and water bucket after the iron pickaxe;
+  - full iron armor before going diamond hunting;
+  - armor, shield and food before entering the Nether.
+  A gate that can't be completed is paused for a while, so the bot never gets stuck on it.
+- Caution: rests and eats when hurt, runs from mobs when badly hurt, and doesn't keep digging deeper
+  while weak.
+- Shield: moved to the offhand and raised against arrows, fireballs, aiming skeletons/blazes and fusing
+  creepers. Only while the bot is running, so it never takes over your right-click.
+- Projectile dodging without a shield: sidesteps, but only onto solid ground with no lava.
+- Water bucket clutch: AltoClef's clutch is kept on and the water bucket has its own hotbar slot.
+- No AltoClef Plus side job can hold the bot for more than 5 minutes.
+
 ## [0.2.0] - 2026-10-14
 
 Smarter inventory. Built and unit-tested; please report anything odd you see in-game.
@@ -61,6 +81,7 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
   stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
 - Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
 
-[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Creeperhouse999/Altoclef-Plus/releases/tag/v0.1.0

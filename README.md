@@ -87,22 +87,22 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - Fixes items getting stuck on the cursor and the eye-of-ender crafting bug.
 - Places a new crafting table instead of walking hundreds of blocks back to an old one.
 
-### Safer progression and survival 🚧
+### Safer progression and survival ✅ / 🗓️
 - **Fair combat:** no more hitting mobs through walls or while looking the other way. ✅
 - **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
-  full iron armor before hunting diamonds; armor and food before entering the Nether.
-- **Caution:** stops to eat and heal when low, flees when in danger, avoids caves when weak.
-- **Shield:** crafts one and blocks arrows, fireballs and creepers.
-- **Better projectile dodging.**
-- **Water bucket clutch:** always carries water so falls don't kill it.
-- **Death recovery:** goes back to its death spot and picks its items up before they despawn.
-- **Enderman hunting with a boat trap** in a warped forest, killed with jump critical hits.
-- **Boats across oceans** and large lakes (not small ponds or narrow rivers).
+  full iron armor before hunting diamonds; armor and food before entering the Nether. ✅
+- **Caution:** stops to eat and heal when low, flees when in danger, avoids going deep when weak. ✅
+- **Shield:** puts one in the offhand and blocks arrows, fireballs and creepers. ✅
+- **Better projectile dodging** (only onto safe ground). ✅
+- **Water bucket clutch:** always carries water so falls don't kill it. ✅
+- **Death recovery:** goes back to its death spot and picks its items up before they despawn. 🗓️
+- **Enderman hunting with a boat trap** in a warped forest, killed with jump critical hits. 🗓️
+- **Boats across oceans** and large lakes (not small ponds or narrow rivers). 🗓️
 - **Safety stashes (optional):** leave a bed by the Nether portal, store valuables in a chest before the
-  Nether, keep a backup gear set in a chest before the Nether or the End.
+  Nether, keep a backup gear set in a chest before the Nether or the End. 🗓️
 - **Precise Nether travel to the stronghold:** brings obsidian and flint and steel, travels to the exact
   matching Nether coordinates, and builds an exit portal that drops it right next to the stronghold —
-  one trip, no back-and-forth.
+  one trip, no back-and-forth. 🗓️
 
 ### Stuck recovery 🗓️
 - Detects: no progress, endless pillaring (the "Nether elevator"), mining the same block, walking back and
@@ -192,8 +192,8 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 |---|---|---|
 | **0.1** | Control panel, HUD, quiet chat, `@gamer` plan view, smooth camera, fair combat | ✅ Released |
 | **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | ✅ Released |
-| **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | 🚧 Next |
-| **0.4** | Stuck recovery and death item recovery | 🗓️ Planned |
+| **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | ✅ Released |
+| **0.4** | Stuck recovery and death item recovery | 🚧 Next |
 | **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | 🗓️ Planned |
 | Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
 

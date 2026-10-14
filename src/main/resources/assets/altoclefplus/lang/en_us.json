@@ -1,1 +1,6 @@
-{}
+{
+  "key.categories.altoclefplus": "AltoClef Plus",
+  "key.altoclefplus.panel": "Open control panel",
+  "key.altoclefplus.stop": "Stop bot",
+  "key.altoclefplus.pause": "Pause / resume bot"
+}

@@ -112,6 +112,11 @@ public final class PlusConfig {
         public int deathKitDistance = 150;
         public int deathKitBelowY = 50;
         public int deathPickupRadius = 8;
+
+        public boolean endermanBoatHunt = true;
+        public boolean boatTravel = true;
+        public int boatMinWaterRun = 24;
+        public int boatMinGoalDistance = 48;
     }
 
     public static final class Recovery {

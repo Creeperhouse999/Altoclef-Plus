@@ -4,6 +4,7 @@ import adris.altoclef.AltoClef;
 import altoclefplus.Plus;
 import altoclefplus.core.logic.PlusConfig;
 import altoclefplus.survival.logic.ProjectileMath;
+import altoclefplus.survival.logic.ShieldRules;
 import baritone.api.utils.input.Input;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -12,17 +13,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.mob.BlazeEntity;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PillagerEntity;
 import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.util.UseAction;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -100,11 +101,23 @@ public final class CombatAssist {
         return new Threat(incoming, other);
     }
 
-    /** Right-click raises the offhand shield only if the main hand has no use of its own. */
+    /**
+     * Holding right-click uses the main-hand item first and interacts with the crosshair target, so only raise
+     * the shield when that can't do anything else (see ShieldRules).
+     */
     private static boolean canRaise(ClientPlayerEntity p, AltoClef mod) {
-        ItemStack main = p.getMainHandStack();
-        if (main.getItem() instanceof BlockItem || main.getUseAction() != UseAction.NONE) return false;
-        return !mod.getFoodChain().isTryingToEat() && MinecraftClient.getInstance().currentScreen == null;
+        if (mod.getFoodChain().isTryingToEat() || MinecraftClient.getInstance().currentScreen != null) return false;
+        String main = altoclefplus.core.StateSampler.id(p.getMainHandStack());
+        return ShieldRules.canRaise(main, crosshair());
+    }
+
+    private static ShieldRules.Target crosshair() {
+        HitResult hit = MinecraftClient.getInstance().crosshairTarget;
+        if (hit == null || hit.getType() == HitResult.Type.MISS) return ShieldRules.Target.NOTHING;
+        if (hit instanceof EntityHitResult e) {
+            return e.getEntity() instanceof Monster ? ShieldRules.Target.HOSTILE : ShieldRules.Target.OTHER_ENTITY;
+        }
+        return ShieldRules.Target.BLOCK;
     }
 
     private void raise(AltoClef mod) {

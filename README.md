@@ -160,7 +160,7 @@ mods/
 |---|---|
 | **Right Shift** | Open / close the control panel |
 | **K** | Stop the bot |
-| **P** | Pause / resume the bot |
+| **O** | Pause / resume the bot |
 | Ctrl + K | AltoClef's own emergency stop (still works) |
 
 All keys can be changed in *Options → Controls → Key Binds → AltoClef Plus*.

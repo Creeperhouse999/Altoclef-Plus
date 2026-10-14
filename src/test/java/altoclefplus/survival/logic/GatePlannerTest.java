@@ -56,6 +56,15 @@ class GatePlannerTest {
     }
 
     @Test
+    void emptyBucketSatisfiesWaterGate() {
+        // AltoClef pours its water bucket out while casting obsidian; don't interrupt it to "get water".
+        GatePlanner g = new GatePlanner();
+        Snapshot s = Snapshot.builder().item("iron_pickaxe", 1).item("iron_sword", 1).item("stone_axe", 1)
+                .item("stone_shovel", 1).offhand("shield").item("bucket", 1).build();
+        assertEquals("iron_chestplate", item(next(g, s)));
+    }
+
+    @Test
     void disabledGateIsSkipped() {
         GatePlanner g = new GatePlanner();
         cfg.gateStoneKit = false;

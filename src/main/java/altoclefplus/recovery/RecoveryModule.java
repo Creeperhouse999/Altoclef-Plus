@@ -65,7 +65,7 @@ public final class RecoveryModule implements Module {
     public RecoveryModule(AltoClef mod) {
         this.mod = mod;
         PlusConfig.Recovery cfg = Plus.config().recovery;
-        chain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus recovery", 54f);
+        chain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus recovery", 54f, 4 * 60_000L);
         detectors = List.of(new NoProgressDetector(cfg), new PillarDetector(cfg), new SameBlockDetector(cfg),
                 new FlipFlopDetector(cfg), new RestartLoopDetector(cfg), new DimensionPingPongDetector(cfg));
         ladder = new EscalationLadder(cfg);
@@ -186,7 +186,7 @@ public final class RecoveryModule implements Module {
     }
 
     private void onDeath(Snapshot s) {
-        botWasRunning = prev.userTaskRunning || !Plus.control().lastCommand().isEmpty();
+        botWasRunning = prev.userTaskRunning;
         deathPos = new BlockPos(Math.floor(prev.x), Math.floor(prev.y), Math.floor(prev.z));
         deathDim = prev.dimension;
         deathY = prev.y;

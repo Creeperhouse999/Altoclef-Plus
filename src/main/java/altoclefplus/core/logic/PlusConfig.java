@@ -197,6 +197,42 @@ public final class PlusConfig {
         if (inventory.buildingBlocks == null) inventory.buildingBlocks = d.inventory.buildingBlocks;
         if (inventory.hotbarLayout == null) inventory.hotbarLayout = d.inventory.hotbarLayout;
         if (recovery.longWaitTasks == null) recovery.longWaitTasks = d.recovery.longWaitTasks;
+
+        // Hand-edited files: drop null entries and broken presets, keep numbers in sane ranges.
+        ui.hudResourceItems = noNulls(ui.hudResourceItems);
+        ui.presets = new ArrayList<>(ui.presets.stream()
+                .filter(p -> p != null && p.name != null && !p.name.isBlank() && p.command != null && !p.command.isBlank())
+                .toList());
+        inventory.protectedItems = noNulls(inventory.protectedItems);
+        inventory.junkItems = noNulls(inventory.junkItems);
+        inventory.buildingBlocks = noNulls(inventory.buildingBlocks);
+        inventory.hotbarLayout.entrySet().removeIf(e -> e.getKey() == null || e.getValue() == null);
+        recovery.longWaitTasks = noNulls(recovery.longWaitTasks);
+
+        camera.smoothness = clamp(camera.smoothness, 1, 40);
+        camera.maxDegreesPerSecond = clamp(camera.maxDegreesPerSecond, 30, 5000);
+        camera.combatMultiplier = clamp(camera.combatMultiplier, 1, 10);
+        inventory.junkFreeSlotThreshold = clamp(inventory.junkFreeSlotThreshold, 0, 10);
+        inventory.buildingBlockCapPerType = clamp(inventory.buildingBlockCapPerType, 16, 2304);
+        inventory.buildingBlockCapTotal = clamp(inventory.buildingBlockCapTotal, inventory.buildingBlockCapPerType, 2304);
+        inventory.craftingTableMaxDistance = clamp(inventory.craftingTableMaxDistance, 8, 512);
+        recovery.noProgressSeconds = clamp(recovery.noProgressSeconds, 10, 600);
+        recovery.safeModeAfterCycles = clamp(recovery.safeModeAfterCycles, 1, 20);
+        recovery.stopAfterSafeModeCycles = clamp(recovery.stopAfterSafeModeCycles, 0, 20);
+        survival.boatMinWaterRun = clamp(survival.boatMinWaterRun, 8, 256);
+        survival.netherTravelMinDistance = clamp(survival.netherTravelMinDistance, 100, 10_000);
         return this;
+    }
+
+    private static List<String> noNulls(List<String> list) {
+        return new ArrayList<>(list.stream().filter(v -> v != null && !v.isBlank()).toList());
+    }
+
+    private static int clamp(int v, int min, int max) {
+        return Math.max(min, Math.min(max, v));
+    }
+
+    private static float clamp(float v, float min, float max) {
+        return Float.isNaN(v) ? min : Math.max(min, Math.min(max, v));
     }
 }

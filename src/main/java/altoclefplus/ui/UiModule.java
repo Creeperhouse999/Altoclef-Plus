@@ -8,7 +8,6 @@ import altoclefplus.core.logic.events.RecoveryAction;
 import altoclefplus.core.logic.events.StuckDetected;
 import altoclefplus.ui.logic.PlanTracker;
 import altoclefplus.ui.logic.StepTrail;
-import net.minecraft.client.MinecraftClient;
 
 /** Keys, plan tracking, step trail and the HUD alert line. */
 public final class UiModule implements Module {
@@ -35,19 +34,6 @@ public final class UiModule implements Module {
 
     @Override
     public void tick(Snapshot s) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        while (Keybinds.PANEL.wasPressed()) {
-            if (client.currentScreen == null) client.setScreen(new PanelScreen());
-        }
-        while (Keybinds.STOP.wasPressed()) {
-            Plus.control().stop();
-            alert("Stopped");
-        }
-        while (Keybinds.PAUSE.wasPressed()) {
-            Plus.control().togglePause();
-            alert(Plus.control().state().label);
-        }
-
         String cmd = Plus.control().lastCommand();
         if (!cmd.equals(lastCommand)) {
             if (cmd.startsWith("gamer")) plan.reset();

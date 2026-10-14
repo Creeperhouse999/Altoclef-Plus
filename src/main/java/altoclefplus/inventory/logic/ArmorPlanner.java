@@ -71,10 +71,11 @@ public final class ArmorPlanner {
      * @return the carried piece to put on in this slot, or "" to keep what's worn.
      */
     public static String bestToWear(String slot, String worn, List<String> carried, String dimension) {
-        boolean nether = "the_nether".equals(dimension);
-        if (nether && slot.equals("feet")) {
-            if ("golden_boots".equals(worn)) return "";
-            if (carried.contains("golden_boots")) return "golden_boots";
+        // Worn golden boots are AltoClef's own choice (@gamer wears them for piglins); never take them off,
+        // or the two mods swap boots back and forth forever.
+        if (slot.equals("feet") && "golden_boots".equals(worn)) return "";
+        if ("the_nether".equals(dimension) && slot.equals("feet") && carried.contains("golden_boots")) {
+            return "golden_boots";
         }
         String best = "";
         int bestPoints = worn == null || worn.isEmpty() ? 0 : ItemInfo.armorPoints(worn);

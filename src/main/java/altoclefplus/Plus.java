@@ -58,9 +58,19 @@ public final class Plus {
         for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt"}) {
             Hooks.expect(hook);
         }
-        EventBus.subscribe(ClientTickEvent.class, evt -> onTick());
+        EventBus.subscribe(ClientTickEvent.class, evt -> {
+            try {
+                onTick();
+            } catch (RuntimeException e) {
+                reportOnce("tick", e);
+            }
+        });
         EventBus.subscribe(ClientRenderEvent.class, evt -> {
-            if (modules.isEnabled("ui") && AltoClef.inGame()) Hud.render(evt.stack, ui);
+            try {
+                if (modules.isEnabled("ui") && AltoClef.inGame()) Hud.render(evt.stack, ui);
+            } catch (RuntimeException e) {
+                reportOnce("hud", e);
+            }
         });
         LOG.add("plus", "AltoClef Plus ready");
     }
@@ -96,8 +106,19 @@ public final class Plus {
         }
     }
 
+    private static final java.util.Set<String> REPORTED = new java.util.HashSet<>();
+
+    /** AltoClef's event bus doesn't catch exceptions; never let ours crash the game. */
+    private static void reportOnce(String where, RuntimeException e) {
+        if (REPORTED.add(where + e.getClass().getName())) {
+            LOG.add("plus", "Error in " + where + ": " + e);
+            e.printStackTrace();
+        }
+    }
+
     private static void onTick() {
         if (!AltoClef.inGame()) return;
+        altoclefplus.ui.Keybinds.poll();
         altoclefplus.inventory.HotbarManager.onTick();
         last = sampler.sample(mod);
         modules.tickAll(last);

@@ -11,37 +11,68 @@ class SurvivalLogicTest {
     // ---- caution ----
     @Test
     void healthyBotCarriesOn() {
-        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(20, 0, 64, cfg));
+        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(20, 0, 64, true, 20, 0, cfg));
     }
 
     @Test
     void lowHealthWithoutEnemiesHoldsUntilHealed() {
         CautionPolicy p = new CautionPolicy();
-        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, p.decide(11, 0, 64, cfg));
-        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, p.decide(15, 0, 64, cfg), "keeps holding below resume health");
-        assertEquals(CautionPolicy.Action.NONE, p.decide(18, 0, 64, cfg));
+        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, p.decide(11, 0, 64, true, 20, 0, cfg));
+        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, p.decide(15, 0, 64, true, 20, 10, cfg), "keeps holding below resume health");
+        assertEquals(CautionPolicy.Action.NONE, p.decide(18, 0, 64, true, 20, 20, cfg));
     }
 
     @Test
     void veryLowHealthWithEnemiesFlees() {
-        assertEquals(CautionPolicy.Action.FLEE, new CautionPolicy().decide(7, 2, 64, cfg));
+        assertEquals(CautionPolicy.Action.FLEE, new CautionPolicy().decide(7, 2, 64, true, 20, 0, cfg));
     }
 
     @Test
     void moderateHealthWithEnemiesLetsMobDefenseFight() {
-        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(11, 2, 64, cfg));
+        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(11, 2, 64, true, 20, 0, cfg));
     }
 
     @Test
     void weakBotDoesNotGoDeepUnderground() {
-        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, new CautionPolicy().decide(14, 0, 20, cfg));
-        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(14, 0, 64, cfg));
+        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, new CautionPolicy().decide(14, 0, 20, true, 20, 0, cfg));
+        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(14, 0, 64, true, 20, 0, cfg));
+    }
+
+    @Test
+    void doesNotRestWhenItCannotHeal() {
+        // no food and hunger too low to regenerate: standing still would never end
+        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(10, 0, 64, false, 12, 0, cfg));
+        // no food but full hunger: natural regeneration works
+        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, new CautionPolicy().decide(10, 0, 64, false, 20, 0, cfg));
+    }
+
+    @Test
+    void backsOffAfterARestThatDidNotHelp() {
+        CautionPolicy p = new CautionPolicy();
+        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, p.decide(10, 0, 64, true, 20, 0, cfg));
+        p.restEndedWithoutHealing(100);
+        assertEquals(CautionPolicy.Action.NONE, p.decide(10, 0, 64, true, 20, 150, cfg));
+        assertEquals(CautionPolicy.Action.HOLD_AND_EAT, p.decide(10, 0, 64, true, 20, 100 + CautionPolicy.BACKOFF_SECONDS + 1, cfg));
     }
 
     @Test
     void disabledCautionDoesNothing() {
         cfg.caution = false;
-        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(5, 3, 10, cfg));
+        assertEquals(CautionPolicy.Action.NONE, new CautionPolicy().decide(5, 3, 10, true, 20, 0, cfg));
+    }
+
+    // ---- shield ----
+    @Test
+    void shieldOnlyWhenRightClickCannotDoAnythingElse() {
+        assertTrue(ShieldRules.canRaise("iron_sword", ShieldRules.Target.NOTHING));
+        assertTrue(ShieldRules.canRaise("", ShieldRules.Target.NOTHING));
+        assertTrue(ShieldRules.canRaise("diamond_sword", ShieldRules.Target.HOSTILE));
+        assertFalse(ShieldRules.canRaise("lava_bucket", ShieldRules.Target.NOTHING), "would place lava");
+        assertFalse(ShieldRules.canRaise("ender_pearl", ShieldRules.Target.NOTHING), "would throw a pearl");
+        assertFalse(ShieldRules.canRaise("flint_and_steel", ShieldRules.Target.BLOCK));
+        assertFalse(ShieldRules.canRaise("iron_axe", ShieldRules.Target.BLOCK), "would strip a log");
+        assertFalse(ShieldRules.canRaise("", ShieldRules.Target.BLOCK), "would open a door/chest/bed");
+        assertFalse(ShieldRules.canRaise("iron_sword", ShieldRules.Target.OTHER_ENTITY), "would mount a boat / trade");
     }
 
     // ---- projectiles ----

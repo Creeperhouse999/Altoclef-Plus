@@ -6,7 +6,6 @@ import adris.altoclef.eventbus.EventBus;
 import adris.altoclef.eventbus.events.SlotClickChangedEvent;
 import adris.altoclef.tasks.ResourceTask;
 import adris.altoclef.tasks.misc.EquipArmorTask;
-import adris.altoclef.tasks.slot.EnsureFreeCursorSlotTask;
 import adris.altoclef.tasksystem.Task;
 import adris.altoclef.util.ItemTarget;
 import altoclefplus.Plus;
@@ -46,7 +45,7 @@ public final class InventoryModule implements Module {
     private String status = "idle";
 
     public InventoryModule(AltoClef mod) {
-        chain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus inventory", 52f);
+        chain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus inventory", 52f, 90_000);
         EventBus.subscribe(SlotClickChangedEvent.class, e -> clickedThisTick = true);
     }
 
@@ -62,7 +61,7 @@ public final class InventoryModule implements Module {
         PlusConfig.Inventory cfg = Plus.config().inventory;
 
         if (cfg.cursorGuard && cursorGuard.tick(s.cursorEmpty, clicked) == CursorGuard.Action.STASH) {
-            if (s.userTaskRunning) chain.startJob(new EnsureFreeCursorSlotTask(), "Putting away a stuck cursor item", null);
+            if (s.userTaskRunning) chain.startJob(new CursorStashTask(), "Putting away a stuck cursor item", null);
         }
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
         if (!s.userTaskRunning || s.mobDefenseActive || s.eating || s.screenOpen || s.dead || "the_end".equals(s.dimension)) return;

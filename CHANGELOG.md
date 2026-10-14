@@ -8,6 +8,28 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-15
+
+Safety fixes from a full code review, before wider in-game testing.
+
+### Fixed
+- The shield could use the main-hand item (place lava, throw pearls, light fires, open doors, mount boats).
+  It is now only raised with a sword or empty hand, aiming at nothing or at a hostile mob.
+- Stop and Pause now also stop the remaining commands of a preset (e.g. "Iron gear").
+- The "put away cursor item" job could hold the bot for minutes; it now ends as soon as the cursor is empty.
+- Endless golden-boots swap during `@gamer`: worn golden boots are never taken off.
+- Resting to heal could repeat forever without food; it now only rests when it can heal and backs off after
+  a rest that didn't help.
+- The water-bucket gear gate no longer interrupts AltoClef while it pours water to make obsidian.
+- If a boat crossing times out, the bot gets out of the boat.
+- Side jobs no longer start while the bot is idle, time out per job, and a job that timed out waits before
+  being tried again. Death recovery only runs when the bot (not you) was playing.
+- Panel, Stop and Pause keys keep working even if the UI module is turned off.
+- Broken or partial settings files (empty list entries, odd numbers) can no longer crash the game.
+
+### Changed
+- Pause / resume key is now **O** (P is vanilla's Social Interactions key).
+
 ## [0.5.0] - 2026-10-15
 
 Travel and pearls. Built and unit-tested; please report anything odd you see in-game.
@@ -124,7 +146,8 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
   stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
 - Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
 
-[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.2.0...v0.3.0

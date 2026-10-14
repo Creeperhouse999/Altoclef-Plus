@@ -40,7 +40,9 @@ public final class GatePlanner {
         if (active(Gate.IRON_KIT, cfg.gateIronKit, nowMs) && pick >= ItemInfo.IRON) {
             if (ItemInfo.bestTier(s, "sword") < ItemInfo.IRON) return need(Gate.IRON_KIT, "iron_sword");
             if (!hasShield(s)) return need(Gate.IRON_KIT, "shield");
-            if (!s.has("water_bucket")) return need(Gate.IRON_KIT, "water_bucket");
+            // An empty bucket counts: AltoClef pours its water out while casting obsidian, and the gate must not
+            // interrupt that to "go get water".
+            if (!s.has("water_bucket") && !s.has("bucket")) return need(Gate.IRON_KIT, "water_bucket");
         }
         if (active(Gate.IRON_ARMOR, cfg.gateIronArmor, nowMs) && pick >= ItemInfo.IRON) {
             Optional<Need> armor = missingIronArmor(s, Gate.IRON_ARMOR);

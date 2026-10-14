@@ -56,6 +56,11 @@ public final class BoatCrossTask extends Task {
         if (cooldown > 0) cooldown--;
         if (limit.elapsed()) {
             releaseKeys(mod);
+            if (p.hasVehicle()) {
+                setDebugState("Giving up on the boat: getting out");
+                mod.getInputControls().tryPress(Input.SNEAK);
+                return null;
+            }
             phase = Phase.DONE;
             return null;
         }
@@ -191,11 +196,14 @@ public final class BoatCrossTask extends Task {
     @Override
     protected void onStop(AltoClef mod, Task interruptTask) {
         releaseKeys(mod);
+        if (mod.getPlayer() != null && mod.getPlayer().getVehicle() instanceof BoatEntity) {
+            mod.getInputControls().tryPress(Input.SNEAK);
+        }
     }
 
     @Override
     public boolean isFinished(AltoClef mod) {
-        return phase == Phase.DONE;
+        return phase == Phase.DONE && (mod.getPlayer() == null || !mod.getPlayer().hasVehicle());
     }
 
     @Override

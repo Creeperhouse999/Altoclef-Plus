@@ -52,6 +52,7 @@ public final class SurvivalModule implements Module {
     private String lastCommand = "";
     private final GatePlanner gates = new GatePlanner();
     private final CautionPolicy caution = new CautionPolicy();
+    private boolean resting;
     private final CombatAssist combat = new CombatAssist();
     private GatePlanner.Gate runningGate;
     /** After any boat attempt, wait before considering another (stops retry loops at awkward shores). */
@@ -62,8 +63,8 @@ public final class SurvivalModule implements Module {
     public SurvivalModule(AltoClef mod) {
         this.mod = mod;
         gateChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus gear gates", 51f);
-        cautionChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus caution", 53f);
-        boatChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus boat", 52.5f);
+        cautionChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus caution", 53f, 2 * 60_000L);
+        boatChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus boat", 52.5f, 4 * 60_000L);
         stashChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus stashes", 51.5f);
         Plus.bus().subscribe(StuckDetected.class, e -> {
             if (gateChain.isActive() && runningGate != null) failGate("stuck: " + e.kind());
@@ -88,10 +89,16 @@ public final class SurvivalModule implements Module {
         // A gate job that ended without finishing (timed out or cancelled) counts as a failed attempt.
         if (runningGate != null && !gateChain.isActive()) failGate("did not finish");
 
+        // A rest that ended (finished or timed out) below resume health didn't help: back off for a while.
+        if (resting && !cautionChain.isActive()) {
+            resting = false;
+            if (s.health < cfg.resumeHealth) caution.restEndedWithoutHealing(s.seconds());
+        }
         if (!cautionChain.isActive()) {
-            CautionPolicy.Action a = caution.decide(s.health, s.hostilesNear16, s.y, cfg);
+            boolean hasFood = ItemInfo.totalFoodUnits(s) > 0;
+            CautionPolicy.Action a = caution.decide(s.health, s.hostilesNear16, s.y, hasFood, s.food, s.seconds(), cfg);
             if (a == CautionPolicy.Action.HOLD_AND_EAT) {
-                cautionChain.startJob(new RestTask(), "Low health: resting and eating", null);
+                resting = cautionChain.startJob(new RestTask(), "Low health: resting and eating", null);
             } else if (a == CautionPolicy.Action.FLEE) {
                 cautionChain.startJob(new RunAwayFromHostilesTask(24, true), "Low health: getting away from mobs", null);
             }

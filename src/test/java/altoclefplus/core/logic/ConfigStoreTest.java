@@ -72,6 +72,35 @@ class ConfigStoreTest {
     }
 
     @Test
+    void nullListElementsAndBrokenPresetsAreDropped() throws Exception {
+        Path file = dir.resolve("altoclefplus.json");
+        Files.writeString(file, "{ \"ui\": { \"hudResourceItems\": [\"food\", null], "
+                + "\"presets\": [ {\"name\": null, \"command\": \"get dirt 1\"}, {\"name\": \"Ok\", \"command\": \"food 5\"} ] },"
+                + " \"inventory\": { \"junkItems\": [null, \"bone\"] } }");
+
+        PlusConfig cfg = new ConfigStore(file).load();
+
+        assertEquals(java.util.List.of("food"), cfg.ui.hudResourceItems);
+        assertEquals(1, cfg.ui.presets.size());
+        assertEquals("Ok", cfg.ui.presets.get(0).name);
+        assertEquals(java.util.List.of("bone"), cfg.inventory.junkItems);
+    }
+
+    @Test
+    void numbersAreClampedToSaneRanges() throws Exception {
+        Path file = dir.resolve("altoclefplus.json");
+        Files.writeString(file, "{ \"camera\": { \"smoothness\": 0, \"maxDegreesPerSecond\": -5 },"
+                + " \"inventory\": { \"buildingBlockCapPerType\": 0, \"junkFreeSlotThreshold\": 99 } }");
+
+        PlusConfig cfg = new ConfigStore(file).load();
+
+        assertTrue(cfg.camera.smoothness >= 1);
+        assertTrue(cfg.camera.maxDegreesPerSecond >= 30);
+        assertTrue(cfg.inventory.buildingBlockCapPerType >= 16);
+        assertTrue(cfg.inventory.junkFreeSlotThreshold <= 10);
+    }
+
+    @Test
     void saveThenLoadRoundTrips() {
         Path file = dir.resolve("altoclefplus.json");
         ConfigStore store = new ConfigStore(file);

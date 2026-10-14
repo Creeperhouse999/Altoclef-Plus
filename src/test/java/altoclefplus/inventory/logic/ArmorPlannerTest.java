@@ -56,7 +56,8 @@ class ArmorPlannerTest {
 
     @Test
     void equipsBestPieceButKeepsGoldenBootsInNether() {
-        assertEquals("iron_boots", ArmorPlanner.bestToWear("feet", "golden_boots", java.util.List.of("iron_boots"), "overworld"));
+        assertEquals("", ArmorPlanner.bestToWear("feet", "golden_boots", java.util.List.of("iron_boots"), "overworld"),
+                "worn golden boots are AltoClef's choice (piglins); taking them off made the two mods swap forever");
         assertEquals("", ArmorPlanner.bestToWear("feet", "golden_boots", java.util.List.of("iron_boots"), "the_nether"), "keep golden boots on");
         assertEquals("golden_boots", ArmorPlanner.bestToWear("feet", "iron_boots", java.util.List.of("golden_boots"), "the_nether"));
         assertEquals("diamond_chestplate", ArmorPlanner.bestToWear("chest", "iron_chestplate", java.util.List.of("diamond_chestplate"), "the_nether"));

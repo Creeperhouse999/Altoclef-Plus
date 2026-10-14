@@ -12,12 +12,12 @@ it didn't attach (please report it).
 - [ ] Game starts with `altoclef`, `baritone` and `altoclefplus` in the mods folder (no crash).
 - [ ] With Mod Menu installed: *Mods → AltoClef Plus* shows the icon, description and links; the ⚙ button
       opens the Settings tab.
-- [ ] *Options → Controls → Key Binds* has an **AltoClef Plus** section (Right Shift / K / P).
+- [ ] *Options → Controls → Key Binds* has an **AltoClef Plus** section (Right Shift / K / O).
 
 ## 2. Panel, HUD and chat
 - [ ] Right Shift opens the panel; it stays open while the bot moves.
 - [ ] Tasks tab: search "diamond", click the diamond pickaxe, amount 1, **Get it** → bot starts.
-- [ ] **P** pauses (HUD shows *Paused*), **P** again resumes the same task, **K** stops.
+- [ ] **O** pauses (HUD shows *Paused*), **O** again resumes the same task, **K** stops.
 - [ ] HUD (top left) shows state, current task, and (during *Beat the game*) the next milestones.
 - [ ] Typing `@gamer` in chat does **not** start the bot and shows a one-line hint.
 - [ ] AltoClef's own white task text on screen is gone; bot messages appear in Status → Log, not chat.

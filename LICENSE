@@ -1,0 +1,32 @@
+AltoClef Plus
+Copyright (c) 2026 Creeperhouse999. All rights reserved.
+
+The source code in this repository is published so it can be read, reviewed
+and built for personal use. No other rights are granted.
+
+You MAY:
+  - read the source code;
+  - build the mod from this source code and use it yourself;
+  - download official releases from this repository's Releases page and use them.
+
+You MAY NOT, without prior written permission from the copyright holder:
+  - redistribute this software or any part of it, in source or binary form,
+    including re-uploading release jars to other websites or modpacks;
+  - publish modified versions or derivative works;
+  - use this software or any part of it in another project;
+  - remove or alter this notice.
+
+Forks created on GitHub exist only because GitHub's Terms of Service allow
+viewing and forking public repositories. A fork grants no additional rights
+under this license.
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THIS SOFTWARE.
+
+Third-party software
+--------------------
+This mod requires, but does not include, the following projects. They are
+distributed by their own authors under their own licenses:
+  - AltoClef  (https://github.com/gaucho-matrero/altoclef) — CC0-1.0
+  - Baritone  (https://github.com/cabaletta/baritone)      — LGPL-3.0

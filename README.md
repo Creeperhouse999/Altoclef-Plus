@@ -1,0 +1,242 @@
+<div align="center">
+
+# AltoClef Plus
+
+**A smarter, safer, easier-to-use AltoClef.**
+Control panel instead of chat commands, a cleaner HUD, smoother camera, better inventory handling,
+safer progression and automatic recovery when the bot gets stuck.
+
+![Minecraft 1.18.2](https://img.shields.io/badge/Minecraft-1.18.2-62B47A?style=flat-square)
+![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4?style=flat-square)
+![Requires AltoClef 0.4.1](https://img.shields.io/badge/Requires-AltoClef%200.4.1-5865F2?style=flat-square)
+![Status: in development](https://img.shields.io/badge/Status-in%20development-orange?style=flat-square)
+
+[Download](https://github.com/Creeperhouse999/Altoclef-Plus/releases) ·
+[Install](#install) ·
+[How to use](#how-to-use) ·
+[Roadmap](#roadmap) ·
+[Build from source](#build-from-source) ·
+[Report a bug](https://github.com/Creeperhouse999/Altoclef-Plus/issues/new/choose)
+
+</div>
+
+> [!IMPORTANT]
+> **AltoClef Plus is an unofficial add-on.** It is not made by, endorsed by or affiliated with the
+> [AltoClef](https://github.com/gaucho-matrero/altoclef) or [Baritone](https://github.com/cabaletta/baritone)
+> teams. Please don't report AltoClef Plus problems to them — use this repo's
+> [issues](https://github.com/Creeperhouse999/Altoclef-Plus/issues) instead.
+
+---
+
+## What is it?
+
+[AltoClef](https://github.com/gaucho-matrero/altoclef) is a bot that plays Minecraft by itself — it can
+even beat the game with `@gamer`. It moves around using [Baritone](https://github.com/cabaletta/baritone).
+
+AltoClef Plus is a **separate mod you add next to them**. It doesn't replace or modify their files. It
+fixes the things that make watching the bot frustrating:
+
+| Without AltoClef Plus | With AltoClef Plus |
+|---|---|
+| You type `@` commands in chat | You click buttons in a control panel |
+| Chat floods with bot messages | Messages go to a log you can open when you want |
+| The camera snaps and shakes | The camera turns smoothly (the bot still aims instantly) |
+| Mines logs holding a helmet, swaps hotbar items nonstop | Uses the right tool and keeps a tidy hotbar |
+| Runs for diamonds with no armor and no sword | Gears up first: stone sword, then iron kit and armor |
+| Gets stuck pillaring or mining the same block forever | Notices, tries something else, never gives up |
+| Dies and starts over | Goes back for its items before they despawn |
+
+## Features
+
+Legend: ✅ done · 🚧 being built now · 🗓️ planned
+
+### Control panel and HUD 🚧
+- **Control panel** (Right Shift) with tabs: *Tasks*, *Plan*, *Status*, *Settings*.
+- **Start anything with a click:** Beat the game (`@gamer`), get any item from a searchable item grid,
+  presets like "Iron gear" or "Food", or any other AltoClef command.
+- **Stop, Pause and Resume** buttons and hotkeys. ✅
+- **Plan view:** a checklist of what the bot is doing in `@gamer` — ✓ done, ▶ now, ○ next. ✅ (logic)
+- **Step history:** every step the bot worked on and how long it took. ✅ (logic)
+- **Small HUD:** current task, state (Running / Paused / Recovering / Idle), next milestones, alerts and
+  key items (food, pearls, blaze rods, eyes, beds).
+- **Quiet chat:** AltoClef and Baritone messages go to the panel log; `@` / `#` chat commands are turned
+  off (you can turn them back on). ✅
+- AltoClef's own overlay text is hidden. ✅
+
+### Smooth camera 🗓️ *(experimental)*
+- Your view turns smoothly instead of snapping.
+- Only what *you see* is smoothed — the bot still aims, mines and fights instantly.
+- One click to turn off if you prefer the raw view.
+
+### Smarter inventory 🗓️
+- Uses the right tool: axe for wood, shovel for dirt and sand, pickaxe for stone.
+- Fixed hotbar layout (sword, pickaxe, axe, shovel, blocks, food, water bucket) — no more slot swapping.
+- Wears better armor as soon as it has it.
+- Crafts armor **piece by piece** as materials come in, instead of waiting for a full set.
+- Keeps spare tools and replaces them before they break.
+- Throws away junk (like random gunpowder) when the inventory fills up. Only items on a junk list (and
+  extra stacks of cobblestone, dirt and similar) are ever dropped — never tools, armor, enchanted or
+  renamed items, valuables, or anything the current task needs. You can edit both lists.
+- Fixes items getting stuck on the cursor and the eye-of-ender crafting bug.
+- Places a new crafting table instead of walking hundreds of blocks back to an old one.
+
+### Safer progression and survival 🗓️
+- **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
+  full iron armor before hunting diamonds; armor and food before entering the Nether.
+- **Caution:** stops to eat and heal when low, flees when in danger, avoids caves when weak.
+- **Shield:** crafts one and blocks arrows, fireballs and creepers.
+- **Better projectile dodging.**
+- **Water bucket clutch:** always carries water so falls don't kill it.
+- **Death recovery:** goes back to its death spot and picks its items up before they despawn.
+- **Enderman hunting with a boat trap** in a warped forest, killed with jump critical hits.
+- **Boats across oceans** and large lakes (not small ponds or narrow rivers).
+- **Safety stashes (optional):** leave a bed by the Nether portal, store valuables in a chest before the
+  Nether, keep a backup gear set in a chest before the Nether or the End.
+
+### Stuck recovery 🗓️
+- Detects: no progress, endless pillaring (the "Nether elevator"), mining the same block, walking back and
+  forth, restarting the same task over and over.
+- Fixes it step by step: new path → avoid that spot → restart the task → walk away and try again.
+- If nothing works after a few rounds, it goes into **safe mode**: gets to safe ground, eats, tells you,
+  and retries every few minutes instead of risking your run.
+- Avoids areas where it keeps dying instead of walking back into the same trap.
+- Doesn't stop the bot unless you want it to (there's a setting for that); every action shows in the HUD
+  and log.
+
+## Requirements
+
+| | Version |
+|---|---|
+| Minecraft | **1.18.2** (Java Edition) |
+| Mod loader | [Fabric Loader](https://fabricmc.net/use/installer/) 0.14 or newer |
+| [AltoClef](https://github.com/gaucho-matrero/altoclef) | **0.4.1** — [download the official release](https://github.com/gaucho-matrero/altoclef/releases/tag/v0.4.1) |
+| [Baritone](https://github.com/cabaletta/baritone) | Comes inside the AltoClef 0.4.1 release |
+| Fabric API | **Not needed** |
+| [Mod Menu](https://modrinth.com/mod/modmenu/versions?g=1.18.2) | Optional — adds AltoClef Plus to the mod list with a config button |
+
+## Install
+
+1. Install [Fabric Loader](https://fabricmc.net/use/installer/) for Minecraft **1.18.2**
+   (or create a Fabric 1.18.2 profile in your launcher, e.g. Modrinth App, Prism or MultiMC).
+2. Download the official [AltoClef v0.4.1 release](https://github.com/gaucho-matrero/altoclef/releases/tag/v0.4.1)
+   and put **both jars** from the zip into your `mods` folder.
+3. Download the latest `altoclefplus-x.y.z.jar` from
+   [Releases](https://github.com/Creeperhouse999/Altoclef-Plus/releases) and put it in the same `mods` folder.
+4. Start the game and join a world. Press **Right Shift** to open the control panel.
+
+> [!TIP]
+> The AltoClef jar already contains Baritone, so the separate Baritone jar is optional. Having both is fine:
+> Fabric loads Baritone only once.
+
+Your `mods` folder should look like this:
+
+```
+mods/
+├── altoclef-0.4.0.jar
+├── baritone-unoptimized-fabric-1.18.2.jar
+└── altoclefplus-x.y.z.jar
+```
+
+## How to use
+
+### Keys
+
+| Key | What it does |
+|---|---|
+| **Right Shift** | Open / close the control panel |
+| **K** | Stop the bot |
+| **P** | Pause / resume the bot |
+| Ctrl + K | AltoClef's own emergency stop (still works) |
+
+All keys can be changed in *Options → Controls → Key Binds → AltoClef Plus*.
+
+With [Mod Menu](https://modrinth.com/mod/modmenu/versions?g=1.18.2) installed you can also open the
+settings from *Mods → AltoClef Plus → ⚙*.
+
+### Control panel
+
+| Tab | What's there |
+|---|---|
+| **Tasks** | Beat the game, get items (searchable icon grid + amount), presets, any AltoClef command |
+| **Plan** | The `@gamer` checklist and the step history |
+| **Status** | What the bot is doing right now, the log, inventory summary, module health |
+| **Settings** | Turn each feature on/off and tune it (camera smoothness, junk limits, gates, stashes…) |
+
+**Pause vs Stop:** AltoClef can't freeze a task halfway, so *Pause* stops the bot but remembers what it
+was doing, and *Resume* starts the same command again. Nothing in your inventory is lost. *Stop* forgets
+the command.
+
+### Settings file
+
+Everything in the Settings tab is saved to `.minecraft/altoclef/altoclefplus.json`. You can edit it by
+hand; if the file is broken, AltoClef Plus uses defaults and tells you in the log instead of crashing.
+
+## Roadmap
+
+| Version | Focus | Status |
+|---|---|---|
+| **0.1** | Control panel, HUD, quiet chat, `@gamer` plan view, smooth camera | 🚧 In progress |
+| **0.2** | Smarter inventory: tools, hotbar, armor, junk, crafting fixes | 🗓️ Planned |
+| **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | 🗓️ Planned |
+| **0.4** | Stuck recovery and death item recovery | 🗓️ Planned |
+| **0.5** | Enderman boat-trap hunting, boat travel, safety stashes | 🗓️ Planned |
+| Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
+
+See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
+
+## Build from source
+
+You need **JDK 17** (Minecraft 1.18.2 mods are built with Java 17).
+
+```bash
+git clone https://github.com/Creeperhouse999/Altoclef-Plus.git
+cd Altoclef-Plus
+./gradlew build          # Windows: gradlew.bat build
+```
+
+- The first build downloads Minecraft, the Fabric toolchain and the official AltoClef v0.4.1 release
+  (checksum-verified, unpacked into `libs/`). This takes a few minutes once.
+- The mod jar ends up in `build/libs/altoclefplus-<version>.jar`.
+- If your default Java isn't 17, point Gradle at a JDK 17:
+  set `JAVA_HOME` (e.g. `export JAVA_HOME=/path/to/jdk-17`) or add
+  `org.gradle.java.home=/path/to/jdk-17` to `~/.gradle/gradle.properties`.
+
+Useful commands:
+
+| Command | What it does |
+|---|---|
+| `./gradlew build` | Compile, run tests, build the jar |
+| `./gradlew test` | Run the unit tests only |
+| `bash tools/audit-mixins.sh` | Check that every mixin target exists in Minecraft / AltoClef / Baritone |
+| `bash tools/test-summary.sh` | Print a one-line summary of the last test run |
+
+## FAQ
+
+**Is this an official AltoClef update?**
+No. It's an independent add-on that runs next to AltoClef. The AltoClef and Baritone teams have nothing
+to do with it.
+
+**Does it work on servers?**
+It's built and tested for singleplayer and LAN worlds. Use bots only where the server rules allow them.
+
+**Do I still need AltoClef?**
+Yes. AltoClef Plus adds to AltoClef; it can't run without it.
+
+**Can I turn features off?**
+Yes, every feature has its own switch in the Settings tab.
+
+**Why can't I type `@gamer` in chat anymore?**
+The control panel replaces chat commands. If you prefer chat, turn off
+*Settings → Block chat commands*.
+
+## Credits
+
+- [AltoClef](https://github.com/gaucho-matrero/altoclef) by TacoTechnica (gaucho-matrero) and contributors — the bot itself.
+- [Baritone](https://github.com/cabaletta/baritone) by leijurv, Brady and contributors — pathfinding.
+- [Fabric](https://fabricmc.net/) — the mod loader.
+
+## License
+
+Copyright © 2026 Creeperhouse999. **All rights reserved.** You may read the code, build it for yourself
+and use official releases. Redistributing it or publishing modified versions is not allowed without
+permission. See [LICENSE](LICENSE).

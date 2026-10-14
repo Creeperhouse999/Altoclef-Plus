@@ -3,17 +3,36 @@
   "id": "altoclefplus",
   "version": "${version}",
   "name": "AltoClef Plus",
-  "description": "UI, smoother camera, smarter inventory, survival and stuck recovery for AltoClef.",
-  "authors": ["debow"],
-  "license": "CC0-1.0",
+  "description": "Unofficial add-on for AltoClef: control panel and HUD, smoother camera, smarter inventory, safer progression and automatic stuck recovery. Not affiliated with the AltoClef or Baritone projects.",
+  "authors": [
+    "Creeperhouse999"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Creeperhouse999/Altoclef-Plus",
+    "sources": "https://github.com/Creeperhouse999/Altoclef-Plus",
+    "issues": "https://github.com/Creeperhouse999/Altoclef-Plus/issues"
+  },
+  "license": "LicenseRef-All-Rights-Reserved",
   "environment": "client",
   "entrypoints": {
-    "main": ["altoclefplus.AltoClefPlus"]
+    "main": [
+      "altoclefplus.AltoClefPlus"
+    ],
+    "modmenu": [
+      "altoclefplus.compat.ModMenuIntegration"
+    ]
   },
-  "mixins": ["altoclefplus.mixins.json"],
+  "mixins": [
+    "altoclefplus.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.14.0",
-    "minecraft": "1.18.x",
-    "altoclef": "*"
+    "minecraft": "1.18.2",
+    "altoclef": "*",
+    "baritone": "*"
+  },
+  "icon": "assets/altoclefplus/icon.png",
+  "suggests": {
+    "modmenu": "*"
   }
 }

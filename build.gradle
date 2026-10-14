@@ -11,6 +11,31 @@ base {
 
 repositories {
     mavenCentral()
+    maven { name = "TerraformersMC"; url = "https://maven.terraformersmc.com/releases/" }
+}
+
+// AltoClef and Baritone are not published to Maven. On first build, download the official
+// AltoClef v0.4.1 release (it ships both jars), verify its checksum and unpack it into libs/.
+def altoclefJar = file("libs/altoclef-0.4.0.jar")
+def baritoneJar = file("libs/baritone-unoptimized-fabric-1.18.2.jar")
+if (!altoclefJar.exists() || !baritoneJar.exists()) {
+    def zip = file("${gradle.gradleUserHomeDir}/caches/altoclefplus/altoclef_release-0.4.1a.zip")
+    if (!zip.exists()) {
+        zip.parentFile.mkdirs()
+        logger.lifecycle("Downloading AltoClef release from ${project.altoclef_release_url}")
+        new URL(project.altoclef_release_url).withInputStream { input -> zip.withOutputStream { it << input } }
+    }
+    def digest = java.security.MessageDigest.getInstance("SHA-256").digest(zip.bytes).encodeHex().toString()
+    if (digest != project.altoclef_release_sha256) {
+        zip.delete()
+        throw new GradleException("AltoClef release checksum mismatch (got ${digest}). Delete it and retry.")
+    }
+    copy {
+        from(zipTree(zip)) { include "**/*.jar" }
+        into "libs"
+        eachFile { it.path = it.name }
+        includeEmptyDirs = false
+    }
 }
 
 dependencies {
@@ -21,6 +46,9 @@ dependencies {
     // AltoClef + Baritone are installed separately by the user; compile against them only.
     modCompileOnly files("libs/altoclef-0.4.0.jar")
     modCompileOnly files("libs/baritone-unoptimized-fabric-1.18.2.jar")
+
+    // Optional: config button in Mod Menu. Only the API is needed at compile time.
+    modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
 
     testImplementation platform("org.junit:junit-bom:5.10.2")
     testImplementation "org.junit.jupiter:junit-jupiter"

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Problem with AltoClef itself (without AltoClef Plus installed)?
+    url: https://github.com/gaucho-matrero/altoclef/issues
+    about: AltoClef Plus is unofficial. Only report it to AltoClef if it also happens without AltoClef Plus.

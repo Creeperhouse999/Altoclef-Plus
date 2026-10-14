@@ -1,0 +1,46 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Please fill in as much as you can — it makes bugs much faster to fix.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did the bot do, and what did you expect it to do?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can it be reproduced?
+      placeholder: |
+        1. Start a new survival world
+        2. Press Right Shift → Tasks → Beat the game
+        3. After ~10 minutes the bot ...
+  - type: input
+    id: command
+    attributes:
+      label: Command / task running
+      placeholder: "gamer, get diamond_pickaxe 1, ..."
+  - type: input
+    id: version
+    attributes:
+      label: AltoClef Plus version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other mods installed
+      placeholder: "altoclef-0.4.0.jar, baritone-unoptimized-fabric-1.18.2.jar, ..."
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Attach or paste `.minecraft/logs/latest.log` (and a crash report if the game crashed).
+      render: text

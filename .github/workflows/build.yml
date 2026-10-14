@@ -1,0 +1,62 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build and test
+        run: ./gradlew build --console=plain
+
+      - name: Check mixin targets
+        run: bash tools/audit-mixins.sh
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: altoclefplus-${{ github.sha }}
+          path: build/libs/altoclefplus-*.jar
+          if-no-files-found: error
+
+      - name: Release notes from CHANGELOG.md
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '
+            $0 ~ "^## \[" v "\]" { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "CHANGELOG.md has no section for $version" >&2
+            exit 1
+          fi
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: AltoClef Plus ${{ github.ref_name }}
+          body_path: release-notes.md
+          files: |
+            build/libs/altoclefplus-*.jar
+            !build/libs/*-sources.jar

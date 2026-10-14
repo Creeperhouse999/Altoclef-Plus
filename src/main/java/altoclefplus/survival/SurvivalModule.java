@@ -12,14 +12,26 @@ import altoclefplus.core.logic.Module;
 import altoclefplus.core.logic.PlusConfig;
 import altoclefplus.core.logic.Snapshot;
 import altoclefplus.core.logic.events.StuckDetected;
+import altoclefplus.core.logic.ItemInfo;
+import altoclefplus.survival.logic.BoatTravel;
 import altoclefplus.survival.logic.CautionPolicy;
 import altoclefplus.survival.logic.GatePlanner;
+import baritone.api.pathing.goals.Goal;
+import baritone.api.pathing.goals.GoalBlock;
+import baritone.api.pathing.goals.GoalGetToBlock;
+import baritone.api.pathing.goals.GoalNear;
+import baritone.api.pathing.goals.GoalTwoBlocks;
+import baritone.api.pathing.goals.GoalXZ;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /** Progression gates, caution, shield / dodging and the water-bucket clutch setting. */
@@ -29,10 +41,13 @@ public final class SurvivalModule implements Module {
     private final AltoClef mod;
     private final PlusChain gateChain;
     private final PlusChain cautionChain;
+    private final PlusChain boatChain;
     private final GatePlanner gates = new GatePlanner();
     private final CautionPolicy caution = new CautionPolicy();
     private final CombatAssist combat = new CombatAssist();
     private GatePlanner.Gate runningGate;
+    /** After any boat attempt, wait before considering another (stops retry loops at awkward shores). */
+    private long nextBoatTryMs;
     private long ticks;
     private String status = "idle";
 
@@ -40,6 +55,7 @@ public final class SurvivalModule implements Module {
         this.mod = mod;
         gateChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus gear gates", 51f);
         cautionChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus caution", 53f);
+        boatChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus boat", 52.5f);
         Plus.bus().subscribe(StuckDetected.class, e -> {
             if (gateChain.isActive() && runningGate != null) failGate("stuck: " + e.kind());
         });
@@ -76,10 +92,11 @@ public final class SurvivalModule implements Module {
             return;
         }
 
-        if (gateChain.isActive()) {
-            status = gateChain.jobLabel();
+        if (gateChain.isActive() || boatChain.isActive()) {
+            status = gateChain.isActive() ? gateChain.jobLabel() : boatChain.jobLabel();
             return;
         }
+        if (cfg.boatTravel && tryBoat(s, cfg)) return;
         if (!"overworld".equals(s.dimension)) {
             status = "idle";
             return;
@@ -100,6 +117,43 @@ public final class SurvivalModule implements Module {
             runningGate = n.gate();
             status = label;
         }
+    }
+
+    /** Big water straight ahead on the way to a far goal, and a boat in the bag: cross by boat. */
+    private boolean tryBoat(Snapshot s, PlusConfig.Survival cfg) {
+        if (!s.pathing || !"overworld".equals(s.dimension) || ItemInfo.countMatching(s, id -> id.endsWith("_boat")) == 0) return false;
+        BlockPos goal = goalPos();
+        if (goal == null) return false;
+        double dist = Math.hypot(goal.getX() - s.x, goal.getZ() - s.z);
+        if (dist < cfg.boatMinGoalDistance) return false;
+        List<Boolean> surface = new ArrayList<>();
+        double dx = (goal.getX() - s.x) / dist;
+        double dz = (goal.getZ() - s.z) / dist;
+        var world = mod.getWorld();
+        for (int i = 1; i <= 64; i++) {
+            int x = (int) Math.floor(s.x + dx * i);
+            int z = (int) Math.floor(s.z + dz * i);
+            boolean water = false;
+            for (int y = (int) s.y + 1; y >= (int) s.y - 3 && !water; y--) {
+                BlockPos b = new BlockPos(x, y, z);
+                water = world.getFluidState(b).isOf(Fluids.WATER) && world.isAir(b.up());
+            }
+            surface.add(water);
+        }
+        if (!BoatTravel.shouldBoat(surface, dist, cfg.boatMinWaterRun, 3, cfg.boatMinGoalDistance)) return false;
+        if (System.currentTimeMillis() < nextBoatTryMs) return false;
+        nextBoatTryMs = System.currentTimeMillis() + 45_000;
+        return boatChain.startJob(new BoatCrossTask(goal), "Crossing water by boat", null);
+    }
+
+    private BlockPos goalPos() {
+        Goal g = mod.getClientBaritone().getPathingBehavior().getGoal();
+        if (g instanceof GoalBlock b) return b.getGoalPos();
+        if (g instanceof GoalGetToBlock b) return b.getGoalPos();
+        if (g instanceof GoalTwoBlocks b) return b.getGoalPos();
+        if (g instanceof GoalNear b) return b.getGoalPos();
+        if (g instanceof GoalXZ b) return new BlockPos(b.getX(), 64, b.getZ());
+        return null;
     }
 
     private static Task taskFor(GatePlanner.Need n) {
@@ -144,6 +198,7 @@ public final class SurvivalModule implements Module {
     @Override
     public void onDisable() {
         gateChain.cancelJob();
+        boatChain.cancelJob();
         cautionChain.cancelJob();
         combat.stop(mod);
     }

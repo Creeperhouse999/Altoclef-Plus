@@ -114,6 +114,10 @@ public final class PlusConfig {
         public float noDescendHealth = 14f;
         public int noDescendY = 40;
 
+        /** Only hit mobs the bot can see and is facing (AltoClef hits through walls / backwards). */
+        public boolean fairCombat = true;
+        public int fairCombatMaxAngle = 30;
+
         public boolean shield = true;
         public boolean dodge = true;
         public boolean waterClutch = true;

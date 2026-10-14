@@ -9,6 +9,7 @@
     "ChatSendMixin",
     "CommandStatusOverlayMixin",
     "DebugLogMixin",
+    "FairCombatMixin",
     "GameOptionsMixin",
     "InteractionFixChainMixin",
     "KeyBindingAccessor"

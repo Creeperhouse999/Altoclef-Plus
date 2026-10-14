@@ -68,6 +68,7 @@ public final class SettingsModel {
 
         r.add(new Header("Survival"));
         r.add(new Toggle("Caution (heal, flee, avoid caves)", () -> c.survival.caution, v -> c.survival.caution = v));
+        r.add(new Toggle("Fair combat (no hits through walls)", () -> c.survival.fairCombat, v -> c.survival.fairCombat = v));
         r.add(new Toggle("Use shield", () -> c.survival.shield, v -> c.survival.shield = v));
         r.add(new Toggle("Better projectile dodging", () -> c.survival.dodge, v -> c.survival.dodge = v));
         r.add(new Toggle("Carry water for fall clutch", () -> c.survival.waterClutch, v -> c.survival.waterClutch = v));

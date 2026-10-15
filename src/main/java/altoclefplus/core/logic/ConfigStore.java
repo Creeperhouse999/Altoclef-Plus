@@ -23,6 +23,7 @@ public final class ConfigStore {
         lastError = null;
         if (!Files.exists(file)) {
             PlusConfig defaults = new PlusConfig();
+            defaults.ui.lastSeenVersion = "fresh"; // new install: no "updated" note
             save(defaults);
             return defaults;
         }

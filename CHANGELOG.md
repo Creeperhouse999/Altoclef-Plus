@@ -49,6 +49,7 @@ as its notes.
   top task name often stayed the same for minutes (a crafting table while it was really mining iron).
 - The Food / Pearls / Rods / Eyes / Beds line only shows while *Beat the game* (`@gamer`) runs.
 - Pressing the pause key with nothing running now says *Nothing to pause*.
+- After an update, the HUD says so once and the Status log lists what's new.
 - Panel: Settings use two columns on wide screens (far fewer pages) and long labels are cut neatly; the
   Status tab's hook list wraps instead of running off the screen; the Zones tab no longer draws the selected
   zone's name over the corner hint, and its rules sit in two columns.

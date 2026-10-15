@@ -55,6 +55,8 @@ public final class PlusConfig {
         public boolean pauseWhileInventoryOpen = true;
         /** Draw safe-zone outlines in the world. */
         public boolean showZones = false;
+        /** Version the player last played with (for the one-time "updated" note). */
+        public String lastSeenVersion = "";
         /** Our world overlay (replaces Baritone's): path, blocks to break, mining target, goal, mobs. */
         public boolean overlay = true;
         public boolean overlayPath = true;

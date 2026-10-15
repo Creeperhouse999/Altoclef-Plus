@@ -114,6 +114,10 @@ public final class Plus {
     }
 
     private static long basicsTick;
+    private static boolean whatsNewShown;
+    /** Shown once after updating (keep in step with the CHANGELOG headline). */
+    private static final String WHATS_NEW = "jump critical hits, axe or sword by situation, avoids cave water, gets air "
+            + "when drowning, visible inventory, background smelting, a new world overlay, AltoClef's options in Settings";
     private static final java.util.Set<String> REPORTED = new java.util.HashSet<>();
 
     /** AltoClef's event bus doesn't catch exceptions; never let ours crash the game. */
@@ -129,11 +133,27 @@ public final class Plus {
         altoclefplus.ui.Keybinds.poll();
         altoclefplus.zones.Zones.refresh();
         if (++basicsTick % 40 == 0) altoclefplus.core.BasicsApplier.apply(mod);
+        if (!whatsNewShown && basicsTick > 100) showWhatsNew();
         altoclefplus.inventory.HotbarManager.onTick();
         altoclefplus.core.UserScreens.tick();
         altoclefplus.inventory.VisibleInventory.tick();
         last = sampler.sample(mod);
         modules.tickAll(last);
+    }
+
+    /** One-time note after an update: HUD alert plus the list in the log. */
+    private static void showWhatsNew() {
+        whatsNewShown = true;
+        String version = net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("altoclefplus")
+                .map(c -> c.getMetadata().getVersion().getFriendlyString()).orElse("");
+        if (version.isEmpty() || version.equals(config.ui.lastSeenVersion)) return;
+        // "fresh" = new install; empty = config from before this note existed (an update from 0.7 or older).
+        boolean firstRun = "fresh".equals(config.ui.lastSeenVersion);
+        config.ui.lastSeenVersion = version;
+        saveConfig();
+        if (firstRun) return;
+        LOG.add("plus", "Updated to " + version + ": " + WHATS_NEW + ". Details: CHANGELOG on GitHub.");
+        if (ui != null) ui.alert("AltoClef Plus updated to " + version + " - see the Status log");
     }
 
     public static AltoClef mod() {

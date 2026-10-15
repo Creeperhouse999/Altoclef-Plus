@@ -60,6 +60,9 @@ public final class SurvivalModule implements Module {
     private final PlusChain airChain;
     /** Fighting a creeper that keeps following: above running from mobs (70), below a hissing creeper (50-100). */
     private final PlusChain creeperChain;
+    /** Running when outnumbered: above AltoClef fighting (65) and its own run-away (70-80). */
+    private final PlusChain fleeChain;
+    private altoclefplus.survival.logic.Outnumbered outnumbered;
     private final altoclefplus.survival.logic.CreeperChase creeperChase = new altoclefplus.survival.logic.CreeperChase(80);
     private final StashPlanner stashes = new StashPlanner();
     private String lastCommand = "";
@@ -86,6 +89,7 @@ public final class SurvivalModule implements Module {
         stashChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus stashes", 51.5f);
         airChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus air", 66f, 60_000L);
         creeperChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus creeper", 72f, 30_000L);
+        fleeChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus run away", 85f, 60_000L);
         Plus.bus().subscribe(StuckDetected.class, e -> {
             if (gateChain.isActive() && runningGate != null) failGate("stuck: " + e.kind());
         });
@@ -102,6 +106,7 @@ public final class SurvivalModule implements Module {
         guardWhileIdle(s, cfg);
         if (cfg.airRescue && (s.userTaskRunning || idleGuard.engaged())) rescueAir();
         if (cfg.fightChasingCreepers && (s.userTaskRunning || idleGuard.engaged())) fightChasingCreeper(s);
+        if (cfg.runWhenOutnumbered > 0 && (s.userTaskRunning || idleGuard.engaged())) runIfOutnumbered(cfg);
         if (s.userTaskRunning || idleGuard.engaged()) combat.tick(mod, cfg);
         else combat.stop(mod);
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
@@ -137,6 +142,7 @@ public final class SurvivalModule implements Module {
         String cmd = Plus.control().lastCommand();
         if (!cmd.equals(lastCommand)) {
             stashes.reset();
+            gates.resetRun();
             lastCommand = cmd;
         }
         if (gateChain.isActive() || boatChain.isActive() || stashChain.isActive()) {
@@ -221,6 +227,25 @@ public final class SurvivalModule implements Module {
         if (airChain.startUrgent(new SurfaceForAirTask(a), label)) {
             Plus.log().add("survival", label);
             nextAirTryMs = System.currentTimeMillis() + 5_000;
+        }
+    }
+
+    private void runIfOutnumbered(PlusConfig.Survival cfg) {
+        var p = mod.getPlayer();
+        if (p == null || p.world == null) return;
+        if (outnumbered == null) outnumbered = new altoclefplus.survival.logic.Outnumbered(cfg.runWhenOutnumbered);
+        java.util.function.Predicate<HostileEntity> chasing = e -> e.isAlive()
+                && !(e instanceof net.minecraft.entity.mob.EndermanEntity) && !(e instanceof net.minecraft.entity.mob.ZombifiedPiglinEntity);
+        int close = p.world.getEntitiesByClass(HostileEntity.class, p.getBoundingBox().expand(8), chasing).size();
+        int around = p.world.getEntitiesByClass(HostileEntity.class, p.getBoundingBox().expand(16), chasing).size();
+        boolean run = outnumbered.shouldRun(close, around);
+        if (run && !fleeChain.isActive()) {
+            if (fleeChain.startUrgent(new RunAwayFromHostilesTask(24, true), "Outnumbered (" + close + " mobs): running away")) {
+                Plus.log().add("survival", "Outnumbered (" + close + " mobs): running away");
+            }
+        } else if (!run && fleeChain.isActive()) {
+            fleeChain.cancelJob();
+            Plus.log().add("survival", "Got away - back to the task");
         }
     }
 
@@ -383,6 +408,7 @@ public final class SurvivalModule implements Module {
         gateChain.cancelJob();
         airChain.cancelJob();
         creeperChain.cancelJob();
+        fleeChain.cancelJob();
         stashChain.cancelJob();
         boatChain.cancelJob();
         cautionChain.cancelJob();

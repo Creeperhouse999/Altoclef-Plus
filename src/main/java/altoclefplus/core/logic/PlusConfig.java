@@ -164,6 +164,8 @@ public final class PlusConfig {
         public boolean critHits = true;
         /** Fight a creeper that keeps following instead of running from it forever. */
         public boolean fightChasingCreepers = true;
+        /** Run away when this many hostile mobs are within 8 blocks (0 = off), until fewer than 2 are near. */
+        public int runWhenOutnumbered = 3;
         /** Make paths through water in caves expensive (open lakes and oceans are not affected). */
         public boolean avoidCaveWater = true;
         public double caveWaterPenalty = 40;

@@ -11,6 +11,11 @@ as its notes.
 ### Added
 - **Bed early in @gamer**: right after stone tools the bot gets one bed (AltoClef only collected beds at the very
   end), so it can sleep through the first night. Setting, on by default.
+- **Runs when outnumbered**: with 3 or more hostile mobs within 8 blocks the bot runs away at once and keeps
+  going until fewer than 2 are near, then returns to its task (it used to fight 5 zombies with a stone sword).
+  Number adjustable in Settings (0 = off).
+- **Avoids places where it keeps dying**: after repeated deaths in one spot it walks around that area
+  (10 blocks) for 10 minutes. Before, the message said "not going back there" but only skipped the items.
 - **Fights creepers that keep following** (hit, step back, repeat) instead of running from them for minutes.
   If one starts hissing up close it still runs. Setting, on by default; safe-zone rules apply.
 - **Junk goes where it can't be picked up again**: into lava the bot can see nearby, otherwise into a 1x1 hole
@@ -26,6 +31,7 @@ as its notes.
 - The @gamer plan names steps as goals ("Stock up food (4/20)") instead of finished facts ("Food stocked").
 
 ### Fixed
+- The early bed no longer loops (AltoClef places the bed to set spawn; the bot then fetched it back).
 - The bot placed a new furnace instead of walking a few blocks to the one it already had.
 - AltoClef's quick hits on nearby mobs while mining were made with an empty hand; it now switches to a weapon.
 - A pickup that has started is finished, even if the bot breaks blocks on the way to the item (it kept

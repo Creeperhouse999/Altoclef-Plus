@@ -30,6 +30,7 @@ import java.util.Set;
  */
 public final class Zones {
     private static volatile ZoneSet current = ZoneSet.empty();
+    public static final altoclefplus.recovery.logic.DangerAreas DANGER = new altoclefplus.recovery.logic.DangerAreas();
     private static volatile BreakRules breakRules = new BreakRules(java.util.Set.of());
     private static volatile boolean nothingToCheck = true;
     private static String currentWorld = "";
@@ -48,6 +49,8 @@ public final class Zones {
         b.avoidBlockBreaking(pos -> mod.getModSettings() != null && mod.getModSettings().isPositionExplicitelyProtected(pos));
         b.avoidBlockPlacing(pos -> mod.getModSettings() != null && mod.getModSettings().isPositionExplicitelyProtected(pos));
         b.avoidBlockBreaking(pos -> enabled() && !mayBreak(pos));
+        // Places where the bot keeps dying (stuck recovery): walk around them for a while.
+        b.avoidWalkingThrough(pos -> !DANGER.isEmpty() && DANGER.avoidHere(pos.getX(), pos.getY(), pos.getZ(), System.currentTimeMillis()));
         b.avoidBlockPlacing(pos -> enabled() && current.forbids(ZoneSet.Action.PLACE, pos.getX(), pos.getY(), pos.getZ()));
         b.avoidWalkingThrough(pos -> enabled()
                 && current.forbids(ZoneSet.Action.ENTER, pos.getX(), pos.getY(), pos.getZ()));

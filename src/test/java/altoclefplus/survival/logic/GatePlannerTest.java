@@ -159,4 +159,16 @@ class GatePlannerTest {
         assertNotEquals("bed", item(g.next(s, cfg, 0, gamer)), "switch off");
         cfg.gateEarlyBed = true;
     }
+
+    @Test
+    void earlyBedOnlyOncePerRunEvenAfterItIsPlaced() {
+        GatePlanner g = new GatePlanner();
+        var gamer = GateScope.allowed(GateScope.Scope.NEEDED, "gamer", java.util.Set.of());
+        Snapshot tools = Snapshot.builder().item("stone_pickaxe", 1).item("stone_sword", 1).item("stone_axe", 1)
+                .item("stone_shovel", 1).build();
+        g.next(tools.toBuilder().item("red_bed", 1).build(), cfg, 0, gamer);
+        assertNotEquals("bed", item(g.next(tools, cfg, 0, gamer)), "bed was placed to set spawn: don't fetch it back");
+        g.resetRun();
+        assertEquals("bed", item(g.next(tools, cfg, 0, gamer)), "new run: ask again");
+    }
 }

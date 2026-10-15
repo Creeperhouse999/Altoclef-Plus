@@ -47,8 +47,9 @@ public final class GatePlanner {
             }
         }
         // AltoClef's @gamer only gets beds at the very end; one early bed lets it sleep and set spawn.
-        if (active(Gate.EARLY_BED, cfg.gateEarlyBed, nowMs) && pick >= ItemInfo.STONE
-                && ItemInfo.countMatching(s, ItemInfo::isBed) == 0) {
+        if (ItemInfo.countMatching(s, ItemInfo::isBed) > 0) hadBed = true;
+        // Only once per run: AltoClef places the bed to set spawn, and fetching it back made a loop.
+        if (active(Gate.EARLY_BED, cfg.gateEarlyBed, nowMs) && pick >= ItemInfo.STONE && !hadBed) {
             return need(Gate.EARLY_BED, "bed");
         }
         if (active(Gate.IRON_KIT, cfg.gateIronKit, nowMs) && pick >= ItemInfo.IRON) {
@@ -75,6 +76,13 @@ public final class GatePlanner {
             }
         }
         return Optional.empty();
+    }
+
+    private boolean hadBed;
+
+    /** A new command started: one-time gates (the early bed) may ask again. */
+    public void resetRun() {
+        hadBed = false;
     }
 
     public void markFailed(Gate gate, long nowMs) {

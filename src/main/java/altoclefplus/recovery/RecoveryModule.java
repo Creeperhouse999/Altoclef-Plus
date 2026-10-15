@@ -78,6 +78,7 @@ public final class RecoveryModule implements Module {
 
     @Override
     public void tick(Snapshot s) {
+        altoclefplus.zones.Zones.DANGER.setStandingAt(s.dimension, (int) Math.floor(s.x), (int) Math.floor(s.y), (int) Math.floor(s.z));
         handleDeath(s);
         prev = s;
         if (chain.isActive()) {
@@ -212,7 +213,10 @@ public final class RecoveryModule implements Module {
             return;
         }
         if (deathLoops.isLoop(Plus.config().recovery, System.currentTimeMillis())) {
-            Plus.bus().publish(new Notice("recovery", "Keeps dying near " + deathPos.toShortString() + " - not going back there"));
+            altoclefplus.zones.Zones.DANGER.add(deathDim, deathPos.getX(), deathPos.getY(), deathPos.getZ(), 10, 10 * 60_000L,
+                    System.currentTimeMillis());
+            Plus.bus().publish(new Notice("recovery", "Keeps dying near " + deathPos.toShortString()
+                    + " - avoiding that area for 10 minutes"));
             deathPos = null;
             return;
         }

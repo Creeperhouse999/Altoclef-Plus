@@ -126,6 +126,7 @@ public final class SettingsModel {
         r.add(new Value("  Cave water cost (per block)", () -> (int) Math.round(c.survival.caveWaterPenalty), v -> c.survival.caveWaterPenalty = v, 0, 200, 10));
         r.add(new Toggle("Get air when drowning (swim up / door)", () -> c.survival.airRescue, v -> c.survival.airRescue = v));
         r.add(new Toggle("Carry a door for air pockets", () -> c.survival.carryDoor, v -> c.survival.carryDoor = v));
+        r.add(new Value("Run when this many mobs are close (0=off)", () -> c.survival.runWhenOutnumbered, v -> c.survival.runWhenOutnumbered = v, 0, 10, 1));
         r.add(new Toggle("Fight creepers that keep following", () -> c.survival.fightChasingCreepers, v -> c.survival.fightChasingCreepers = v));
         r.add(new Toggle("Jump critical hits", () -> c.survival.critHits, v -> c.survival.critHits = v));
         r.add(new Toggle("Pick axe or sword by situation", () -> c.survival.smartWeapon, v -> c.survival.smartWeapon = v));

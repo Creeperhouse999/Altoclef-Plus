@@ -8,6 +8,11 @@ as its notes.
 
 ## [Unreleased]
 
+### Fixed
+- Presets no longer "finish" with items missing: at the end every step is checked again, and a step whose
+  item was lost meanwhile (for example the chestplate after a death) is done again (at most 2 extra rounds).
+- Armor made by a preset is put on at the end instead of staying in the inventory.
+
 ## [0.7.0] - 2026-10-15
 
 First round of fixes from a real in-game test session.

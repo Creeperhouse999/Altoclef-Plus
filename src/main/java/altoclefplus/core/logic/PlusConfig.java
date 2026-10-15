@@ -17,6 +17,8 @@ public final class PlusConfig {
     public Basics basics = new Basics();
     /** Safe zones of every world (each zone remembers its world). */
     public List<altoclefplus.zones.logic.Zone> zones = new ArrayList<>();
+    /** AltoClef's own options changed from our panel: field name -> value (toggles as 0/1). */
+    public java.util.Map<String, Double> altoclefOverrides = new java.util.HashMap<>();
 
     public static final class Modules {
         public boolean ui = true;
@@ -260,6 +262,8 @@ public final class PlusConfig {
         if (rules == null) rules = d.rules;
         if (basics == null) basics = d.basics;
         if (zones == null) zones = new ArrayList<>();
+        if (altoclefOverrides == null) altoclefOverrides = new java.util.HashMap<>();
+        altoclefOverrides.values().removeIf(v -> v == null || v.isNaN());
         zones.removeIf(z -> z == null || z.world == null);
         for (altoclefplus.zones.logic.Zone z : zones) {
             if (z.rules == null) z.rules = new altoclefplus.zones.logic.ZoneRules();

@@ -19,6 +19,9 @@ as its notes.
   under a cave ceiling it places a door next to itself (doors can't hold water) and breathes inside it;
   with no door and no open water above, it leaves the way out to the pathfinder.
 - **Carries a door** for those air pockets, made only from wood it already has.
+- **AltoClef options in the panel**: 18 of AltoClef's own settings (auto-eat, auto-respawn, replant crops,
+  mining and chest search range, food to keep and collect, building blocks to keep, ...) can now be changed
+  in Settings. They are applied in memory; AltoClef's own settings file is left untouched.
 - The water bucket in the iron-kit gear gate has its own switch, and the cave-water cost and the visible
   inventory click pace can be adjusted in Settings.
 - **Visible inventory** (on by default): when the bot crafts in its 2x2 grid, sorts or equips, the inventory

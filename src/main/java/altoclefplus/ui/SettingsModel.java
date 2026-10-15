@@ -145,6 +145,26 @@ public final class SettingsModel {
         r.add(new Value("Stuck after (seconds)", () -> c.recovery.noProgressSeconds, v -> c.recovery.noProgressSeconds = v, 10, 300, 5));
         r.add(new Value("Safe mode after (rounds)", () -> c.recovery.safeModeAfterCycles, v -> c.recovery.safeModeAfterCycles = v, 1, 10, 1));
         r.add(new Value("Stop bot after safe modes (0=never)", () -> c.recovery.stopAfterSafeModeCycles, v -> c.recovery.stopAfterSafeModeCycles = v, 0, 10, 1));
+
+        // AltoClef's own options (kept as overrides in our config, applied in memory).
+        Object altoSettings = altoclefplus.Plus.mod() == null ? null : altoclefplus.Plus.mod().getModSettings();
+        if (altoSettings != null) {
+            r.add(new Header("AltoClef options"));
+            for (altoclefplus.core.logic.AltoClefOptions.Option o : altoclefplus.core.logic.AltoClefOptions.ALL) {
+                if (Double.isNaN(altoclefplus.core.logic.AltoClefOptions.read(altoSettings, o.field()))) continue;
+                java.util.function.DoubleSupplier current = () -> c.altoclefOverrides.getOrDefault(o.field(),
+                        altoclefplus.core.logic.AltoClefOptions.read(altoSettings, o.field()));
+                java.util.function.DoubleConsumer change = v -> {
+                    c.altoclefOverrides.put(o.field(), v);
+                    altoclefplus.core.logic.AltoClefOptions.applyAll(altoSettings, c.altoclefOverrides);
+                };
+                if (o.kind() == altoclefplus.core.logic.AltoClefOptions.Kind.TOGGLE) {
+                    r.add(new Toggle(o.label(), () -> current.getAsDouble() >= 0.5, v -> change.accept(v ? 1 : 0)));
+                } else {
+                    r.add(new Value(o.label(), () -> (int) Math.round(current.getAsDouble()), v -> change.accept(v), o.min(), o.max(), o.step()));
+                }
+            }
+        }
         return r;
     }
 

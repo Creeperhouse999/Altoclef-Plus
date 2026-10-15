@@ -31,6 +31,7 @@ public final class BasicsApplier {
         }
         Settings s = mod.getModSettings();
         if (s == null) return;
+        altoclefplus.core.logic.AltoClefOptions.applyAll(s, Plus.config().altoclefOverrides);
         try {
             if (avoidDungeonChests == null) {
                 avoidDungeonChests = Settings.class.getDeclaredField("avoidSearchingDungeonChests");

@@ -55,9 +55,7 @@ goal is to fix the things that make watching the bot frustrating:
 
 ## Features
 
-✅ = released and tested in-game · 🧪 = new, tested by unit tests only — please report anything odd
-
-Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
+Legend: ✅ built · 🧪 new, only unit-tested so far (please report anything odd) · 🚧 being built now · 🗓️ planned (not available yet)
 
 ### Control panel and HUD ✅
 - **Control panel** (Right Shift) with tabs: *Tasks*, *Plan*, *Status*, *Settings*. ✅

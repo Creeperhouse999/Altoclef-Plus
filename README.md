@@ -55,6 +55,8 @@ goal is to fix the things that make watching the bot frustrating:
 
 ## Features
 
+✅ = released and tested in-game · 🧪 = new, tested by unit tests only — please report anything odd
+
 Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 
 ### Control panel and HUD ✅
@@ -64,8 +66,11 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - **Stop, Pause and Resume** buttons and hotkeys. ✅
 - **Plan view:** a checklist of what the bot is doing in `@gamer` — ✓ done, ▶ now, ○ next. ✅
 - **Step history:** every step the bot worked on and how long it took. ✅
-- **Small HUD:** current task, state (Running / Paused / Recovering / Idle), next milestones, alerts and
-  key items (food, pearls, blaze rods, eyes, beds). ✅
+- **Small HUD:** what you asked for and what the bot is doing right now in plain English (e.g. *Get iron
+  pickaxe: Mining iron ore*), state (Running / Paused / Recovering / Defending / Idle), next milestones,
+  alerts, and during `@gamer` the key items (food, pearls, blaze rods, eyes, beds). ✅
+- **World overlay:** blocks the bot will break glow red, the block it is mining orange, its goal green, the
+  path ahead is a cyan line and nearby hostile mobs are outlined — each layer can be switched off. 🧪
 - **Quiet chat:** AltoClef and Baritone messages go to the panel log; `@` / `#` chat commands are turned
   off (you can turn them back on). ✅
 - AltoClef's own overlay text is hidden. ✅
@@ -84,6 +89,13 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - Throws away junk (like random gunpowder) when the inventory fills up. Only items on a junk list (and
   extra stacks of cobblestone, dirt and similar) are ever dropped — never tools, armor, enchanted or
   renamed items, valuables, or anything the current task needs. You can edit both lists.
+- Drops tools once it has a better one of the same kind (a wooden pickaxe after a stone one). 🧪
+- **Visible inventory:** when it crafts or sorts in its own inventory, the inventory screen opens so you can
+  watch the clicks at a human-like pace. 🧪
+- **Respects your inventory:** open it while the bot runs and the bot waits until you close it. 🧪
+- **Smelts in the background:** fetches some coal instead of standing at the furnace, then comes back. 🧪
+- Presets check at the end that everything is still there (a death can cost the chestplate) and redo
+  what's missing, then put the armor on. 🧪
 - Fixes items getting stuck on the cursor and the eye-of-ender crafting bug.
 - Places a new crafting table instead of walking hundreds of blocks back to an old one.
 
@@ -92,6 +104,10 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - **Defends itself when idle:** with no task running and you away from the keys, it fights or flees mobs
   instead of standing still; touch a key and you have the controls back. ✅
 - **Steady mining:** sticks to the block it is going for instead of switching targets all the time. ✅
+- **Better melee:** waits for a full charge bar and lands jump critical hits; picks an axe against shields or
+  for a finishing blow and a sword for groups. 🧪
+- **Water safety:** avoids wading through water in caves, swims up when low on air, or makes an air pocket
+  with a door it carries when a ceiling is in the way. 🧪
 - **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
   full iron armor before hunting diamonds; armor and food before entering the Nether. ✅ Only for tasks that
   need it by default (`@gamer`, ores, Nether and End items) — errands like "get dirt" start right away.

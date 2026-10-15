@@ -36,7 +36,7 @@ final class BuildTab {
     private final Consumer<ClickableWidget> add;
     private final Runnable rebuild;
     private String loadError = "";
-    private Materials materials;
+    private static Materials materials;
 
     BuildTab(Consumer<ClickableWidget> add, Runnable rebuild) {
         this.add = add;

@@ -9,6 +9,13 @@ as its notes.
 ## [Unreleased]
 
 ### Added
+- **Building (Build tab)**: build any `.litematic` schematic in survival — no Litematica mod needed. Pick a file
+  (built-in or from `.minecraft/schematics`), it's placed where you stand facing your way (move it with
+  X/Y/Z buttons, Rotate, or Relocate back to you) with an outline preview. The bot gathers the materials
+  itself (one at a time, chests first), clears what's in the way and builds layer by layer from the bottom.
+  Pause keeps a build (even after a restart) and Resume continues it; Stop asks twice because it forgets
+  the build; builds queue up; finished builds have a Repair button. Blocks survival can't place (command
+  blocks, spawners, barriers) or items it can't get make the build stop and wait for your approval.
 - **Jump critical hits** in every fight: the bot waits for a full charge bar, jumps and hits on the way down
   (only where that's safe: not in water or lava, on ladders, in boats or under a low ceiling).
 - **Axe or sword by situation**: an axe against shields and when one axe hit finishes the mob, a sword for

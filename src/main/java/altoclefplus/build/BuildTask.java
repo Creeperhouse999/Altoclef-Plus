@@ -111,8 +111,12 @@ public final class BuildTask extends Task {
         }
         if (!toGet.isEmpty()) {
             if (builder.isActive()) builder.onLostControl();
-            setDebugState("Getting materials (" + toGet.size() + " kinds)");
-            return TaskCatalogue.getSquashedItemTask(toGet.toArray(new ItemTarget[0]));
+            // One material at a time, wood last: gathering several at once let AltoClef's planks task pull
+            // planks back out of the 2x2 grid while its pickaxe task was crafting sticks there (endless loop).
+            toGet.sort(java.util.Comparator.comparingInt(t -> isWood(t) ? 1 : 0));
+            ItemTarget first = toGet.get(0);
+            setDebugState("Getting materials: " + first + " (" + toGet.size() + " kinds left)");
+            return TaskCatalogue.getItemTask(first);
         }
 
         if (builder.isPaused()) builder.onLostControl();
@@ -131,6 +135,14 @@ public final class BuildTask extends Task {
             if (one.containsKey(itemId) && !out.contains(block)) out.add(block);
         }
         return out;
+    }
+
+    private static boolean isWood(ItemTarget t) {
+        for (Item i : t.getMatches()) {
+            String id = Registry.ITEM.getId(i).getPath();
+            if (id.endsWith("_planks") || id.endsWith("_log") || id.equals("stick")) return true;
+        }
+        return false;
     }
 
     private void waitFor(String reason) {

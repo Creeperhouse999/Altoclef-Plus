@@ -20,6 +20,9 @@ public final class CameraModule implements Module {
     private final CameraSmoother smoother = new CameraSmoother();
     private volatile boolean botActive;
     private volatile boolean combat;
+    /** Mining or placing right now (show the real view), and when that last happened. */
+    private volatile long lastBusyTick = Long.MIN_VALUE / 2;
+    private volatile long tick;
     private long lastFrameNs;
     private double lastX, lastY, lastZ;
     private String lastDimension = "";
@@ -38,6 +41,8 @@ public final class CameraModule implements Module {
     public void tick(Snapshot s) {
         botActive = s.userTaskRunning || s.pathing;
         combat = s.mobDefenseActive;
+        tick = s.tick;
+        if (s.breakingPos != Snapshot.NO_POS || s.mobDefenseActive || s.eating) lastBusyTick = s.tick;
     }
 
     @Override
@@ -82,6 +87,12 @@ public final class CameraModule implements Module {
         CameraPolicy.Decision d = CameraPolicy.decide(new CameraPolicy.Input(
                 enabled, botActive, client.currentScreen != null, moved, dimChanged, combat,
                 perspectiveChanged, onPlayer), cfg.snapDistance);
+
+        // Walking only (a little horizontal movement, nothing being mined/fought for ~1 s): look ahead.
+        double horizontal = Math.hypot(player.getVelocity().x, player.getVelocity().z);
+        boolean walking = botActive && horizontal > 0.03 && onPlayer;
+        boolean busy = tick - lastBusyTick < 20;
+        pitch = CameraPolicy.viewPitch(pitch, walking, busy, cfg.lookAhead && d.mode() == CameraPolicy.Mode.SMOOTH);
 
         if (d.mode() == CameraPolicy.Mode.SNAP) {
             smoother.snap(yaw, pitch);

@@ -86,6 +86,7 @@ public final class SettingsModel {
 
         r.add(new Header("Camera"));
         r.add(new Value("Smoothness (higher = snappier)", () -> Math.round(c.camera.smoothness), v -> c.camera.smoothness = v, 1, 40, 1));
+        r.add(new Toggle("Look ahead while walking (not at feet)", () -> c.camera.lookAhead, v -> c.camera.lookAhead = v));
         r.add(new Value("Combat speed-up (x)", () -> Math.round(c.camera.combatMultiplier), v -> c.camera.combatMultiplier = v, 1, 10, 1));
 
         r.add(new Header("Inventory"));

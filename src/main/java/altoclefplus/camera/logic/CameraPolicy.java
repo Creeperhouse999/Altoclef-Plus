@@ -27,4 +27,17 @@ public final class CameraPolicy {
                 || in.perspectiveChanged() || !in.cameraOnPlayer();
         return new Decision(snap ? Mode.SNAP : Mode.SMOOTH, in.combat());
     }
+
+    /** Pitch range shown while the bot just walks: a little down (to see the ground ahead), never at its feet. */
+    private static final float LOOK_DOWN_MAX = 12f;
+    private static final float LOOK_UP_MAX = -20f;
+
+    /**
+     * What pitch to show. Baritone often walks looking straight down at its feet; while the bot is only
+     * walking (not mining, placing at a target or fighting) the view looks ahead instead. Visual only.
+     */
+    public static float viewPitch(float realPitch, boolean walking, boolean busy, boolean enabled) {
+        if (!enabled || !walking || busy) return realPitch;
+        return Math.max(LOOK_UP_MAX, Math.min(LOOK_DOWN_MAX, realPitch));
+    }
 }

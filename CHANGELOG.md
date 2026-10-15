@@ -15,6 +15,9 @@ as its notes.
   3 blocks deep dug right beside it.
 
 ### Changed
+- **Camera looks ahead while walking**: Baritone often walks staring at its feet; while the bot is only
+  walking, your view now looks ahead (a little down at most). When it mines, places or fights you still see
+  exactly where it aims. Visual only; setting in Camera.
 - The path line is drawn through blocks, like Baritone's, so you can follow it behind walls; the next path
   segment is shown too.
 - The @gamer plan names steps as goals ("Stock up food (4/20)") instead of finished facts ("Food stocked").

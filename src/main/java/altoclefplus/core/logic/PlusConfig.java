@@ -83,6 +83,8 @@ public final class PlusConfig {
         public float combatMultiplier = 3f;
         /** Player moved further than this in one tick (teleport) = snap camera. */
         public float snapDistance = 8f;
+        /** While the bot only walks, the view looks ahead instead of at its feet (visual only). */
+        public boolean lookAhead = true;
     }
 
     public static final class Inventory {

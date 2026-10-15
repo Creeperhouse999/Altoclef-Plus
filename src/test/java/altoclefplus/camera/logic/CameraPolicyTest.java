@@ -53,4 +53,14 @@ class CameraPolicyTest {
         assertTrue(CameraPolicy.decide(in(true, false, 0, false, true), 8f).combat());
         assertFalse(CameraPolicy.decide(in(true, false, 0, false, false), 8f).combat());
     }
+
+    @Test
+    void looksAheadWhileJustWalking() {
+        assertEquals(12f, CameraPolicy.viewPitch(80f, true, false, true), 0.01f, "walking, staring at its feet: look ahead");
+        assertEquals(5f, CameraPolicy.viewPitch(5f, true, false, true), 0.01f, "already looking ahead: unchanged");
+        assertEquals(-20f, CameraPolicy.viewPitch(-60f, true, false, true), 0.01f, "staring at the sky: not that far up either");
+        assertEquals(80f, CameraPolicy.viewPitch(80f, true, true, true), 0.01f, "mining/fighting: show what it really looks at");
+        assertEquals(80f, CameraPolicy.viewPitch(80f, false, false, true), 0.01f, "standing still: real view");
+        assertEquals(80f, CameraPolicy.viewPitch(80f, true, false, false), 0.01f, "setting off");
+    }
 }

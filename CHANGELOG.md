@@ -40,7 +40,8 @@ as its notes.
 
 ### Changed
 - The HUD task line is now our own plain-English line: what you asked for and what the bot is doing right
-  now, e.g. *Get iron pickaxe: Mining iron ore* or *Get spruce log x40: Picking up items*. AltoClef's own
+  now, with progress, e.g. *Get iron pickaxe (0/1): Mining iron ore* or *Get spruce log x40 (12/40): Picking
+  up items*. AltoClef's own
   top task name often stayed the same for minutes (a crafting table while it was really mining iron).
 - The Food / Pearls / Rods / Eyes / Beds line only shows while *Beat the game* (`@gamer`) runs.
 - Pressing the pause key with nothing running now says *Nothing to pause*.

@@ -51,4 +51,14 @@ class TaskNarratorTest {
         assertEquals("Putting on armor", TaskNarrator.action(List.of("<Equipping armor [iron_chestplate]>"), ""));
         assertEquals("Eating", TaskNarrator.action(List.of("<Eat food>"), ""));
     }
+
+    @Test
+    void goalShowsProgressForGetCommands() {
+        java.util.Map<String, Integer> have = java.util.Map.of("spruce_log", 12, "iron_pickaxe", 1);
+        assertEquals("Get spruce log x40 (12/40)", TaskNarrator.goalWithProgress("get spruce_log 40", id -> have.getOrDefault(id, 0)));
+        assertEquals("Get iron boots (0/1)", TaskNarrator.goalWithProgress("get iron_boots 1", id -> have.getOrDefault(id, 0)));
+        assertEquals("Get spruce log x40 (40/40)", TaskNarrator.goalWithProgress("get spruce_log 40", id -> 55), "never shows more than wanted");
+        assertEquals("Beat the game", TaskNarrator.goalWithProgress("gamer", id -> 0));
+        assertEquals("Get a, b", TaskNarrator.goalWithProgress("get a 1 b 2", id -> 0), "several items: no single counter");
+    }
 }

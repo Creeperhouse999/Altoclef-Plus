@@ -32,11 +32,26 @@ public final class TaskNarrator {
                 return t.length > 1 ? "Food (" + t[1] + ")" : "Food";
             case "get":
                 if (t.length < 2) return "Get";
+                List<GetCommand.Want> wants = GetCommand.parse(command);
+                if (wants != null && wants.size() > 1) {
+                    StringBuilder sb = new StringBuilder("Get ");
+                    for (int i = 0; i < wants.size(); i++) sb.append(i > 0 ? ", " : "").append(pretty(wants.get(i).id()));
+                    return sb.toString();
+                }
                 String item = pretty(t[1]);
                 return t.length > 2 && !t[2].equals("1") ? "Get " + item + " x" + t[2] : "Get " + item;
             default:
                 return capitalize(command.trim().replace('_', ' '));
         }
+    }
+
+    /** {@link #goal} plus "(have/want)" for a single-item get command. */
+    public static String goalWithProgress(String command, java.util.function.ToIntFunction<String> have) {
+        String g = goal(command);
+        List<GetCommand.Want> wants = GetCommand.parse(command);
+        if (wants == null || wants.size() != 1) return g;
+        GetCommand.Want w = wants.get(0);
+        return g + " (" + Math.min(w.count(), Math.max(0, have.applyAsInt(w.id()))) + "/" + w.count() + ")";
     }
 
     /**

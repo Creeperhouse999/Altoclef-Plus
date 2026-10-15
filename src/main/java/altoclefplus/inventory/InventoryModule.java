@@ -41,6 +41,7 @@ public final class InventoryModule implements Module {
     private final CursorGuard cursorGuard = new CursorGuard(100);
     /** Our own pickup: AltoClef often wandered off and left drops it had just mined. */
     private final PlusChain pickupChain;
+    private final altoclefplus.inventory.logic.TorchPlanner torches = new altoclefplus.inventory.logic.TorchPlanner();
     private long lastBreakTick = Long.MIN_VALUE / 2;
     private long lastPickupTick = Long.MIN_VALUE / 2;
     private final altoclefplus.inventory.logic.PickupPlanner pickup = new altoclefplus.inventory.logic.PickupPlanner(10, 200);
@@ -80,6 +81,7 @@ public final class InventoryModule implements Module {
         // Never in the middle of placing a table, crafting or using a furnace: AltoClef would start over.
         if (altoclefplus.core.logic.TaskChainState.inDelicateStep(s.taskChain)) return;
 
+        if (cfg.placeTorches && tryTorches(s)) return;
         if (cfg.equipArmor && tryEquipArmor(s)) return;
         if ((cfg.dropJunk || cfg.dropOutdatedTools) && tryDropJunk(s, cfg)) return;
         if (cfg.craftArmorPiecewise) {
@@ -148,6 +150,25 @@ public final class InventoryModule implements Module {
         pickupChain.startJob(new adris.altoclef.tasks.resources.MineAndCollectTask(
                 new adris.altoclef.util.ItemTarget(adris.altoclef.util.helpers.ItemHelper.PLANKS, have + want), planks,
                 adris.altoclef.util.MiningRequirement.HAND), "Mining planks nearby instead of looking for a tree", null);
+    }
+
+    /** Optional: keep some torches (from carried coal) and light up dark places the bot works in. */
+    private boolean tryTorches(Snapshot s) {
+        ClientPlayerEntity p = MinecraftClient.getInstance().player;
+        if (p == null || p.world == null || s.dead) return false;
+        int have = s.count("torch");
+        int coal = s.count("coal") + s.count("charcoal");
+        int wood = s.count("stick") + ItemInfo.countMatching(s, ItemInfo::isPlanks) + ItemInfo.countMatching(s, ItemInfo::isLog);
+        if (altoclefplus.inventory.logic.TorchPlanner.shouldCraft(true, have, coal, wood)) {
+            return start(TaskCatalogue.getItemTask("torch", Math.min(altoclefplus.inventory.logic.TorchPlanner.KEEP, have + coal * 4)),
+                    "Making torches");
+        }
+        var pos = p.getBlockPos();
+        int block = p.world.getLightLevel(net.minecraft.world.LightType.BLOCK, pos);
+        int sky = p.world.getLightLevel(net.minecraft.world.LightType.SKY, pos) - p.world.getAmbientDarkness();
+        if (!torches.shouldPlace(true, block, Math.max(0, sky), pos.getX(), pos.getY(), pos.getZ(), have > 0)) return false;
+        torches.placed(pos.getX(), pos.getY(), pos.getZ());
+        return start(new adris.altoclef.tasks.construction.PlaceBlockNearbyTask(net.minecraft.block.Blocks.TORCH), "Placing a torch");
     }
 
     private boolean start(Task task, String label) {

@@ -233,12 +233,12 @@ public final class SurvivalModule implements Module {
     private void runIfOutnumbered(PlusConfig.Survival cfg) {
         var p = mod.getPlayer();
         if (p == null || p.world == null) return;
-        if (outnumbered == null) outnumbered = new altoclefplus.survival.logic.Outnumbered(cfg.runWhenOutnumbered);
+        if (outnumbered == null) outnumbered = new altoclefplus.survival.logic.Outnumbered(cfg.runWhenOutnumbered, 600, 1200);
         java.util.function.Predicate<HostileEntity> chasing = e -> e.isAlive()
                 && !(e instanceof net.minecraft.entity.mob.EndermanEntity) && !(e instanceof net.minecraft.entity.mob.ZombifiedPiglinEntity);
         int close = p.world.getEntitiesByClass(HostileEntity.class, p.getBoundingBox().expand(8), chasing).size();
         int around = p.world.getEntitiesByClass(HostileEntity.class, p.getBoundingBox().expand(16), chasing).size();
-        boolean run = outnumbered.shouldRun(close, around);
+        boolean run = outnumbered.shouldRun(close, around, ticks);
         if (run && !fleeChain.isActive()) {
             if (fleeChain.startUrgent(new RunAwayFromHostilesTask(24, true), "Outnumbered (" + close + " mobs): running away")) {
                 Plus.log().add("survival", "Outnumbered (" + close + " mobs): running away");

@@ -11,8 +11,11 @@ as its notes.
 ### Added
 - **Bed early in @gamer**: right after stone tools the bot gets one bed (AltoClef only collected beds at the very
   end), so it can sleep through the first night. Setting, on by default.
+- **Torches (optional, off by default)**: crafts torches from coal it carries (keeps about 16) and places one
+  every 7 blocks or so where it's dark, so mobs don't spawn around it and you can see.
 - **Runs when outnumbered**: with 3 or more hostile mobs within 8 blocks the bot runs away at once and keeps
-  going until fewer than 2 are near, then returns to its task (it used to fight 5 zombies with a stone sword).
+  going until fewer than 2 are near, then returns to its task (it used to fight 5 zombies with a stone sword). If it can't get away within
+  30 seconds it stops running for a minute and lets AltoClef fight or tower up.
   Number adjustable in Settings (0 = off).
 - **Avoids places where it keeps dying**: after repeated deaths in one spot it walks around that area
   (10 blocks) for 10 minutes. Before, the message said "not going back there" but only skipped the items.

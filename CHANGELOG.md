@@ -8,6 +8,11 @@ as its notes.
 
 ## [Unreleased]
 
+### Added
+- Night shelter in @gamer: without iron armor and without a bed, the bot digs three blocks down, covers
+  the hole and waits for dawn instead of dying to the first night's mobs. It never digs into caves,
+  liquids or bedrock. Setting: Survival → "Hide in a hole at night without armor (@gamer)", on by default.
+
 ## [0.8.2] - 2026-10-15
 
 Fixes and additions from a long playtest. Tested in-game: an @gamer run with the new bed step, running when

@@ -165,8 +165,9 @@ Legend: ✅ built · 🧪 new, only unit-tested so far (please report anything o
    (or create a Fabric 1.18.2 profile in your launcher, e.g. Modrinth App, Prism or MultiMC).
 2. Download the official [AltoClef v0.4.1 release](https://github.com/gaucho-matrero/altoclef/releases/tag/v0.4.1)
    and put **both jars** from the zip into your `mods` folder.
-3. Download the latest `altoclefplus-x.y.z.jar` from
-   [Releases](https://github.com/Creeperhouse999/Altoclef-Plus/releases) and put it in the same `mods` folder.
+3. Download the latest `altoclefplus-x.y.z.jar` from [Modrinth](https://modrinth.com/mod/altoclef-plus)
+   or [GitHub Releases](https://github.com/Creeperhouse999/Altoclef-Plus/releases) and put it in the same
+   `mods` folder.
 4. Start the game and join a world. Press **Right Shift** to open the control panel.
 
 > [!TIP]
@@ -233,8 +234,10 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.4** | Stuck recovery and death item recovery | ✅ Released |
 | **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | ✅ Released |
 | **0.6** | Safe zones, safety rules, basics settings, door fix, gate scope | ✅ Released |
-| **0.7** | In-game testing feedback, polish and fixes | 🚧 In progress (0.7.0 out) |
-| Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
+| **0.7** | In-game testing feedback, polish and fixes | ✅ Released |
+| **0.8** | Building from .litematic files, better melee, water safety, world overlay, visible inventory | ✅ Released |
+| **0.9** | Schematic contents (chests, signs, frames), chest labels, scaffolding cleanup, more fixes | 🚧 Next |
+| **1.0** | Multiplayer support (e.g. building) | 🗓️ Planned |
 
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 

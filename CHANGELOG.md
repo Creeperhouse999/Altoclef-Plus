@@ -8,6 +8,13 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-15
+
+Building from .litematic schematics, smarter fighting, water safety, a world overlay and many fixes from
+in-game testing. Tested in-game: building a schematic end to end (gather → build → done, pause survives a
+restart), idle defense with critical hits, waiting while your inventory is open, the HUD progress line and
+the overlay. The rest is unit-tested — please report anything odd.
+
 ### Added
 - **Building (Build tab)**: build any `.litematic` schematic in survival — no Litematica mod needed. Pick a file
   (built-in or from `.minecraft/schematics`), it's placed where you stand facing your way (move it with
@@ -67,6 +74,8 @@ as its notes.
 - Full-height safe zones now also show their rectangle at your feet level, not only the corner posts.
 
 ### Fixed
+- Underground, when it needs planks it mines nearby plank blocks (mineshafts) instead of walking off
+  to find a tree.
 - Fixed a crash when leaving a world while the bot was fighting ("other is null" in AltoClef's task chains).
 - **Spare pickaxe**: the only pickaxe is replaced at 15% durability while the materials are still in the bag
   (same tier, else stone or wood). A pickaxe breaking deep underground used to send the bot back up for wood.

@@ -25,7 +25,14 @@ changing their files, and makes the bot easier to control, safer and less likely
 - **Safer progression**: gears up before risky trips, rests when hurt, uses a shield, dodges arrows and
   carries water for falls. When you're AFK with nothing running, it still fights or runs from mobs instead
   of standing there.
-- **Steady mining**: sticks to the block it's going for instead of switching targets every moment.
+- **Steady mining**: sticks to the block it's going for instead of switching targets every moment, and
+  picks up what it mined.
+- **Building**: build any `.litematic` schematic in survival (no Litematica needed). Place it where you stand,
+  preview the outline, and the bot gathers the materials and builds it layer by layer. Pause, resume after a
+  restart, queue several builds, repair a finished one.
+- **Better fighting**: jump critical hits with a full charge bar, axe or sword depending on the situation.
+- **Water safety**: avoids wading through cave water, swims up or makes a door air pocket when drowning.
+- **World overlay**: path, blocks to break, the block being mined, the goal and nearby mobs, each switchable.
 - **Stuck recovery**: notices endless pillaring, mining the same block, pacing or Nether back-and-forth
   and tries something else; goes back for its items after dying.
 - **Travel**: boats across oceans, enderman hunting with a boat trap, and one precise Nether trip to the

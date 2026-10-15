@@ -67,6 +67,7 @@ public final class InventoryModule implements Module {
             if (s.userTaskRunning) chain.startJob(new CursorStashTask(), "Putting away a stuck cursor item", null);
         }
         if (ticks % 5 == 0) tryPickup(s, cfg);
+        if (ticks % 40 == 0) tryPlanksShortcut(s);
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
         if (!s.userTaskRunning || s.mobDefenseActive || s.eating || s.screenOpen || s.dead || "the_end".equals(s.dimension)) return;
         if (chain.isActive()) {
@@ -115,6 +116,31 @@ public final class InventoryModule implements Module {
                 }
             }
         });
+    }
+
+    /** Underground and AltoClef walks off for a log to make planks: mine nearby plank blocks instead (mineshafts). */
+    private void tryPlanksShortcut(Snapshot s) {
+        if (!s.userTaskRunning || s.y >= 50 || pickupChain.isActive() || s.mobDefenseActive || s.dead) return;
+        int want = altoclefplus.inventory.logic.PlanksShortcut.planksWanted(s.taskChain);
+        if (want <= 0) return;
+        ClientPlayerEntity p = MinecraftClient.getInstance().player;
+        if (p == null || p.world == null) return;
+        net.minecraft.util.math.BlockPos c = p.getBlockPos();
+        boolean near = false;
+        for (net.minecraft.util.math.BlockPos b : net.minecraft.util.math.BlockPos.iterate(c.add(-12, -4, -12), c.add(12, 4, 12))) {
+            if (p.world.getBlockState(b).isIn(net.minecraft.tag.BlockTags.PLANKS) && altoclefplus.zones.Zones.mayBreak(b)) {
+                near = true;
+                break;
+            }
+        }
+        if (!near) return;
+        net.minecraft.block.Block[] planks = net.minecraft.util.registry.Registry.BLOCK.stream()
+                .filter(b -> b.getDefaultState().isIn(net.minecraft.tag.BlockTags.PLANKS)).toArray(net.minecraft.block.Block[]::new);
+        int have = 0;
+        for (var item : adris.altoclef.util.helpers.ItemHelper.PLANKS) have += Plus.mod().getItemStorage().getItemCount(item);
+        pickupChain.startJob(new adris.altoclef.tasks.resources.MineAndCollectTask(
+                new adris.altoclef.util.ItemTarget(adris.altoclef.util.helpers.ItemHelper.PLANKS, have + want), planks,
+                adris.altoclef.util.MiningRequirement.HAND), "Mining planks nearby instead of looking for a tree", null);
     }
 
     private boolean start(Task task, String label) {

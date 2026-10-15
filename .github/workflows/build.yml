@@ -12,6 +12,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Empty until the maintainer adds the secret; the Modrinth step is skipped while it's empty.
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -62,6 +65,25 @@ jobs:
           AltoClef Plus is unofficial and not affiliated with the AltoClef or Baritone projects.
           NOTES
           sed -i 's/^          //' release-notes.md
+
+      - name: Publish to Modrinth
+        # Runs only once the maintainer has added the MODRINTH_TOKEN secret and MODRINTH_PROJECT_ID variable.
+        if: startsWith(github.ref, 'refs/tags/v') && env.MODRINTH_TOKEN != '' && vars.MODRINTH_PROJECT_ID != ''
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: |
+            build/libs/altoclefplus-*.jar
+            !build/libs/*-sources.jar
+          name: AltoClef Plus ${{ github.ref_name }}
+          version: ${{ github.ref_name }}
+          version-type: ${{ startsWith(github.ref_name, 'v0.') && 'beta' || 'release' }}
+          changelog-file: release-notes.md
+          loaders: fabric
+          game-versions: 1.18.2
+          dependencies: |
+            modmenu(optional){modrinth:modmenu}
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/v')

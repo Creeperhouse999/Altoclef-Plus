@@ -1,0 +1,1 @@
+Unofficial add-on for the AltoClef bot: control panel and HUD, safe zones, smarter inventory, safer progression and automatic stuck recovery. Singleplayer.

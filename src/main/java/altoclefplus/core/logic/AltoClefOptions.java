@@ -23,10 +23,10 @@ public final class AltoClefOptions {
     }
 
     public static final List<Option> ALL = List.of(
-            Option.toggle("autoEat", "Eat automatically"),
+            Option.toggle("autoEat", "Eat automatically (resting needs this)"),
             Option.toggle("autoRespawn", "Respawn automatically after dying"),
             Option.toggle("autoReconnect", "Reconnect after a disconnect"),
-            Option.toggle("mobDefense", "Fight back / run from mobs"),
+            Option.toggle("mobDefense", "Fight back / run from mobs (idle defense needs this)"),
             Option.toggle("killOrAvoidAnnoyingHostiles", "Deal with mobs that keep following"),
             Option.toggle("extinguishSelfWithWater", "Put out fire with water"),
             Option.toggle("replantCrops", "Replant crops after harvesting"),

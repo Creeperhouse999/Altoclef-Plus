@@ -18,7 +18,8 @@ public final class TaskChainState {
             String e = chain.get(i).toLowerCase(Locale.ROOT);
             if (e.contains("destroy block") || e.contains("mine and collect") || e.contains("mining or collecting")
                     || e.contains("approach entity") || e.contains("pickup dropped") || e.contains("wander")
-                    || e.contains("get to") || e.contains("going to")) {
+                    || e.contains("get to") || e.contains("getting to") || e.contains("going to")
+                    || e.contains("walking")) {
                 return false;
             }
             if (e.contains("place structure") || e.contains("placing container") || e.contains("nearby>")

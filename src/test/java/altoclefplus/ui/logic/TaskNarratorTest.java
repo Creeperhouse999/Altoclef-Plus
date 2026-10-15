@@ -61,4 +61,10 @@ class TaskNarratorTest {
         assertEquals("Beat the game", TaskNarrator.goalWithProgress("gamer", id -> 0));
         assertEquals("Get a, b", TaskNarrator.goalWithProgress("get a 1 b 2", id -> 0), "several items: no single counter");
     }
+
+    @Test
+    void noProgressForAltoClefGroupNames() {
+        // "log" is an AltoClef catalogue group, not an item: counting it would always show 0.
+        assertEquals("Get log x20", TaskNarrator.goalWithProgress("get log 20", id -> -1));
+    }
 }

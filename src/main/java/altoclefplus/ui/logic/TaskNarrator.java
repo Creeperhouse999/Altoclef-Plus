@@ -51,7 +51,9 @@ public final class TaskNarrator {
         List<GetCommand.Want> wants = GetCommand.parse(command);
         if (wants == null || wants.size() != 1) return g;
         GetCommand.Want w = wants.get(0);
-        return g + " (" + Math.min(w.count(), Math.max(0, have.applyAsInt(w.id()))) + "/" + w.count() + ")";
+        int n = have.applyAsInt(w.id());
+        if (n < 0) return g; // an AltoClef group name like "log" or "planks": nothing to count
+        return g + " (" + Math.min(w.count(), n) + "/" + w.count() + ")";
     }
 
     /**

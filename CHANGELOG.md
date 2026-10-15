@@ -21,7 +21,8 @@ as its notes.
 - **Carries a door** for those air pockets, made only from wood it already has.
 - **Your own presets**: type a command and press *+* next to *Run* to keep it as a preset button;
   shift-click a preset to remove it.
-- **Never attack players** (no PvP, on by default) in Safety rules.
+- **Never attack players** (no PvP, on by default) in Safety rules. AltoClef's own `punk` / `terminate`
+  commands still work when you run them yourself.
 - **AltoClef options in the panel**: 18 of AltoClef's own settings (auto-eat, auto-respawn, replant crops,
   mining and chest search range, food to keep and collect, building blocks to keep, ...) can now be changed
   in Settings. They are applied in memory; AltoClef's own settings file is left untouched.

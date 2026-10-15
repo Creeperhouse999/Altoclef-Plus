@@ -50,7 +50,11 @@ public abstract class SteadyMiningMixin {
         // Items: AltoClef flipped between "pick up that drop" and "mine that block" as distances changed.
         if (altoclefplus$chasing != null) {
             var item = altoclefplus$chasing;
-            boolean stillThere = item.isAlive() && !item.isRemoved() && item.squaredDistanceTo(pos) < 16 * 16;
+            boolean offered = picked != null && picked.isPresent() && picked.get() instanceof net.minecraft.entity.ItemEntity;
+            boolean stillThere = item.isAlive() && !item.isRemoved() && item.squaredDistanceTo(pos) < 16 * 16
+                    && mod.getEntityTracker().isEntityReachable(item)
+                    // AltoClef offers no drop at all any more (e.g. inventory full): stop insisting.
+                    && (offered || item.squaredDistanceTo(pos) < 6 * 6);
             if (stillThere && tick - altoclefplus$chaseStart < 300) {
                 if (picked == null || picked.isEmpty() || picked.get() != item) cir.setReturnValue(Optional.of(item));
                 return;

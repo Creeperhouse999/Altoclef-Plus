@@ -30,6 +30,13 @@ public final class PlanTracker {
         this.targetEyes = targetEyes;
     }
 
+    private boolean requireWaterBucket = true;
+
+    /** Follows the "...and a water bucket" gear-gate setting. */
+    public void setRequireWaterBucket(boolean require) {
+        this.requireWaterBucket = require;
+    }
+
     public void setListener(Consumer<Milestone> listener) {
         this.listener = listener;
     }
@@ -80,7 +87,8 @@ public final class PlanTracker {
             case STONE_SWORD -> ItemInfo.bestTier(s, "sword") >= ItemInfo.STONE;
             case IRON_INGOTS -> s.has("iron_ingot") || pick >= ItemInfo.IRON;
             case IRON_KIT -> pick >= ItemInfo.IRON && ItemInfo.bestTier(s, "sword") >= ItemInfo.IRON
-                    && (s.has("shield") || "shield".equals(s.offhand)) && (s.has("water_bucket") || s.has("bucket"));
+                    && (s.has("shield") || "shield".equals(s.offhand))
+                    && (!requireWaterBucket || s.has("water_bucket") || s.has("bucket"));
             case IRON_ARMOR -> allArmorAtLeast(s, ItemInfo.IRON);
             case DIAMONDS -> s.has("diamond") || pick >= ItemInfo.DIAMOND;
             case DIAMOND_GEAR -> pick >= ItemInfo.DIAMOND && ItemInfo.bestTier(s, "sword") >= ItemInfo.DIAMOND

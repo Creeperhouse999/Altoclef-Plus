@@ -110,13 +110,19 @@ public final class Zones {
 
     public static boolean mayAttack(Entity target) {
         PlusConfig.Rules r = Plus.config().rules;
-        if (r.neverAttackPlayers && target instanceof net.minecraft.entity.player.PlayerEntity) return false;
+        if (r.neverAttackPlayers && target instanceof net.minecraft.entity.player.PlayerEntity && !playerCommandRunning()) return false;
         AttackRules rules = new AttackRules(r.neverAttackNamed, r.neverAttackTamed, new HashSet<>(r.neverAttackMobs), r.selfDefense);
         var player = MinecraftClient.getInstance().player;
         boolean attackingMe = player != null && target instanceof MobEntity mob && mob.getTarget() == player;
         String type = Registry.ENTITY_TYPE.getId(target.getType()).getPath();
         return rules.mayAttack(category(target), type, target.hasCustomName(), isTamed(target), attackingMe,
                 current, target.getX(), target.getY(), target.getZ());
+    }
+
+    /** You asked for it yourself ("punk <player>" / "terminate"): the no-PvP rule doesn't stall that task. */
+    private static boolean playerCommandRunning() {
+        String cmd = Plus.control() == null ? "" : Plus.control().lastCommand().trim().toLowerCase(java.util.Locale.ROOT);
+        return cmd.startsWith("punk") || cmd.startsWith("terminate");
     }
 
     public static MobCategory category(Entity e) {

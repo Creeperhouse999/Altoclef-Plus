@@ -40,6 +40,7 @@ public final class UiModule implements Module {
             if (!cmd.isEmpty()) trail.clear();
             lastCommand = cmd;
         }
+        plan.setRequireWaterBucket(altoclefplus.Plus.config().survival.gateWaterBucket);
         plan.update(s);
         if (s.userTaskRunning && !s.taskChain.isEmpty()) {
             trail.update(s.taskChain.get(s.taskChain.size() - 1), System.currentTimeMillis());

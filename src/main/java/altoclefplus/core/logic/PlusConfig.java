@@ -265,7 +265,7 @@ public final class PlusConfig {
         if (basics == null) basics = d.basics;
         if (zones == null) zones = new ArrayList<>();
         if (altoclefOverrides == null) altoclefOverrides = new java.util.HashMap<>();
-        altoclefOverrides.values().removeIf(v -> v == null || v.isNaN());
+        altoclefOverrides.values().removeIf(v -> v == null || !Double.isFinite(v));
         zones.removeIf(z -> z == null || z.world == null);
         for (altoclefplus.zones.logic.Zone z : zones) {
             if (z.rules == null) z.rules = new altoclefplus.zones.logic.ZoneRules();
@@ -296,7 +296,8 @@ public final class PlusConfig {
         recovery.longWaitTasks = noNulls(recovery.longWaitTasks);
 
         camera.smoothness = clamp(camera.smoothness, 1, 40);
-        survival.caveWaterPenalty = Math.max(0, Math.min(200, survival.caveWaterPenalty));
+        survival.caveWaterPenalty = Double.isFinite(survival.caveWaterPenalty) ? Math.max(0, Math.min(200, survival.caveWaterPenalty)) : 40;
+        if (!Float.isFinite(inventory.visibleClickDelay)) inventory.visibleClickDelay = 0.3f;
         inventory.visibleClickDelay = clamp(inventory.visibleClickDelay, 0.1f, 1.0f);
         camera.maxDegreesPerSecond = clamp(camera.maxDegreesPerSecond, 30, 5000);
         camera.combatMultiplier = clamp(camera.combatMultiplier, 1, 10);

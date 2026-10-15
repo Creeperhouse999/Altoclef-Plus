@@ -122,4 +122,12 @@ class PlanTrackerTest {
 
         assertEquals(List.of(Milestone.WOOD), got);
     }
+
+    @Test
+    void ironKitSkipsTheBucketWhenThatGateIsOff() {
+        PlanTracker t = new PlanTracker(12);
+        t.setRequireWaterBucket(false);
+        t.update(Snapshot.builder().item("iron_pickaxe", 1).item("iron_sword", 1).offhand("shield").build());
+        assertTrue(t.isDone(Milestone.IRON_KIT));
+    }
 }

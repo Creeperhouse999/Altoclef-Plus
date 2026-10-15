@@ -51,7 +51,8 @@ public final class Hud {
             // Our own line: the goal you asked for and what is happening right now (AltoClef's root task name
             // often stays the same for minutes, e.g. "crafting table" while it is really mining iron).
             String goal = TaskNarrator.goalWithProgress(Plus.control().lastCommand(),
-                    id -> s.count(id) + (int) s.armor.values().stream().filter(id::equals).count());
+                    id -> net.minecraft.util.registry.Registry.ITEM.containsId(new net.minecraft.util.Identifier("minecraft", id))
+                            ? s.count(id) + (int) s.armor.values().stream().filter(id::equals).count() : -1);
             String action = TaskNarrator.action(s.taskChain, minedBlock(client, s));
             String text = goal.isEmpty() ? action : action.isEmpty() || action.equalsIgnoreCase(goal) ? goal : goal + ": " + action;
             tr.drawWithShadow(m, shorten(text, 60), x, y, 0xFFFFFFFF);

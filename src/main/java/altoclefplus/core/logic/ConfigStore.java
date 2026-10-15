@@ -40,7 +40,7 @@ public final class ConfigStore {
         try {
             Files.createDirectories(file.toAbsolutePath().getParent());
             Files.writeString(file, GSON.toJson(cfg), StandardCharsets.UTF_8);
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
             lastError = "Could not save config: " + e.getMessage();
         }
     }

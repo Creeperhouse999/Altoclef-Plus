@@ -25,4 +25,10 @@ class TaskChainStateTest {
                 "<Destroy block at 1, 2, 3> Getting to block...")), "a crafting task that is really out mining: fine to interrupt");
         assertFalse(TaskChainState.inDelicateStep(List.of()));
     }
+
+    @Test
+    void walkingToAFarContainerIsNotDelicate() {
+        assertFalse(TaskChainState.inDelicateStep(List.of("<Doing stuff in [furnace] x 1 container>",
+                "<Getting to block 10, 64, 20> Walking")), "only the moment at the container is");
+    }
 }

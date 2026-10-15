@@ -67,10 +67,22 @@ jobs:
           NOTES
           sed -i 's/^          //' release-notes.md
 
+      - name: Bot token
+        id: bot
+        # Releases are published by the AltoClef Plus Bot when it may write repo contents; otherwise as usual.
+        if: startsWith(github.ref, 'refs/tags/v') && vars.BOT_APP_ID != ''
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+          permission-contents: write
+
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ steps.bot.outputs.token || github.token }}
           name: AltoClef Plus ${{ github.ref_name }}
           body_path: release-notes.md
           prerelease: ${{ startsWith(github.ref_name, 'v0.') }}

@@ -51,7 +51,7 @@ public final class GatePlanner {
             if (!hasShield(s)) return need(Gate.IRON_KIT, "shield");
             // An empty bucket counts: AltoClef pours its water out while casting obsidian, and the gate must not
             // interrupt that to "go get water".
-            if (!s.has("water_bucket") && !s.has("bucket")) return need(Gate.IRON_KIT, "water_bucket");
+            if (cfg.gateWaterBucket && !s.has("water_bucket") && !s.has("bucket")) return need(Gate.IRON_KIT, "water_bucket");
         }
         if (active(Gate.IRON_ARMOR, cfg.gateIronArmor, nowMs) && pick >= ItemInfo.IRON) {
             Optional<Need> armor = missingIronArmor(s, Gate.IRON_ARMOR);

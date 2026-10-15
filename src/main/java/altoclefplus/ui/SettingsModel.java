@@ -92,6 +92,7 @@ public final class SettingsModel {
         r.add(new Toggle("Drop junk when full", () -> c.inventory.dropJunk, v -> c.inventory.dropJunk = v));
         r.add(new Toggle("Drop outdated tools", () -> c.inventory.dropOutdatedTools, v -> c.inventory.dropOutdatedTools = v));
         r.add(new Toggle("Visible inventory (watch the bot sort and craft)", () -> c.inventory.visibleInventory, v -> c.inventory.visibleInventory = v));
+        r.add(new Value("  Click pace (ms)", () -> Math.round(c.inventory.visibleClickDelay * 1000), v -> c.inventory.visibleClickDelay = v / 1000f, 100, 1000, 50));
         r.add(new Toggle("Smelt in the background (get coal meanwhile)", () -> c.inventory.backgroundSmelting, v -> c.inventory.backgroundSmelting = v));
         r.add(new Toggle("Unstick cursor items", () -> c.inventory.cursorGuard, v -> c.inventory.cursorGuard = v));
         r.add(new Toggle("New table/furnace instead of long walks", () -> c.inventory.placeNearCraftingTable, v -> c.inventory.placeNearCraftingTable = v));
@@ -106,7 +107,8 @@ public final class SettingsModel {
                 List.of("Tasks that need it", "@gamer only", "Every task"),
                 () -> c.survival.gateScope, v -> c.survival.gateScope = v));
         r.add(new Toggle("Stone sword/axe/shovel first", () -> c.survival.gateStoneKit, v -> c.survival.gateStoneKit = v));
-        r.add(new Toggle("Iron sword, shield, water bucket", () -> c.survival.gateIronKit, v -> c.survival.gateIronKit = v));
+        r.add(new Toggle("Iron sword and shield", () -> c.survival.gateIronKit, v -> c.survival.gateIronKit = v));
+        r.add(new Toggle("  ...and a water bucket", () -> c.survival.gateWaterBucket, v -> c.survival.gateWaterBucket = v));
         r.add(new Toggle("Full iron armor before diamonds", () -> c.survival.gateIronArmor, v -> c.survival.gateIronArmor = v));
         r.add(new Toggle("Armor + food before Nether", () -> c.survival.gateNetherEntry, v -> c.survival.gateNetherEntry = v));
 
@@ -114,6 +116,7 @@ public final class SettingsModel {
         r.add(new Toggle("Caution (heal, flee, avoid caves)", () -> c.survival.caution, v -> c.survival.caution = v));
         r.add(new Toggle("Defend myself when idle (AFK)", () -> c.survival.defendWhileIdle, v -> c.survival.defendWhileIdle = v));
         r.add(new Toggle("Avoid water in caves", () -> c.survival.avoidCaveWater, v -> c.survival.avoidCaveWater = v));
+        r.add(new Value("  Cave water cost (per block)", () -> (int) Math.round(c.survival.caveWaterPenalty), v -> c.survival.caveWaterPenalty = v, 0, 200, 10));
         r.add(new Toggle("Get air when drowning (swim up / door)", () -> c.survival.airRescue, v -> c.survival.airRescue = v));
         r.add(new Toggle("Carry a door for air pockets", () -> c.survival.carryDoor, v -> c.survival.carryDoor = v));
         r.add(new Toggle("Jump critical hits", () -> c.survival.critHits, v -> c.survival.critHits = v));

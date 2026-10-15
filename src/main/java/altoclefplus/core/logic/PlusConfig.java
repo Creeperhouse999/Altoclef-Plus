@@ -129,6 +129,8 @@ public final class PlusConfig {
         public String gateScope = "NEEDED";
         public boolean gateStoneKit = true;
         public boolean gateIronKit = true;
+        /** Part of the iron kit: a water bucket for fall clutches and putting out fire. */
+        public boolean gateWaterBucket = true;
         public boolean gateIronArmor = true;
         public boolean gateNetherEntry = true;
         public int netherMinFoodUnits = 20;
@@ -288,6 +290,8 @@ public final class PlusConfig {
         recovery.longWaitTasks = noNulls(recovery.longWaitTasks);
 
         camera.smoothness = clamp(camera.smoothness, 1, 40);
+        survival.caveWaterPenalty = Math.max(0, Math.min(200, survival.caveWaterPenalty));
+        inventory.visibleClickDelay = clamp(inventory.visibleClickDelay, 0.1f, 1.0f);
         camera.maxDegreesPerSecond = clamp(camera.maxDegreesPerSecond, 30, 5000);
         camera.combatMultiplier = clamp(camera.combatMultiplier, 1, 10);
         inventory.junkFreeSlotThreshold = clamp(inventory.junkFreeSlotThreshold, 0, 10);

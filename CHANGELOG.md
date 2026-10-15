@@ -19,6 +19,8 @@ as its notes.
   under a cave ceiling it places a door next to itself (doors can't hold water) and breathes inside it;
   with no door and no open water above, it leaves the way out to the pathfinder.
 - **Carries a door** for those air pockets, made only from wood it already has.
+- The water bucket in the iron-kit gear gate has its own switch, and the cave-water cost and the visible
+  inventory click pace can be adjusted in Settings.
 - **Visible inventory** (on by default): when the bot crafts in its 2x2 grid, sorts or equips, the inventory
   screen opens so you can watch it click, at a slower human-like pace, and closes when it's done.
 - **Drops outdated tools**: a wooden pickaxe goes once a stone one is carried, and so on (enchanted, named,

@@ -80,7 +80,7 @@ public final class PlanTracker {
             case STONE_SWORD -> ItemInfo.bestTier(s, "sword") >= ItemInfo.STONE;
             case IRON_INGOTS -> s.has("iron_ingot") || pick >= ItemInfo.IRON;
             case IRON_KIT -> pick >= ItemInfo.IRON && ItemInfo.bestTier(s, "sword") >= ItemInfo.IRON
-                    && (s.has("shield") || "shield".equals(s.offhand)) && s.has("water_bucket");
+                    && (s.has("shield") || "shield".equals(s.offhand)) && (s.has("water_bucket") || s.has("bucket"));
             case IRON_ARMOR -> allArmorAtLeast(s, ItemInfo.IRON);
             case DIAMONDS -> s.has("diamond") || pick >= ItemInfo.DIAMOND;
             case DIAMOND_GEAR -> pick >= ItemInfo.DIAMOND && ItemInfo.bestTier(s, "sword") >= ItemInfo.DIAMOND

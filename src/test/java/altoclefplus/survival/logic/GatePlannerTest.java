@@ -134,4 +134,13 @@ class GatePlannerTest {
         Snapshot s = Snapshot.builder().item("bread", 1).taskChain(List.of("<Beat Minecraft> Collecting beds.")).build();
         assertEquals("none", item(next(g, s)));
     }
+
+    @Test
+    void waterBucketCanBeLeftOutOfTheIronKit() {
+        GatePlanner g = new GatePlanner();
+        cfg.gateWaterBucket = false;
+        Snapshot s = Snapshot.builder().item("iron_pickaxe", 1).item("iron_sword", 1).item("stone_axe", 1)
+                .item("stone_shovel", 1).offhand("shield").build();
+        assertNotEquals("water_bucket", item(next(g, s)), "bucket switched off: go straight to iron armor");
+    }
 }

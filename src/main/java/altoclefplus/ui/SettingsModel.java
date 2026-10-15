@@ -44,6 +44,7 @@ public final class SettingsModel {
         List<Row> r = new ArrayList<>();
 
         r.add(new Header("Basics"));
+        r.add(new Toggle("Defend myself when idle (AFK)", () -> c.survival.defendWhileIdle, v -> c.survival.defendWhileIdle = v));
         r.add(new Toggle("Loot chests", () -> c.basics.lootChests, v -> c.basics.lootChests = v));
         r.add(new Toggle("Sleep at night (@gamer)", () -> c.basics.sleepAtNight, v -> c.basics.sleepAtNight = v));
         r.add(new Toggle("Loot ruined portals (@gamer)", () -> c.basics.lootRuinedPortals, v -> c.basics.lootRuinedPortals = v));
@@ -119,7 +120,6 @@ public final class SettingsModel {
 
         r.add(new Header("Survival"));
         r.add(new Toggle("Caution (heal, flee, avoid caves)", () -> c.survival.caution, v -> c.survival.caution = v));
-        r.add(new Toggle("Defend myself when idle (AFK)", () -> c.survival.defendWhileIdle, v -> c.survival.defendWhileIdle = v));
         r.add(new Toggle("Avoid water in caves", () -> c.survival.avoidCaveWater, v -> c.survival.avoidCaveWater = v));
         r.add(new Value("  Cave water cost (per block)", () -> (int) Math.round(c.survival.caveWaterPenalty), v -> c.survival.caveWaterPenalty = v, 0, 200, 10));
         r.add(new Toggle("Get air when drowning (swim up / door)", () -> c.survival.airRescue, v -> c.survival.airRescue = v));

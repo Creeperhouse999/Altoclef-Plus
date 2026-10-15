@@ -22,6 +22,7 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Live safe zones and break/attack rules for the current world. Zones also feed Baritone's own "avoid
@@ -53,7 +54,15 @@ public final class Zones {
     }
 
     /** Rebuild the zone set when the world or the zone list changed. Cheap; called every tick. */
+    /**
+     * Blocks that hold an item frame or painting. Breaking them pops the frame off, and frames label chests,
+     * so they are never broken. Refreshed on the game thread; read by Baritone's pathing thread.
+     */
+    private static volatile Set<Long> frameSupports = Set.of();
+    private static int frameScanTick;
+
     public static void refresh() {
+        if (++frameScanTick % 20 == 0) scanFrames();
         var deny = Plus.config().rules.neverBreakBlocks;
         breakRules = new BreakRules(new HashSet<>(deny));
         String world = worldKey();
@@ -65,6 +74,20 @@ public final class Zones {
             zonesHash = hash;
         }
         nothingToCheck = current.zones().isEmpty() && deny.isEmpty();
+    }
+
+    private static void scanFrames() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.world == null || client.player == null) {
+            frameSupports = Set.of();
+            return;
+        }
+        Set<Long> supports = new HashSet<>();
+        for (var e : client.world.getEntitiesByClass(net.minecraft.entity.decoration.AbstractDecorationEntity.class,
+                client.player.getBoundingBox().expand(96), x -> true)) {
+            supports.add(e.getDecorationBlockPos().offset(e.getHorizontalFacing().getOpposite()).asLong());
+        }
+        frameSupports = supports;
     }
 
     /** Force a rebuild (after editing a zone's corners or rules). */
@@ -94,6 +117,7 @@ public final class Zones {
 
     /** Called by Baritone for every block it considers, so it must stay cheap. */
     public static boolean mayBreak(BlockPos pos) {
+        if (!frameSupports.isEmpty() && frameSupports.contains(pos.asLong())) return false;
         if (nothingToCheck) return true;
         MinecraftClient client = MinecraftClient.getInstance();
         String blockId = client.world == null ? "" : Registry.BLOCK.getId(client.world.getBlockState(pos).getBlock()).getPath();
@@ -109,6 +133,8 @@ public final class Zones {
     }
 
     public static boolean mayAttack(Entity target) {
+        // Item frames and paintings are never hit (frames label chests; hitting one takes its item out).
+        if (target instanceof net.minecraft.entity.decoration.AbstractDecorationEntity) return false;
         PlusConfig.Rules r = Plus.config().rules;
         if (r.neverAttackPlayers && target instanceof net.minecraft.entity.player.PlayerEntity && !playerCommandRunning()) return false;
         AttackRules rules = new AttackRules(r.neverAttackNamed, r.neverAttackTamed, new HashSet<>(r.neverAttackMobs), r.selfDefense);

@@ -21,6 +21,8 @@ as its notes.
 - **Carries a door** for those air pockets, made only from wood it already has.
 - **Your own presets**: type a command and press *+* next to *Run* to keep it as a preset button;
   shift-click a preset to remove it.
+- **Item frames are never touched**: the bot never hits an item frame or painting and never breaks the block
+  one hangs on (frames often label chests).
 - **Never attack players** (no PvP, on by default) in Safety rules. AltoClef's own `punk` / `terminate`
   commands still work when you run them yourself.
 - **AltoClef options in the panel**: 18 of AltoClef's own settings (auto-eat, auto-respawn, replant crops,

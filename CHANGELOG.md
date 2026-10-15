@@ -8,6 +8,12 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-15
+
+Fixes and additions from a long playtest. Tested in-game: an @gamer run with the new bed step, running when
+outnumbered, the see-through path, the new HUD text and plan labels, the pickup fix and torch crafting.
+Unit-tested only so far: junk pit / lava, furnace reuse, creeper fights, torch placing, avoiding death spots.
+
 ### Added
 - **Bed early in @gamer**: right after stone tools the bot gets one bed (AltoClef only collected beds at the very
   end), so it can sleep through the first night. Setting, on by default.

@@ -2,7 +2,7 @@ package altoclefplus.survival.logic;
 
 /**
  * Early @gamer nights killed the bot again and again (skeletons, zombie groups). Without iron armor and
- * without a way to sleep, it waits the night out in a covered 2-deep hole instead.
+ * without a way to sleep, it waits the night out in a covered 3-deep hole instead.
  */
 public final class NightShelter {
     private NightShelter() {}

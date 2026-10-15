@@ -22,7 +22,7 @@ import java.util.Map;
 
 /** The control panel: Tasks, Plan, Status and Settings tabs, with Stop / Pause always visible. */
 public final class PanelScreen extends PlusScreen {
-    public enum Tab { TASKS("Tasks"), PLAN("Plan"), STATUS("Status"), SETTINGS("Settings");
+    public enum Tab { TASKS("Tasks"), PLAN("Plan"), STATUS("Status"), ZONES("Zones"), SETTINGS("Settings");
         final String label;
         Tab(String label) { this.label = label; }
     }
@@ -45,6 +45,7 @@ public final class PanelScreen extends PlusScreen {
     private TextFieldWidget command;
     private ButtonWidget pauseButton;
     private String selectedItem = "";
+    private ZonesTab zonesTab;
 
     public PanelScreen() {
         this(null, lastTab);
@@ -86,6 +87,13 @@ public final class PanelScreen extends PlusScreen {
         switch (tab) {
             case TASKS -> initTasks();
             case SETTINGS -> initSettings();
+            case ZONES -> {
+                zonesTab = new ZonesTab(this::addDrawableChild, () -> {
+                    clearChildren();
+                    init();
+                });
+                zonesTab.init(textRenderer, cx(), cy(), cw(), ch());
+            }
             default -> { }
         }
     }
@@ -165,7 +173,9 @@ public final class PanelScreen extends PlusScreen {
         return SettingsModel.rows(
                 () -> client.setScreen(new ItemListScreen(this, "Protected items (never dropped)", Plus.config().inventory.protectedItems)),
                 () -> client.setScreen(new ItemListScreen(this, "Junk items (may be dropped when full)", Plus.config().inventory.junkItems)),
-                () -> client.setScreen(new HotbarLayoutScreen(this)));
+                () -> client.setScreen(new HotbarLayoutScreen(this)),
+                () -> client.setScreen(new EntityListScreen(this, "Never attack these mobs", Plus.config().rules.neverAttackMobs)),
+                () -> client.setScreen(new ItemListScreen(this, "Never break these blocks", Plus.config().rules.neverBreakBlocks)));
     }
 
     private int rowsPerPage() {
@@ -237,6 +247,9 @@ public final class PanelScreen extends PlusScreen {
             case TASKS -> renderTasks(m, mouseX, mouseY);
             case PLAN -> renderPlan(m);
             case STATUS -> renderStatus(m);
+            case ZONES -> {
+                if (zonesTab != null) zonesTab.render(m, textRenderer, cx(), cy());
+            }
             case SETTINGS -> renderSettings(m);
         }
         BotState st = Plus.control() == null ? BotState.IDLE : Plus.control().state();
@@ -416,6 +429,7 @@ public final class PanelScreen extends PlusScreen {
         if (search != null) search.tick();
         if (count != null) count.tick();
         if (command != null) command.tick();
+        if (tab == Tab.ZONES && zonesTab != null) zonesTab.tick();
         if (pauseButton != null) pauseButton.setMessage(pauseLabel());
     }
 

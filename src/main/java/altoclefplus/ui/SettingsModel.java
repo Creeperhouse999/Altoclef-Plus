@@ -38,9 +38,26 @@ public final class SettingsModel {
 
     private SettingsModel() {}
 
-    public static List<Row> rows(Runnable openProtected, Runnable openJunk, Runnable openHotbar) {
+    public static List<Row> rows(Runnable openProtected, Runnable openJunk, Runnable openHotbar,
+                                 Runnable openNeverAttack, Runnable openNeverBreak) {
         PlusConfig c = Plus.config();
         List<Row> r = new ArrayList<>();
+
+        r.add(new Header("Basics"));
+        r.add(new Toggle("Loot chests", () -> c.basics.lootChests, v -> c.basics.lootChests = v));
+        r.add(new Toggle("Sleep at night (@gamer)", () -> c.basics.sleepAtNight, v -> c.basics.sleepAtNight = v));
+        r.add(new Toggle("Loot ruined portals (@gamer)", () -> c.basics.lootRuinedPortals, v -> c.basics.lootRuinedPortals = v));
+        r.add(new Toggle("Loot desert temples (@gamer)", () -> c.basics.lootDesertTemples, v -> c.basics.lootDesertTemples = v));
+        r.add(new Toggle("Pearls by piglin trading, not hunting", () -> c.basics.barterForPearls, v -> c.basics.barterForPearls = v));
+        r.add(new Value("Eyes of ender to collect", () -> c.basics.eyesToCollect, v -> c.basics.eyesToCollect = v, 12, 20, 1));
+
+        r.add(new Header("Safety rules"));
+        r.add(new Toggle("Never attack named mobs", () -> c.rules.neverAttackNamed, v -> c.rules.neverAttackNamed = v));
+        r.add(new Toggle("Never attack tamed pets", () -> c.rules.neverAttackTamed, v -> c.rules.neverAttackTamed = v));
+        r.add(new Toggle("Self-defense inside zones", () -> c.rules.selfDefense, v -> c.rules.selfDefense = v));
+        r.add(new Action("Never-attack mob list...", openNeverAttack));
+        r.add(new Action("Never-break block list...", openNeverBreak));
+        r.add(new Toggle("Show safe zones in the world", () -> c.ui.showZones, v -> c.ui.showZones = v));
 
         r.add(new Header("Modules"));
         module(r, "Control panel & HUD", "ui", v -> c.modules.ui = v, () -> c.modules.ui);

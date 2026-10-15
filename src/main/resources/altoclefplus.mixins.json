@@ -25,7 +25,8 @@
     "SlotHandlerMixin",
     "StrongholdLocateMixin",
     "ToolSelectMixin",
-    "ZoneGuardMixin"
+    "ZoneGuardMixin",
+    "ZoneOutlineMixin"
   ],
   "injectors": {
     "defaultRequire": 1

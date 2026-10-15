@@ -22,6 +22,7 @@ as its notes.
   exactly where it aims. Visual only; setting in Camera.
 - The path line is drawn through blocks, like Baritone's, so you can follow it behind walls; the next path
   segment is shown too.
+- The HUD says "Hunting sheep" when the bot kills animals for food or wool, instead of "Fighting mobs".
 - The @gamer plan names steps as goals ("Stock up food (4/20)") instead of finished facts ("Food stocked").
 
 ### Fixed

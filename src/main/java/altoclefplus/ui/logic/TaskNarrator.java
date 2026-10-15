@@ -13,6 +13,10 @@ import java.util.regex.Pattern;
 public final class TaskNarrator {
     private static final Pattern CRAFT = Pattern.compile("craft ([a-z0-9_]+)\\}");
     private static final Pattern COLLECT = Pattern.compile("mine and collect: \\[\\[([a-z0-9_]+)");
+    private static final Pattern KILLING = Pattern.compile("killing entity\\.minecraft\\.([a-z_]+)");
+    /** Animals AltoClef kills for food, wool or leather. */
+    private static final java.util.Set<String> PASSIVE = java.util.Set.of("sheep", "cow", "pig", "chicken", "rabbit",
+            "mooshroom", "horse", "salmon", "cod", "squid", "goat", "hoglin");
     private static final Pattern DIMENSION = Pattern.compile("going to dimension: ([a-z_]+)");
     private static final Pattern EAT = Pattern.compile("\\beat(ing)?\\b");
     private static final Pattern SLEEP = Pattern.compile("\\bsleep|\\bbeds?\\b");
@@ -82,6 +86,11 @@ public final class TaskNarrator {
         if (e.contains("furnace") || e.contains("smelt")) return "Smelting";
         if (e.contains("creeper")) return "Running from a creeper";
         if (e.contains("nigerundayo") || e.contains("run away") || e.contains("runaway")) return "Running from mobs";
+        m = KILLING.matcher(e);
+        if (m.find()) {
+            String mob = m.group(1);
+            return (PASSIVE.contains(mob) ? "Hunting " : "Fighting ") + pretty(mob);
+        }
         if (e.contains("kill")) return "Fighting mobs";
         if (e.contains("pickup dropped") || e.contains("approach entity entity.minecraft.item")) return "Picking up items";
         if (e.contains("wander")) return "Exploring";

@@ -34,6 +34,8 @@ class TaskNarratorTest {
                 "<Crafting (w/ RECIPE): RecipeTarget{_recipe=CraftingRecipe{craft iron_boots}, _item=iron_boots x 1}>"), ""));
         assertEquals("Smelting", TaskNarrator.action(List.of("<Doing stuff in [furnace] x 1 container> Waiting..."), ""));
         assertEquals("Fighting mobs", TaskNarrator.action(List.of("<Killing entities>"), ""));
+        assertEquals("Hunting sheep", TaskNarrator.action(List.of("<Collect Food>", "<Killing entity.minecraft.sheep>"), ""), "food/wool, not a fight");
+        assertEquals("Fighting skeleton", TaskNarrator.action(List.of("<Killing entity.minecraft.skeleton>"), ""));
         assertEquals("Running from a creeper", TaskNarrator.action(List.of("<Run away from creepers>"), ""));
         assertEquals("Picking up items", TaskNarrator.action(List.of("<Pickup Dropped Items: [[spruce_log] x 10]>"), ""));
         assertEquals("Exploring", TaskNarrator.action(List.of("<Wander for 5.0 blocks> Exploring"), ""));

@@ -92,6 +92,7 @@ public final class SettingsModel {
         r.add(new Toggle("Drop junk when full", () -> c.inventory.dropJunk, v -> c.inventory.dropJunk = v));
         r.add(new Toggle("Drop outdated tools", () -> c.inventory.dropOutdatedTools, v -> c.inventory.dropOutdatedTools = v));
         r.add(new Toggle("Visible inventory (watch the bot sort and craft)", () -> c.inventory.visibleInventory, v -> c.inventory.visibleInventory = v));
+        r.add(new Toggle("Smelt in the background (get coal meanwhile)", () -> c.inventory.backgroundSmelting, v -> c.inventory.backgroundSmelting = v));
         r.add(new Toggle("Unstick cursor items", () -> c.inventory.cursorGuard, v -> c.inventory.cursorGuard = v));
         r.add(new Toggle("New table/furnace instead of long walks", () -> c.inventory.placeNearCraftingTable, v -> c.inventory.placeNearCraftingTable = v));
         r.add(new Value("Drop junk when free slots <=", () -> c.inventory.junkFreeSlotThreshold, v -> c.inventory.junkFreeSlotThreshold = v, 0, 10, 1));

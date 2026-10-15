@@ -91,6 +91,8 @@ public final class PlusConfig {
         public boolean cursorGuard = true;
         /** Show the inventory screen while the bot moves items in its own inventory, at a watchable pace. */
         public boolean visibleInventory = true;
+        /** Don't stand at the furnace: mine some coal while it smelts, then come back. */
+        public boolean backgroundSmelting = true;
         /** Seconds between item moves in visible mode (AltoClef's default is 0.2). */
         public float visibleClickDelay = 0.3f;
         public boolean placeNearCraftingTable = true;

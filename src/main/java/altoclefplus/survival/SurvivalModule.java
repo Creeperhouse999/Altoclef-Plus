@@ -171,7 +171,15 @@ public final class SurvivalModule implements Module {
      */
     private void guardWhileIdle(Snapshot s, PlusConfig.Survival cfg) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || client.world == null || s.dead || s.paused) return;
+        if (client.player == null || client.world == null) {
+            // Left the world while defending: hand the runner back (it crashed AltoClef otherwise).
+            if (idleGuard.tick(false, false, false, false) == IdleGuard.Action.RELEASE) {
+                Plus.control().setDefending(false);
+                if (!mod.getUserTaskChain().isActive()) mod.getTaskRunner().disable();
+            }
+            return;
+        }
+        if (s.dead || s.paused) return;
         if (anyKeyPressed(client.options)) lastInputTick = s.tick;
         boolean playerActive = s.tick - lastInputTick < 100;
         boolean threat = client.player.hurtTime > 0 || !client.world.getEntitiesByClass(HostileEntity.class,

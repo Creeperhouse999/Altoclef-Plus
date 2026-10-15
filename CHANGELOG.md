@@ -67,6 +67,7 @@ as its notes.
 - Full-height safe zones now also show their rectangle at your feet level, not only the corner posts.
 
 ### Fixed
+- Fixed a crash when leaving a world while the bot was fighting ("other is null" in AltoClef's task chains).
 - **Spare pickaxe**: the only pickaxe is replaced at 15% durability while the materials are still in the bag
   (same tier, else stone or wood). A pickaxe breaking deep underground used to send the bot back up for wood.
 - **Picks up what it mines**: a new pickup step walks straight to nearby drops the task needs (within 10

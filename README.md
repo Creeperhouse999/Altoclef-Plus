@@ -64,8 +64,8 @@ Legend: ✅ built · 🧪 new, only unit-tested so far (please report anything o
 - **Stop, Pause and Resume** buttons and hotkeys. ✅
 - **Plan view:** a checklist of what the bot is doing in `@gamer` — ✓ done, ▶ now, ○ next. ✅
 - **Step history:** every step the bot worked on and how long it took. ✅
-- **Small HUD:** what you asked for and what the bot is doing right now in plain English (e.g. *Get iron
-  pickaxe: Mining iron ore*), state (Running / Paused / Recovering / Defending / Idle), next milestones,
+- **Small HUD:** what you asked for, how far along it is and what the bot is doing right now in plain
+  English (e.g. *Get spruce log x40 (12/40): Mining spruce log*), state (Running / Paused / Recovering / Defending / Idle), next milestones,
   alerts, and during `@gamer` the key items (food, pearls, blaze rods, eyes, beds). ✅
 - **World overlay:** blocks the bot will break glow red, the block it is mining orange, its goal green, the
   path ahead is a cyan line and nearby hostile mobs are outlined — each layer can be switched off. 🧪
@@ -127,9 +127,14 @@ Legend: ✅ built · 🧪 new, only unit-tested so far (please report anything o
 - **Safe zones:** mark your house, farm or petting zoo from the *Zones* tab (stand on two corners, press a
   button). Per zone you choose: no breaking, no placing, no looting, no entering, no attacking hostile /
   neutral / friendly mobs. Baritone plans around zones, and you can show their outlines in the world.
-- **Never attack** named mobs and tamed pets (on by default), plus any mob types you pick.
+- **Never attack** named mobs, tamed pets and other players (all on by default), plus any mob types you pick.
 - **Never break** the block types you pick.
 - **Self-defense:** inside a zone the bot may still hit a mob that is attacking it (never named or tamed).
+
+### AltoClef's own options 🧪
+- 18 of AltoClef's settings right in the panel: eat and respawn automatically, replant crops, how far to
+  mine or search chests for resources, how much food to keep, building blocks to keep, and more. They are
+  applied in memory — AltoClef's own settings file is never changed.
 
 ### Stuck recovery ✅
 - Detects: no progress, endless pillaring (the "Nether elevator"), mining the same block, walking back and

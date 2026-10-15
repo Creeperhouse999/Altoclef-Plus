@@ -111,4 +111,12 @@ class ToolsTest {
         assertNotEquals(7, p.slot(), "slot 7 was filled 50 ticks ago");
         assertNotEquals(1, p.slot(), "slot 1 is pinned for pickaxes");
     }
+
+    @Test
+    void cursorGuardIsPatientWhileAContainerIsOpen() {
+        CursorGuard g = new CursorGuard(40);
+        // A furnace/crafting task holds an item on the cursor between its own clicks: not stuck.
+        for (int i = 0; i < 399; i++) assertEquals(CursorGuard.Action.NONE, g.tick(false, false, true));
+        assertEquals(CursorGuard.Action.STASH, g.tick(false, false, true), "still rescues a truly stuck cursor");
+    }
 }

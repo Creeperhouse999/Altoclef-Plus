@@ -60,6 +60,17 @@ public final class BotControl {
         if (state == BotState.RUNNING || state == BotState.RECOVERING) state = BotState.IDLE;
     }
 
+    private boolean defending;
+
+    /** Idle, but fighting/fleeing a mob on its own ("defend while idle"). */
+    public boolean defending() {
+        return defending && state == BotState.IDLE;
+    }
+
+    public void setDefending(boolean defending) {
+        this.defending = defending;
+    }
+
     public void setRecovering(boolean recovering) {
         if (recovering && state == BotState.RUNNING) state = BotState.RECOVERING;
         else if (!recovering && state == BotState.RECOVERING) state = BotState.RUNNING;

@@ -12,12 +12,17 @@ public final class CursorGuard {
     }
 
     public Action tick(boolean cursorEmpty, boolean clickedThisTick) {
+        return tick(cursorEmpty, clickedThisTick, false);
+    }
+
+    /** With a container open (furnace, crafting table) AltoClef holds items between clicks: wait 10x longer. */
+    public Action tick(boolean cursorEmpty, boolean clickedThisTick, boolean containerOpen) {
         if (cursorEmpty || clickedThisTick) {
             stuckTicks = 0;
             return Action.NONE;
         }
         stuckTicks++;
-        if (stuckTicks >= timeoutTicks) {
+        if (stuckTicks >= (containerOpen ? timeoutTicks * 10 : timeoutTicks)) {
             stuckTicks = 0;
             return Action.STASH;
         }

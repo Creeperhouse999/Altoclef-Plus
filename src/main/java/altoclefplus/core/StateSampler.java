@@ -70,6 +70,7 @@ public final class StateSampler {
                 .dead(player.isDead() || client.currentScreen instanceof DeathScreen)
                 .inLava(player.isInLava())
                 .screenOpen(client.currentScreen != null)
+                .paused(client.isPaused())
                 .containerOpen(client.currentScreen instanceof HandledScreen && !(client.currentScreen instanceof InventoryScreen))
                 .cursorEmpty(player.currentScreenHandler == null || player.currentScreenHandler.getCursorStack().isEmpty());
 

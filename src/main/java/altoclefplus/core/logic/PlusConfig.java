@@ -127,6 +127,10 @@ public final class PlusConfig {
 
         /** Only hit mobs the bot can see and is facing (AltoClef hits through walls / backwards). */
         public boolean fairCombat = true;
+        /** With no task running and nobody at the keys, fight or flee mobs instead of standing there. */
+        public boolean defendWhileIdle = true;
+        /** Stay on the block being mined; only switch to a much closer one, at most every few seconds. */
+        public boolean steadyMining = true;
         public int fairCombatMaxAngle = 30;
 
         /** Path around doors with diagonal/step moves and don't eat while aiming at doors. */

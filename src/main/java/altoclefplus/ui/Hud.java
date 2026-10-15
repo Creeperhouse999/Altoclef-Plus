@@ -27,13 +27,14 @@ public final class Hud {
 
         if (cfg.hudBadge) {
             BotState st = Plus.control().state();
-            int color = switch (st) {
+            boolean defending = Plus.control().defending();
+            int color = defending ? 0xFFFF5555 : switch (st) {
                 case RUNNING -> 0xFF55FF55;
                 case PAUSED -> 0xFFFFFF55;
                 case RECOVERING -> 0xFFFFAA00;
                 case IDLE -> 0xFFAAAAAA;
             };
-            String badge = "[" + st.label + "]";
+            String badge = "[" + (defending ? "Defending" : st.label) + "]";
             DrawableHelper.fill(m, x - 2, y - 2, x + tr.getWidth(badge) + 2, y + tr.fontHeight, 0x90000000);
             tr.drawWithShadow(m, badge, x, y, color);
             y += line;

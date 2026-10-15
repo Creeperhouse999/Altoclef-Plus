@@ -23,6 +23,7 @@
     "KeyBindingAccessor",
     "ObsidianCastMixin",
     "SlotHandlerMixin",
+    "SteadyMiningMixin",
     "StrongholdLocateMixin",
     "ToolSelectMixin",
     "ZoneGuardMixin",

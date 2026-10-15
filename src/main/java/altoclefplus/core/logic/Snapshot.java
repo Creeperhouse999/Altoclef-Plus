@@ -31,6 +31,8 @@ public final class Snapshot {
     public final boolean cursorEmpty;
     public final boolean screenOpen;
     public final boolean containerOpen;
+    /** Singleplayer game paused (Esc menu): the world is frozen. */
+    public final boolean paused;
     public final boolean userTaskRunning;
     public final String userCommand;
     /** Task chain from root to leaf, as AltoClef debug strings. */
@@ -67,6 +69,7 @@ public final class Snapshot {
         cursorEmpty = b.cursorEmpty;
         screenOpen = b.screenOpen;
         containerOpen = b.containerOpen;
+        paused = b.paused;
         userTaskRunning = b.userTaskRunning;
         userCommand = b.userCommand;
         taskChain = List.copyOf(b.taskChain);
@@ -118,6 +121,7 @@ public final class Snapshot {
         b.cursorEmpty = cursorEmpty;
         b.screenOpen = screenOpen;
         b.containerOpen = containerOpen;
+        b.paused = paused;
         b.userTaskRunning = userTaskRunning;
         b.userCommand = userCommand;
         b.taskChain = new java.util.ArrayList<>(taskChain);
@@ -150,6 +154,7 @@ public final class Snapshot {
         private boolean cursorEmpty = true;
         private boolean screenOpen;
         private boolean containerOpen;
+        private boolean paused;
         private boolean userTaskRunning;
         private String userCommand = "";
         private List<String> taskChain = new java.util.ArrayList<>();
@@ -184,6 +189,7 @@ public final class Snapshot {
         public Builder cursorEmpty(boolean v) { cursorEmpty = v; return this; }
         public Builder screenOpen(boolean v) { screenOpen = v; return this; }
         public Builder containerOpen(boolean v) { containerOpen = v; return this; }
+        public Builder paused(boolean v) { paused = v; return this; }
         public Builder userTaskRunning(boolean v) { userTaskRunning = v; return this; }
         public Builder userCommand(String v) { userCommand = v; return this; }
         public Builder taskChain(List<String> v) { taskChain = new java.util.ArrayList<>(v); return this; }

@@ -89,6 +89,9 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 
 ### Safer progression and survival ✅
 - **Fair combat:** no more hitting mobs through walls or while looking the other way. ✅
+- **Defends itself when idle:** with no task running and you away from the keys, it fights or flees mobs
+  instead of standing still; touch a key and you have the controls back. ✅
+- **Steady mining:** sticks to the block it is going for instead of switching targets all the time. ✅
 - **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
   full iron armor before hunting diamonds; armor and food before entering the Nether. ✅ Only for tasks that
   need it by default (`@gamer`, ores, Nether and End items) — errands like "get dirt" start right away.
@@ -211,7 +214,7 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.4** | Stuck recovery and death item recovery | ✅ Released |
 | **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | ✅ Released |
 | **0.6** | Safe zones, safety rules, basics settings, door fix, gate scope | ✅ Released |
-| **0.7** | In-game testing feedback, polish and fixes | 🚧 Next |
+| **0.7** | In-game testing feedback, polish and fixes | 🚧 In progress (0.7.0 out) |
 | Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
 
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.

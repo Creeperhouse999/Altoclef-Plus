@@ -28,9 +28,9 @@ public abstract class Detector {
 
     protected abstract void reset();
 
-    /** No task, menus, eating, fighting, dead, or a known long wait (smelting, sleeping...). */
+    /** No task, game paused, menus, eating, fighting, dead, or a known long wait (smelting, sleeping...). */
     public boolean suppressed(Snapshot s) {
-        if (!s.userTaskRunning || s.containerOpen || s.eating || s.mobDefenseActive || s.dead) return true;
+        if (!s.userTaskRunning || s.paused || s.containerOpen || s.eating || s.mobDefenseActive || s.dead) return true;
         for (String frag : cfg.longWaitTasks) {
             if (!frag.isEmpty() && s.leafTask.contains(frag)) return true;
         }

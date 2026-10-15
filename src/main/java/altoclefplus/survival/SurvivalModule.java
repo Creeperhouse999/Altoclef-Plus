@@ -21,8 +21,13 @@ import altoclefplus.survival.logic.CautionPolicy;
 import altoclefplus.core.TaskTargets;
 import altoclefplus.survival.logic.GatePlanner;
 import altoclefplus.survival.logic.GateScope;
+import altoclefplus.survival.logic.IdleGuard;
 import altoclefplus.survival.logic.StashPlanner;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalBlock;
 import baritone.api.pathing.goals.GoalGetToBlock;
@@ -56,6 +61,10 @@ public final class SurvivalModule implements Module {
     private final CautionPolicy caution = new CautionPolicy();
     private boolean resting;
     private final CombatAssist combat = new CombatAssist();
+    /** Hand AltoClef's mob defense the controls while idle and AFK; give them back ~5 s after it's calm. */
+    private final IdleGuard idleGuard = new IdleGuard(100);
+    /** Last tick the player pressed a movement/attack/use key (they are playing, not AFK). */
+    private long lastInputTick = Long.MIN_VALUE / 2;
     private GatePlanner.Gate runningGate;
     /** After any boat attempt, wait before considering another (stops retry loops at awkward shores). */
     private long nextBoatTryMs;
@@ -81,7 +90,8 @@ public final class SurvivalModule implements Module {
     @Override
     public void tick(Snapshot s) {
         PlusConfig.Survival cfg = Plus.config().survival;
-        if (s.userTaskRunning) combat.tick(mod, cfg);
+        guardWhileIdle(s, cfg);
+        if (s.userTaskRunning || idleGuard.engaged()) combat.tick(mod, cfg);
         else combat.stop(mod);
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
         if (cfg.waterClutch) ensureAutoMlg();
@@ -143,6 +153,44 @@ public final class SurvivalModule implements Module {
             runningGate = n.gate();
             status = label;
         }
+    }
+
+    /**
+     * AltoClef switches its whole task runner off when no task is running, so mob defense stopped too and
+     * the bot just stood there while zombies and creepers killed it. Switch the runner on while a threat is
+     * near (only when nobody is at the keys), so AltoClef's own defense fights or flees, then off again.
+     */
+    private void guardWhileIdle(Snapshot s, PlusConfig.Survival cfg) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null || s.dead || s.paused) return;
+        if (anyKeyPressed(client.options)) lastInputTick = s.tick;
+        boolean playerActive = s.tick - lastInputTick < 100;
+        boolean threat = client.player.hurtTime > 0 || !client.world.getEntitiesByClass(HostileEntity.class,
+                client.player.getBoundingBox().expand(10), e -> e.isAlive()
+                        && (client.player.canSee(e) || e instanceof CreeperEntity c && c.getFuseSpeed() > 0)).isEmpty();
+        switch (idleGuard.tick(cfg.defendWhileIdle, s.userTaskRunning, playerActive, threat)) {
+            case ENGAGE -> {
+                mod.getTaskRunner().enable();
+                Plus.control().setDefending(true);
+                Plus.log().add("survival", "Mob nearby while idle: defending");
+                status = "Defending (idle)";
+            }
+            case RELEASE -> {
+                Plus.control().setDefending(false);
+                if (!mod.getUserTaskChain().isActive()) {
+                    mod.getTaskRunner().disable();
+                    mod.getClientBaritone().getPathingBehavior().cancelEverything();
+                    mod.getClientBaritone().getInputOverrideHandler().clearAllKeys();
+                }
+                status = "idle";
+            }
+            case NONE -> { }
+        }
+    }
+
+    private static boolean anyKeyPressed(GameOptions o) {
+        return o.forwardKey.isPressed() || o.backKey.isPressed() || o.leftKey.isPressed() || o.rightKey.isPressed()
+                || o.jumpKey.isPressed() || o.attackKey.isPressed() || o.useKey.isPressed() || o.sneakKey.isPressed();
     }
 
     /** Bed by the portal, valuables chest, backup gear - each once per run, all optional. */
@@ -255,6 +303,7 @@ public final class SurvivalModule implements Module {
 
     @Override
     public void onDisable() {
+        if (idleGuard.engaged() && !mod.getUserTaskChain().isActive()) mod.getTaskRunner().disable();
         gateChain.cancelJob();
         stashChain.cancelJob();
         boatChain.cancelJob();

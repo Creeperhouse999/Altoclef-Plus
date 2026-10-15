@@ -141,4 +141,11 @@ class DetectorsTest {
         for (int i = 0; i < dims.length; i++) fired |= d.update(at(i * 1200L, 0, 64, 0).dimension(dims[i]).build()).isPresent();
         assertFalse(fired);
     }
+
+    @Test
+    void pausedGameTimeNeverCountsAsNoProgress() {
+        Detector d = new NoProgressDetector(cfg);
+        // 10 s running, 60 s with the game paused (Esc menu), then 10 s running again: never "stuck".
+        assertFalse(feed(d, 80, i -> at(i * 20L, 0, 64, 0).paused(i >= 10 && i < 70).build()));
+    }
 }

@@ -8,6 +8,24 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-15
+
+First round of fixes from a real in-game test session.
+
+### Added
+- **Defend myself when idle** (on by default): when no task is running and nobody is at the keys, the bot
+  now fights or runs from nearby mobs (zombies, creepers...) instead of standing still until it dies. It hands
+  the controls back as soon as it is calm again or you touch a movement key. The HUD shows *[Defending]*.
+- **Steady mining** (on by default): the bot keeps going for the block it already chose instead of switching
+  targets several times a second. A new block only wins when it is much closer, at most once every 3 seconds.
+
+### Fixed
+- After dying, the bot again goes back for its items: deaths while it was idle no longer count towards the
+  "keeps dying here, don't go back" guard.
+- Pausing the game (Esc menu) no longer makes stuck recovery think the bot is stuck when you come back.
+- "Putting away a stuck cursor item" no longer interrupts furnace and crafting-table work; it now waits much
+  longer while a container is open (and a bit longer everywhere).
+
 ## [0.6.1] - 2026-10-15
 
 ### Changed

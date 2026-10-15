@@ -200,7 +200,8 @@ public final class RecoveryModule implements Module {
         }
         items.remove(Items.AIR);
         lostItems = items;
-        deathLoops.record(System.currentTimeMillis(), prev.x, prev.z);
+        // Only deaths during a task count towards "keeps dying here"; idle/AFK deaths are not the bot's route.
+        if (botWasRunning) deathLoops.record(System.currentTimeMillis(), prev.x, prev.z);
         Plus.log().add("recovery", "Died at " + deathPos.toShortString() + " (" + deathDim + ", " + deathCause + ")");
     }
 

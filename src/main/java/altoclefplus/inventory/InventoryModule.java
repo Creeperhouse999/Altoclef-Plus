@@ -37,7 +37,7 @@ public final class InventoryModule implements Module {
     private static final int DECIDE_EVERY_TICKS = 20;
 
     private final PlusChain chain;
-    private final CursorGuard cursorGuard = new CursorGuard(40);
+    private final CursorGuard cursorGuard = new CursorGuard(100);
     private boolean clickedThisTick;
     private long ticks;
     private String status = "idle";
@@ -58,7 +58,7 @@ public final class InventoryModule implements Module {
         clickedThisTick = false;
         PlusConfig.Inventory cfg = Plus.config().inventory;
 
-        if (cfg.cursorGuard && cursorGuard.tick(s.cursorEmpty, clicked) == CursorGuard.Action.STASH) {
+        if (cfg.cursorGuard && cursorGuard.tick(s.cursorEmpty, clicked, s.containerOpen) == CursorGuard.Action.STASH) {
             if (s.userTaskRunning) chain.startJob(new CursorStashTask(), "Putting away a stuck cursor item", null);
         }
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;

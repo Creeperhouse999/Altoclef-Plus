@@ -102,6 +102,8 @@ public final class SettingsModel {
 
         r.add(new Header("Survival"));
         r.add(new Toggle("Caution (heal, flee, avoid caves)", () -> c.survival.caution, v -> c.survival.caution = v));
+        r.add(new Toggle("Defend myself when idle (AFK)", () -> c.survival.defendWhileIdle, v -> c.survival.defendWhileIdle = v));
+        r.add(new Toggle("Steady mining (no target switching)", () -> c.survival.steadyMining, v -> c.survival.steadyMining = v));
         r.add(new Toggle("Fair combat (no hits through walls)", () -> c.survival.fairCombat, v -> c.survival.fairCombat = v));
         r.add(new Toggle("Door fixes (no getting stuck at doors)", () -> c.survival.fixDoors, v -> c.survival.fixDoors = v));
         r.add(new Toggle("Use shield", () -> c.survival.shield, v -> c.survival.shield = v));

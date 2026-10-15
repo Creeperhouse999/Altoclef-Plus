@@ -239,6 +239,7 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.9** | Schematic contents (chests, signs, frames), chest labels, scaffolding cleanup, more fixes | 🚧 Next |
 | **1.0** | Multiplayer support (e.g. building) | 🗓️ Planned |
 
+Live progress: the [milestones](https://github.com/Creeperhouse999/Altoclef-Plus/milestones) list every planned item as an issue, closed when it's done.
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
 ## Build from source

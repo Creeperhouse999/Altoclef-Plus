@@ -23,7 +23,9 @@ changing their files, and makes the bot easier to control, safer and less likely
 - **Smarter inventory**: right tool for every block, tidy hotbar, wears and crafts armor as soon as it can,
   drops only real junk, fixes eye-of-ender crafting and long walks back to old crafting tables.
 - **Safer progression**: gears up before risky trips, rests when hurt, uses a shield, dodges arrows and
-  carries water for falls.
+  carries water for falls. When you're AFK with nothing running, it still fights or runs from mobs instead
+  of standing there.
+- **Steady mining**: sticks to the block it's going for instead of switching targets every moment.
 - **Stuck recovery**: notices endless pillaring, mining the same block, pacing or Nether back-and-forth
   and tries something else; goes back for its items after dying.
 - **Travel**: boats across oceans, enderman hunting with a boat trap, and one precise Nether trip to the

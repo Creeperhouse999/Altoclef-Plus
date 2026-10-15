@@ -8,6 +8,13 @@ as its notes.
 
 ## [Unreleased]
 
+### Changed
+- The HUD task line is now our own plain-English line: what you asked for and what the bot is doing right
+  now, e.g. *Get iron pickaxe: Mining iron ore* or *Get spruce log x40: Picking up items*. AltoClef's own
+  top task name often stayed the same for minutes (a crafting table while it was really mining iron).
+- The Food / Pearls / Rods / Eyes / Beds line only shows while *Beat the game* (`@gamer`) runs.
+- Pressing the pause key with nothing running now says *Nothing to pause*.
+
 ### Fixed
 - Presets no longer "finish" with items missing: at the end every step is checked again, and a step whose
   item was lost meanwhile (for example the chestplate after a death) is done again (at most 2 extra rounds).

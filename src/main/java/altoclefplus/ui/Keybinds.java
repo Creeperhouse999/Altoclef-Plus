@@ -37,8 +37,13 @@ public final class Keybinds {
             alert("Stopped");
         }
         while (PAUSE.wasPressed()) {
-            altoclefplus.Plus.control().togglePause();
-            alert(altoclefplus.Plus.control().state().label);
+            var control = altoclefplus.Plus.control();
+            if (control.state() == altoclefplus.ui.logic.BotState.IDLE) {
+                alert("Nothing to pause");
+                continue;
+            }
+            control.togglePause();
+            alert(control.state().label);
         }
     }
 

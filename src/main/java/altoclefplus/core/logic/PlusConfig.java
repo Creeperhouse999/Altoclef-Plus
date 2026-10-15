@@ -129,6 +129,10 @@ public final class PlusConfig {
         public boolean fairCombat = true;
         /** With no task running and nobody at the keys, fight or flee mobs instead of standing there. */
         public boolean defendWhileIdle = true;
+        /** Wait for a full charge bar and hit on the way down from a jump (critical hits) when it's safe. */
+        public boolean critHits = true;
+        /** Axe vs sword by situation (shields, groups, finishing blows) instead of AltoClef's fixed list. */
+        public boolean smartWeapon = true;
         /** Stay on the block being mined; only switch to a much closer one, at most every few seconds. */
         public boolean steadyMining = true;
         public int fairCombatMaxAngle = 30;

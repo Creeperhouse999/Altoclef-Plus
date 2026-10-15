@@ -32,6 +32,49 @@ public final class CritTiming {
         return best;
     }
 
+    /**
+     * Situational weapon: an axe against a shield (it knocks the shield out) or when one axe crit finishes the
+     * target and a sword crit wouldn't; a sword for groups (sweeping); otherwise the most damage per second.
+     */
+    public static String chooseWeapon(Map<String, Integer> items, int hostilesNear, boolean targetBlocking, float targetHealth) {
+        String sword = best(items, "_sword");
+        String axe = best(items, "_axe");
+        if (targetBlocking && !axe.isEmpty()) return axe;
+        if (hostilesNear >= 2 && !sword.isEmpty()) return sword;
+        if (!axe.isEmpty() && !sword.isEmpty()) {
+            boolean axeKills = damage(axe) * CRIT >= targetHealth;
+            boolean swordKills = damage(sword) * CRIT >= targetHealth;
+            if (axeKills && !swordKills) return axe;
+            return damage(sword) * speed(sword) >= damage(axe) * speed(axe) ? sword : axe;
+        }
+        return sword.isEmpty() ? axe : sword;
+    }
+
+    /** Jump crits only where a jump is safe and actually crits (not swimming, climbing, riding, levitating). */
+    public static boolean canCrit(boolean inWater, boolean inLava, boolean climbing, boolean riding, boolean levitating, boolean headroom) {
+        return !inWater && !inLava && !climbing && !riding && !levitating && headroom;
+    }
+
+    private static final double CRIT = 1.5;
+
+    private static String best(Map<String, Integer> items, String suffix) {
+        String best = "";
+        for (String id : items.keySet()) {
+            if (id.endsWith(suffix) && damage(id) > damage(best)) best = id;
+        }
+        return best;
+    }
+
+    /** Attacks per second. */
+    static double speed(String id) {
+        if (id.endsWith("_sword")) return 1.6;
+        return switch (id) {
+            case "wooden_axe", "stone_axe" -> 0.8;
+            case "iron_axe" -> 0.9;
+            default -> 1.0;
+        };
+    }
+
     static double damage(String id) {
         return switch (id) {
             case "wooden_sword", "golden_sword" -> 4;

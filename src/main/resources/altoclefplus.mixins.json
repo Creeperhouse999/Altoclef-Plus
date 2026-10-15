@@ -26,6 +26,7 @@
     "SteadyMiningMixin",
     "StrongholdLocateMixin",
     "ToolSelectMixin",
+    "WeaponChoiceMixin",
     "ZoneGuardMixin",
     "ZoneOutlineMixin"
   ],

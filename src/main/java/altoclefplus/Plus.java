@@ -62,6 +62,11 @@ public final class Plus {
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> {
             try {
+                altoclefplus.core.DevBridge.tick();
+            } catch (RuntimeException e) {
+                reportOnce("dev-bridge", e);
+            }
+            try {
                 onTick();
             } catch (RuntimeException e) {
                 reportOnce("tick", e);

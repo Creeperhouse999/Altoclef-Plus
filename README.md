@@ -9,6 +9,7 @@ safer progression and automatic recovery when the bot gets stuck.
 [![Minecraft 1.18.2](https://img.shields.io/badge/Minecraft-1.18.2-62B47A?style=flat-square)](https://minecraft.wiki/w/Java_Edition_1.18.2)
 [![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4?style=flat-square)](https://fabricmc.net/use/installer/)
 [![Requires AltoClef 0.4.1](https://img.shields.io/badge/Requires-AltoClef%200.4.1-5865F2?style=flat-square)](https://github.com/gaucho-matrero/altoclef/releases/tag/v0.4.1)
+[![Requires Baritone](https://img.shields.io/badge/Requires-Baritone%20(in%20AltoClef%200.4.1)-3B3B3B?style=flat-square)](https://github.com/cabaletta/baritone)
 [![Latest release](https://img.shields.io/github/v/release/Creeperhouse999/Altoclef-Plus?include_prereleases&style=flat-square&label=Release)](https://github.com/Creeperhouse999/Altoclef-Plus/releases)
 [![Modrinth](https://img.shields.io/badge/Modrinth-AltoClef%20Plus-1BD96A?style=flat-square&logo=modrinth&logoColor=white)](https://modrinth.com/mod/altoclef-plus)
 [![Build](https://img.shields.io/github/actions/workflow/status/Creeperhouse999/Altoclef-Plus/build.yml?branch=main&style=flat-square)](https://github.com/Creeperhouse999/Altoclef-Plus/actions/workflows/build.yml)

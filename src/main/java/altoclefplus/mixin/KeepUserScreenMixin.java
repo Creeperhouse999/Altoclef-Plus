@@ -14,6 +14,6 @@ public abstract class KeepUserScreenMixin {
     @Inject(method = "closeScreen", at = @At("HEAD"), cancellable = true, require = 0)
     private static void altoclefplus$keepUserScreen(CallbackInfo ci) {
         Hooks.hit("keep-user-screen");
-        if (UserScreens.userInventoryOpen()) ci.cancel();
+        if (UserScreens.pauseBot()) ci.cancel();
     }
 }

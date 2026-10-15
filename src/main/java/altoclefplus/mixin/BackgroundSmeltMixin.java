@@ -26,6 +26,21 @@ public abstract class BackgroundSmeltMixin {
     private Task altoclefplus$sideTask;
     @Unique
     private long altoclefplus$sideUntilMs;
+    @Unique
+    private int altoclefplus$trips;
+    @Unique
+    private long altoclefplus$nextCheckMs;
+
+    @Unique
+    private static boolean altoclefplus$coalNearby(AltoClef mod) {
+        var world = mod.getWorld();
+        var c = mod.getPlayer().getBlockPos();
+        for (var b : net.minecraft.util.math.BlockPos.iterate(c.add(-12, -6, -12), c.add(12, 6, 12))) {
+            var block = world.getBlockState(b).getBlock();
+            if (block == net.minecraft.block.Blocks.COAL_ORE || block == net.minecraft.block.Blocks.DEEPSLATE_COAL_ORE) return true;
+        }
+        return false;
+    }
 
     @Inject(method = "onTick", at = @At("HEAD"), cancellable = true, require = 0)
     private void altoclefplus$doSideJob(AltoClef mod, CallbackInfoReturnable<Task> cir) {
@@ -43,13 +58,21 @@ public abstract class BackgroundSmeltMixin {
         Hooks.hit("background-smelt");
         // null here means "furnace filled, waiting".
         if (cir.getReturnValue() != null || !Plus.config().inventory.backgroundSmelting) return;
+        if (altoclefplus$trips >= 2) return;
+        // Only for coal ore right here: never an exploring trip far from the furnace. (Checked every 5 s at most.)
+        long now = System.currentTimeMillis();
+        if (now < altoclefplus$nextCheckMs) return;
+        altoclefplus$nextCheckMs = now + 5_000;
+        if (!altoclefplus$coalNearby(mod)) return;
         int coal = mod.getItemStorage().getItemCount(Items.COAL);
         int items = StorageHelper.getItemStackInSlot(FurnaceSlot.INPUT_SLOT_MATERIALS).getCount();
         int seconds = SmeltPlanner.sideJobSeconds(items, StorageHelper.getFurnaceCookPercent(), coal);
         if (seconds <= 0) return;
-        Task coalTask = TaskCatalogue.getItemTask("coal", coal + 4);
+        seconds = Math.min(seconds, 60);
+        Task coalTask = TaskCatalogue.getItemTask("coal", coal + 8);
         if (coalTask == null) return;
         altoclefplus$sideTask = coalTask;
+        altoclefplus$trips++;
         altoclefplus$sideUntilMs = System.currentTimeMillis() + seconds * 1000L;
         Plus.log().add("inventory", "Smelting in the background (" + seconds + " s): getting coal meanwhile");
         StorageHelper.closeScreen();

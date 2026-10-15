@@ -32,8 +32,10 @@ public final class VisibleInventory {
         ClientPlayerEntity p = client.player;
         if (p == null || Plus.mod() == null) return;
         boolean enabled = Plus.config().modules.inventory && Plus.config().inventory.visibleInventory;
+        if (p.isCreative()) return;
         if (!VisibleInventoryPolicy.shouldOpen(enabled, Plus.snapshot().userTaskRunning, playerInventorySlot,
-                client.currentScreen != null || p.currentScreenHandler != p.playerScreenHandler)) return;
+                client.currentScreen != null || p.currentScreenHandler != p.playerScreenHandler,
+                VisibleInventoryPolicy.isInventoryJob(Plus.snapshot().taskChain))) return;
         ours = new InventoryScreen(p);
         client.setScreen(ours);
     }

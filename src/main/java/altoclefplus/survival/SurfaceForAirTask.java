@@ -27,6 +27,8 @@ public final class SurfaceForAirTask extends Task {
 
     private WaterSafety.AirAction mode;
     private BlockPos doorCell;
+    private int placeAttempts;
+    private boolean gaveUp;
     private final TimerGame timeout = new TimerGame(30);
 
     public SurfaceForAirTask(WaterSafety.AirAction mode) {
@@ -42,7 +44,12 @@ public final class SurfaceForAirTask extends Task {
     @Override
     protected Task onTick(AltoClef mod) {
         ClientPlayerEntity p = mod.getPlayer();
-        if (mode == WaterSafety.AirAction.DOOR_POCKET && !tickDoor(mod, p)) mode = WaterSafety.AirAction.SWIM_UP;
+        if (mode == WaterSafety.AirAction.DOOR_POCKET && !tickDoor(mod, p)) {
+            // No door pocket possible here: swimming up only helps under open water; otherwise hand back to
+            // pathing (which may know the way out) instead of pushing against a ceiling.
+            if (openWaterAbove(p)) mode = WaterSafety.AirAction.SWIM_UP;
+            else gaveUp = true;
+        }
         if (mode == WaterSafety.AirAction.SWIM_UP) {
             setDebugState("Low on air: swimming up");
             mod.getInputControls().forceLook(p.getYaw(), -90f);
@@ -61,7 +68,7 @@ public final class SurfaceForAirTask extends Task {
         BlockState at = w.getBlockState(doorCell);
         if (!(at.getBlock() instanceof DoorBlock)) {
             Item door = carriedDoor(mod);
-            if (door == null || !mod.getSlotHandler().forceEquipItem(door)) return false;
+            if (door == null || ++placeAttempts > 10 || !mod.getSlotHandler().forceEquipItem(door)) return false;
             setDebugState("Low on air: placing a door for an air pocket");
             LookHelper.lookAt(mod, Vec3d.ofCenter(doorCell.down()).add(0, 0.5, 0));
             mod.getInputControls().tryPress(Input.CLICK_RIGHT);
@@ -97,6 +104,16 @@ public final class SurfaceForAirTask extends Task {
         return null;
     }
 
+    private static boolean openWaterAbove(ClientPlayerEntity p) {
+        BlockPos pos = new BlockPos(p.getEyePos());
+        for (int i = 0; i < 24; i++) {
+            BlockState st = p.world.getBlockState(pos.up(i));
+            if (st.isAir()) return true;
+            if (st.getFluidState().isEmpty() && st.getMaterial().blocksMovement()) return false;
+        }
+        return false;
+    }
+
     private static boolean isWater(BlockState s) {
         return s.getFluidState().getFluid() == Fluids.WATER;
     }
@@ -115,7 +132,7 @@ public final class SurfaceForAirTask extends Task {
     @Override
     public boolean isFinished(AltoClef mod) {
         ClientPlayerEntity p = mod.getPlayer();
-        return p == null || p.getAir() >= FULL_AIR || timeout.elapsed();
+        return p == null || gaveUp || p.getAir() >= FULL_AIR || timeout.elapsed();
     }
 
     @Override

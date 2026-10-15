@@ -43,20 +43,28 @@ public final class AltoClefCommandRunner implements CommandRunner {
         AltoClef.getCommandExecutor().execute(line, onFinish, ex -> Plus.log().add("altoclef", ex.getMessage()));
     }
 
-    /** "get iron_boots 1" (or several "item count" pairs): true when all are in the inventory or worn. */
+    /**
+     * Is a "get" part still satisfied? Only equipment (tools, weapons, armor, shields) is judged: materials are
+     * used up on purpose (ingots become a pickaxe), and anything we can't parse counts as done. Never throws.
+     */
     static boolean alreadyHave(String command) {
-        String[] t = command.trim().split("\\s+");
-        if (t.length < 2 || !t[0].equalsIgnoreCase("get")) return true;
-        ClientPlayerEntity p = MinecraftClient.getInstance().player;
-        if (p == null) return true;
-        for (int i = 1; i < t.length; i++) {
-            Item item = Registry.ITEM.get(new Identifier("minecraft", t[i]));
-            if (item == Items.AIR) return true; // not an item name: can't judge, don't redo
-            int want = 1;
-            if (i + 1 < t.length && t[i + 1].matches("\\d+")) want = Integer.parseInt(t[++i]);
-            if (p.getInventory().count(item) < want) return false;
+        try {
+            var wants = altoclefplus.ui.logic.GetCommand.parse(command);
+            ClientPlayerEntity p = MinecraftClient.getInstance().player;
+            if (wants == null || p == null) return true;
+            for (var w : wants) {
+                boolean equipment = !ItemInfo.toolType(w.id()).isEmpty() || !ItemInfo.armorSlot(w.id()).isEmpty()
+                        || w.id().equals("shield");
+                if (!equipment) continue;
+                Identifier id = Identifier.tryParse("minecraft:" + w.id());
+                Item item = id == null ? Items.AIR : Registry.ITEM.get(id);
+                if (item == Items.AIR) continue;
+                if (p.getInventory().count(item) < w.count()) return false;
+            }
+            return true;
+        } catch (RuntimeException e) {
+            return true;
         }
-        return true;
     }
 
     /** A preset that made armor should end with it worn, not left in the bag. */
@@ -72,7 +80,7 @@ public final class AltoClefCommandRunner implements CommandRunner {
         }
         if (wear.isEmpty()) return;
         Plus.log().add("plus", "Putting on " + String.join(", ", wear));
-        executeOne("equip " + String.join(" ", wear), () -> { });
+        executeOne("equip [" + String.join(", ", wear) + "]", () -> { });
     }
 
     @Override

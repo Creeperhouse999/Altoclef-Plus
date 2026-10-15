@@ -52,4 +52,21 @@ class CombatChoiceTest {
         assertEquals(WAIT, g.decide(1f, true, 0, true, 5), "jump didn't happen yet");
         assertEquals(HIT, g.decide(1f, true, 0, true, 17), "timeout: never stall the fight");
     }
+
+    @Test
+    void gateNeverStallsWhileHangingInTheAir() {
+        CritGate g = new CritGate(15);
+        assertEquals(WAIT, g.decide(1f, false, -0.01, true, 0), "barely falling (cobweb)");
+        assertEquals(HIT, g.decide(1f, false, -0.01, true, 16), "timeout counts from the first wait, even airborne");
+    }
+
+    @Test
+    void weaponChoiceIsHeldBrieflyToAvoidSwapping() {
+        WeaponHold h = new WeaponHold(20);
+        assertEquals("iron_axe", h.choose("iron_axe", 0, id -> true));
+        assertEquals("iron_axe", h.choose("iron_sword", 10, id -> true), "held: swapping resets the charge bar");
+        assertEquals("iron_sword", h.choose("iron_sword", 25, id -> true));
+        assertEquals("iron_axe", h.choose("iron_axe", 46, id -> true));
+        assertEquals("iron_sword", h.choose("iron_sword", 47, id -> !id.equals("iron_axe")), "held weapon gone: switch now");
+    }
 }

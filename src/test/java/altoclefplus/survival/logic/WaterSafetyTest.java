@@ -21,7 +21,8 @@ class WaterSafetyTest {
     void doorPocketWhenSurfaceIsFarOrBlocked() {
         assertEquals(DOOR_POCKET, WaterSafety.airAction(110, true, -1, true), "ceiling above");
         assertEquals(DOOR_POCKET, WaterSafety.airAction(60, true, 12, true), "too far up for the air left");
-        assertEquals(SWIM_UP, WaterSafety.airAction(60, true, -1, false), "no door: best effort, swim up");
+        assertEquals(NONE, WaterSafety.airAction(60, true, -1, false), "ceiling and no door: don't take over, let pathing get out");
+        assertEquals(SWIM_UP, WaterSafety.airAction(60, true, 12, false), "far but open surface and no door: swim up");
     }
 
     @Test

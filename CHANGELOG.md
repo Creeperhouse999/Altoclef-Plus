@@ -16,14 +16,16 @@ as its notes.
 - **Avoid water in caves** (on by default): paths through cave water cost much more, so the bot goes around
   instead of wading and drowning. Lakes, rivers and oceans under open sky are not affected.
 - **Getting air when drowning**: low on air underwater, the bot swims straight up if the surface is close;
-  under a cave ceiling it places a door next to itself (doors can't hold water) and breathes inside it.
+  under a cave ceiling it places a door next to itself (doors can't hold water) and breathes inside it;
+  with no door and no open water above, it leaves the way out to the pathfinder.
 - **Carries a door** for those air pockets, made only from wood it already has.
 - **Visible inventory** (on by default): when the bot crafts in its 2x2 grid, sorts or equips, the inventory
   screen opens so you can watch it click, at a slower human-like pace, and closes when it's done.
 - **Drops outdated tools**: a wooden pickaxe goes once a stone one is carried, and so on (enchanted, named,
   needed or protected tools are kept). Separate setting from the junk drop.
-- **Smelts in the background**: with 20+ seconds of smelting left, the bot fetches a little coal instead of
-  standing at the furnace, then walks back to the same furnace (setting, on by default).
+- **Smelts in the background**: with 20+ seconds of smelting left and coal ore right nearby, the bot mines
+  some coal instead of standing at the furnace (at most a minute, twice per batch), then walks back (setting,
+  on by default).
 - **Our own world overlay** (replaces Baritone's while on): blocks the bot will break glow red, the block it
   is mining orange, its goal green, the path ahead is a cyan line, and nearby hostile mobs get red outlines.
   Every layer can be switched off in Settings; switching the overlay off brings Baritone's back.

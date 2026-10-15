@@ -23,6 +23,7 @@ import java.util.Comparator;
 /** Crit timing and weapon choice for every AltoClef melee hit (called from mixins). */
 public final class MeleeAssist {
     private static final CritGate GATE = new CritGate(15);
+    private static final altoclefplus.survival.logic.WeaponHold HOLD = new altoclefplus.survival.logic.WeaponHold(20);
 
     private MeleeAssist() {}
 
@@ -32,7 +33,8 @@ public final class MeleeAssist {
         AltoClef mod = Plus.mod();
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
         if (mod == null || p == null) return true;
-        boolean safe = CritTiming.canCrit(p.isTouchingWater(), p.isInLava(), p.isClimbing(), p.hasVehicle(),
+        // While Baritone walks us it replaces the movement input and ignores the jump key: no crits then.
+        boolean safe = !mod.getClientBaritone().getPathingBehavior().isPathing() && CritTiming.canCrit(p.isTouchingWater(), p.isInLava(), p.isClimbing(), p.hasVehicle(),
                 p.hasStatusEffect(StatusEffects.LEVITATION) || p.hasStatusEffect(StatusEffects.SLOW_FALLING),
                 WorldHelper.isAir(mod, p.getBlockPos().up(2)));
         switch (GATE.decide(p.getAttackCooldownProgress(0f), p.isOnGround(), p.getVelocity().y, safe, p.age)) {
@@ -44,6 +46,7 @@ public final class MeleeAssist {
                 return false;
             }
             default -> {
+                if (!p.isOnGround()) p.setSprinting(false); // sprinting cancels the critical hit
                 return true;
             }
         }
@@ -56,9 +59,11 @@ public final class MeleeAssist {
         if (p == null || p.world == null) return false;
         var near = p.world.getEntitiesByClass(HostileEntity.class, p.getBoundingBox().expand(4), Entity::isAlive);
         LivingEntity target = near.stream().min(Comparator.comparingDouble(p::squaredDistanceTo)).orElse(null);
-        String id = CritTiming.chooseWeapon(Plus.snapshot().items, near.size(),
+        var items = Plus.snapshot().items;
+        String fresh = CritTiming.chooseWeapon(items, near.size(),
                 target != null && target.isBlocking(), target == null ? 20f : target.getHealth());
-        if (id.isEmpty()) return false;
+        if (fresh.isEmpty()) return false;
+        String id = HOLD.choose(fresh, p.age, items::containsKey);
         Item item = Registry.ITEM.get(new Identifier("minecraft", id));
         return item != Items.AIR && HotbarManager.equipItem(item);
     }

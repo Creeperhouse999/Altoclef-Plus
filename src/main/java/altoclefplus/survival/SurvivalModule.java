@@ -68,6 +68,7 @@ public final class SurvivalModule implements Module {
     private final IdleGuard idleGuard = new IdleGuard(100);
     /** Last tick the player pressed a movement/attack/use key (they are playing, not AFK). */
     private long lastInputTick = Long.MIN_VALUE / 2;
+    private long nextAirTryMs;
     private GatePlanner.Gate runningGate;
     /** After any boat attempt, wait before considering another (stops retry loops at awkward shores). */
     private long nextBoatTryMs;
@@ -197,10 +198,14 @@ public final class SurvivalModule implements Module {
     private void rescueAir() {
         var p = mod.getPlayer();
         if (p == null || airChain.isActive() || !p.isSubmergedInWater()) return;
+        if (System.currentTimeMillis() < nextAirTryMs) return;
         WaterSafety.AirAction a = WaterSafety.airAction(p.getAir(), true, waterAbove(p), SurfaceForAirTask.carriedDoor(mod) != null);
         if (a == WaterSafety.AirAction.NONE) return;
         String label = a == WaterSafety.AirAction.SWIM_UP ? "Low on air: swimming up" : "Low on air: door air pocket";
-        if (airChain.startUrgent(new SurfaceForAirTask(a), label)) Plus.log().add("survival", label);
+        if (airChain.startUrgent(new SurfaceForAirTask(a), label)) {
+            Plus.log().add("survival", label);
+            nextAirTryMs = System.currentTimeMillis() + 5_000;
+        }
     }
 
     /** Water blocks above the head up to open air, or -1 if something solid is in the way. */
@@ -215,9 +220,23 @@ public final class SurvivalModule implements Module {
         return -1;
     }
 
+    /**
+     * The player is physically holding a movement/attack/use key. KeyBinding.isPressed can't be used: AltoClef
+     * presses the same bindings itself (crit jumps, placing doors), which would look like the player playing.
+     */
     private static boolean anyKeyPressed(GameOptions o) {
-        return o.forwardKey.isPressed() || o.backKey.isPressed() || o.leftKey.isPressed() || o.rightKey.isPressed()
-                || o.jumpKey.isPressed() || o.attackKey.isPressed() || o.useKey.isPressed() || o.sneakKey.isPressed();
+        long window = MinecraftClient.getInstance().getWindow().getHandle();
+        for (var kb : new net.minecraft.client.option.KeyBinding[]{o.forwardKey, o.backKey, o.leftKey, o.rightKey,
+                o.jumpKey, o.attackKey, o.useKey, o.sneakKey}) {
+            var key = ((altoclefplus.mixin.KeyBindingAccessor) kb).altoclefplus$getBoundKey();
+            if (key == null || key.getCode() < 0) continue;
+            boolean down = key.getCategory() == net.minecraft.client.util.InputUtil.Type.MOUSE
+                    ? org.lwjgl.glfw.GLFW.glfwGetMouseButton(window, key.getCode()) == org.lwjgl.glfw.GLFW.GLFW_PRESS
+                    : key.getCategory() == net.minecraft.client.util.InputUtil.Type.KEYSYM
+                    && net.minecraft.client.util.InputUtil.isKeyPressed(window, key.getCode());
+            if (down) return true;
+        }
+        return false;
     }
 
     /** Bed by the portal, valuables chest, backup gear - each once per run, all optional. */

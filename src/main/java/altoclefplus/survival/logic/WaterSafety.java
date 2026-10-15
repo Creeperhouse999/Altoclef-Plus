@@ -20,7 +20,10 @@ public final class WaterSafety {
         if (!headUnderwater || air >= LOW_AIR) return AirAction.NONE;
         boolean surfaceReachable = waterAbove >= 0 && waterAbove * TICKS_PER_BLOCK_UP + MARGIN < air;
         if (surfaceReachable) return AirAction.SWIM_UP;
-        return hasDoor ? AirAction.DOOR_POCKET : AirAction.SWIM_UP;
+        if (hasDoor) return AirAction.DOOR_POCKET;
+        // No door: swimming up only helps if there is open water above at all; under a ceiling, don't take
+        // over (cancelling the path would trap the bot) and let pathing find the way out.
+        return waterAbove >= 0 ? AirAction.SWIM_UP : AirAction.NONE;
     }
 
     /** Extra path cost for a move ending in water underground (no penalty for open-sky lakes and oceans). */

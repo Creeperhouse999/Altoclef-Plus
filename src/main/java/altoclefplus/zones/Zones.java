@@ -43,6 +43,9 @@ public final class Zones {
      */
     public static void registerWithBaritone(adris.altoclef.AltoClef mod) {
         var b = mod.getBehaviour();
+        // AltoClef adds its protected areas straight to Baritone (wiped by the state stack): keep them here too.
+        b.avoidBlockBreaking(pos -> mod.getModSettings() != null && mod.getModSettings().isPositionExplicitelyProtected(pos));
+        b.avoidBlockPlacing(pos -> mod.getModSettings() != null && mod.getModSettings().isPositionExplicitelyProtected(pos));
         b.avoidBlockBreaking(pos -> enabled() && !mayBreak(pos));
         b.avoidBlockPlacing(pos -> enabled() && current.forbids(ZoneSet.Action.PLACE, pos.getX(), pos.getY(), pos.getZ()));
         b.avoidWalkingThrough(pos -> enabled()

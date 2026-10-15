@@ -16,7 +16,7 @@ public abstract class InteractionFixChainMixin {
     private void altoclefplus$keepPanel(CallbackInfoReturnable<Boolean> cir) {
         Hooks.hit("keep-panel-open");
         if (MinecraftClient.getInstance().currentScreen instanceof PlusScreen
-                || altoclefplus.core.UserScreens.userInventoryOpen()
+                || altoclefplus.core.UserScreens.pauseBot()
                 || altoclefplus.inventory.VisibleInventory.isOurs()) cir.setReturnValue(false);
     }
 }

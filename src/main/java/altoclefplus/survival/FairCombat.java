@@ -21,6 +21,8 @@ public final class FairCombat {
 
     /** @return true if the attack may go ahead (after turning to face the target if needed). */
     public static boolean allow(Entity target) {
+        // Safe zones and attack rules (named/tamed mobs, never-attack list) apply even with fair combat off.
+        if (Plus.mod() != null && target != null && !altoclefplus.zones.Zones.mayAttack(target)) return false;
         PlusConfig.Survival cfg = Plus.config().survival;
         if (Plus.mod() == null || !Plus.config().modules.survival || !cfg.fairCombat) return true;
         MinecraftClient client = MinecraftClient.getInstance();

@@ -53,9 +53,11 @@ public final class Plus {
         } catch (Exception e) {
             LOG.add("plus", "Could not register huntendermen command: " + e.getMessage());
         }
+        altoclefplus.zones.Zones.registerWithBaritone();
+        altoclefplus.core.BasicsApplier.apply(mod);
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> {
@@ -106,6 +108,7 @@ public final class Plus {
         }
     }
 
+    private static long basicsTick;
     private static final java.util.Set<String> REPORTED = new java.util.HashSet<>();
 
     /** AltoClef's event bus doesn't catch exceptions; never let ours crash the game. */
@@ -119,6 +122,8 @@ public final class Plus {
     private static void onTick() {
         if (!AltoClef.inGame()) return;
         altoclefplus.ui.Keybinds.poll();
+        altoclefplus.zones.Zones.refresh();
+        if (++basicsTick % 40 == 0) altoclefplus.core.BasicsApplier.apply(mod);
         altoclefplus.inventory.HotbarManager.onTick();
         last = sampler.sample(mod);
         modules.tickAll(last);

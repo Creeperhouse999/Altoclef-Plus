@@ -13,6 +13,10 @@ public final class PlusConfig {
     public Inventory inventory = new Inventory();
     public Survival survival = new Survival();
     public Recovery recovery = new Recovery();
+    public Rules rules = new Rules();
+    public Basics basics = new Basics();
+    /** Safe zones of every world (each zone remembers its world). */
+    public List<altoclefplus.zones.logic.Zone> zones = new ArrayList<>();
 
     public static final class Modules {
         public boolean ui = true;
@@ -45,6 +49,8 @@ public final class PlusConfig {
         public boolean hideAltoClefOverlay = true;
         public boolean redirectChat = true;
         public boolean blockChatCommands = true;
+        /** Draw safe-zone outlines in the world. */
+        public boolean showZones = false;
         /** Item ids, or the tokens "food" and "bed" which sum all foods / beds. */
         public List<String> hudResourceItems = new ArrayList<>(List.of("food", "ender_pearl", "blaze_rod", "ender_eye", "bed"));
         public List<Preset> presets = new ArrayList<>(List.of(
@@ -150,6 +156,28 @@ public final class PlusConfig {
         public int boatMinGoalDistance = 48;
     }
 
+    /** What the bot may break and attack outside (and inside) safe zones. */
+    public static final class Rules {
+        public boolean neverAttackNamed = true;
+        public boolean neverAttackTamed = true;
+        /** Inside zones, still hit a mob that is attacking the bot (never named/tamed ones). */
+        public boolean selfDefense = true;
+        /** Entity type ids never attacked anywhere, e.g. "villager". */
+        public List<String> neverAttackMobs = new ArrayList<>();
+        /** Block ids never broken anywhere, e.g. "chest". */
+        public List<String> neverBreakBlocks = new ArrayList<>();
+    }
+
+    /** Everyday options, mapped onto AltoClef's own settings while the game runs. */
+    public static final class Basics {
+        public boolean lootChests = true;
+        public boolean sleepAtNight = true;
+        public boolean lootRuinedPortals = true;
+        public boolean lootDesertTemples = true;
+        public boolean barterForPearls = false;
+        public int eyesToCollect = 14;
+    }
+
     public static final class Recovery {
         public boolean logActions = true;
         public int noProgressSeconds = 30;
@@ -195,6 +223,19 @@ public final class PlusConfig {
         if (inventory == null) inventory = d.inventory;
         if (survival == null) survival = d.survival;
         if (recovery == null) recovery = d.recovery;
+        if (rules == null) rules = d.rules;
+        if (basics == null) basics = d.basics;
+        if (zones == null) zones = new ArrayList<>();
+        zones.removeIf(z -> z == null || z.world == null);
+        for (altoclefplus.zones.logic.Zone z : zones) {
+            if (z.rules == null) z.rules = new altoclefplus.zones.logic.ZoneRules();
+            if (z.name == null || z.name.isBlank()) z.name = "Zone";
+        }
+        if (rules.neverAttackMobs == null) rules.neverAttackMobs = new ArrayList<>();
+        if (rules.neverBreakBlocks == null) rules.neverBreakBlocks = new ArrayList<>();
+        rules.neverAttackMobs = noNulls(rules.neverAttackMobs);
+        rules.neverBreakBlocks = noNulls(rules.neverBreakBlocks);
+        basics.eyesToCollect = clamp(basics.eyesToCollect, 12, 20);
         if (ui.hudResourceItems == null) ui.hudResourceItems = d.ui.hudResourceItems;
         if (ui.presets == null) ui.presets = d.ui.presets;
         if (inventory.protectedItems == null) inventory.protectedItems = d.inventory.protectedItems;

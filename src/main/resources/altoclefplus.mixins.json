@@ -24,7 +24,8 @@
     "ObsidianCastMixin",
     "SlotHandlerMixin",
     "StrongholdLocateMixin",
-    "ToolSelectMixin"
+    "ToolSelectMixin",
+    "ZoneGuardMixin"
   ],
   "injectors": {
     "defaultRequire": 1

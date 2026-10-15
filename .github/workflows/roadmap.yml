@@ -1,0 +1,45 @@
+name: Roadmap
+
+# Creates the milestones, labels and issues listed in .github/roadmap.json as the AltoClef Plus Bot.
+# Safe to run again: anything that already exists (same title) is skipped.
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  roadmap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bot token
+        id: bot
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
+      - name: Create milestones, labels and issues
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+        run: |
+          set -e
+          R="$GITHUB_REPOSITORY"
+          existing_ms=$(gh api "repos/$R/milestones?state=all&per_page=100" --jq '.[].title')
+          jq -c '.milestones[]' .github/roadmap.json | while read -r m; do
+            t=$(jq -r .title <<<"$m"); d=$(jq -r .description <<<"$m")
+            if grep -qxF "$t" <<<"$existing_ms"; then echo "milestone $t exists"; continue; fi
+            gh api "repos/$R/milestones" -f title="$t" -f description="$d" >/dev/null && echo "milestone $t created"
+          done
+          jq -r '[.issues[].labels[]] | unique | .[]' .github/roadmap.json | while read -r name; do
+            gh label create "$name" --repo "$R" --force >/dev/null && echo "label $name ok"
+          done
+          existing_issues=$(gh issue list --repo "$R" --state all --limit 500 --json title --jq '.[].title')
+          jq -c '.issues[]' .github/roadmap.json | while read -r i; do
+            t=$(jq -r .title <<<"$i")
+            if grep -qxF "$t" <<<"$existing_issues"; then echo "issue exists: $t"; continue; fi
+            args=(--repo "$R" --title "$t" --body "$(jq -r .body <<<"$i")" --milestone "$(jq -r .milestone <<<"$i")")
+            while read -r lab; do args+=(--label "$lab"); done < <(jq -r '.labels[]' <<<"$i")
+            gh issue create "${args[@]}"
+          done

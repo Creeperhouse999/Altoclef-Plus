@@ -1,0 +1,68 @@
+{
+  "milestones": [
+    {
+      "title": "0.9",
+      "description": "Building polish: schematic contents, chest labels, scaffolding cleanup, leftovers, and in-game checks of 0.8 features."
+    },
+    {
+      "title": "1.0",
+      "description": "Multiplayer support (e.g. building on servers that allow bots)."
+    }
+  ],
+  "issues": [
+    {
+      "title": "Building: fill chests, barrels, signs and item frames from the schematic",
+      "milestone": "0.9",
+      "labels": ["building", "enhancement"],
+      "body": "The Build tab already has the switch *Fill chests/signs/frames*, but it doesn't do anything yet.\n\n- Put the schematic's container contents into placed chests/barrels/furnaces\n- Write sign text\n- Place item frames with their items\n- Items the bot can't get (enchanted/written books, rare items) → stop and ask, like missing blocks"
+    },
+    {
+      "title": "Building: go straight to the right chest using item-frame / sign labels",
+      "milestone": "0.9",
+      "labels": ["building", "enhancement"],
+      "body": "When gathering materials, read item frames (and sign text like \"Cobble / Stone\") on chests to find where an item is stored. Never take the frame's own item. The matching logic exists (`ChestLabels`); it still needs to be used by gathering."
+    },
+    {
+      "title": "Building: remove scaffolding blocks after a build",
+      "milestone": "0.9",
+      "labels": ["building", "enhancement"],
+      "body": "Blocks the bot placed only to reach high spots (dirt/cobble pillars) should be removed when the build is done. The detection logic exists (`ScaffoldTracker`); it still needs to run after a build."
+    },
+    {
+      "title": "Building: put leftover materials back into chests",
+      "milestone": "0.9",
+      "labels": ["building", "enhancement"],
+      "body": "After a build, return unused materials to the chests they came from (or a labeled chest)."
+    },
+    {
+      "title": "Built-in schematics",
+      "milestone": "0.9",
+      "labels": ["building"],
+      "body": "Ship a set of built-in `.litematic` files with the mod (in `assets/altoclefplus/schematics/`)."
+    },
+    {
+      "title": "In-game check: water safety (cave water, air rescue, door air pocket)",
+      "milestone": "0.9",
+      "labels": ["needs testing"],
+      "body": "Added in 0.8.0, covered by unit tests only so far. Check that the bot avoids wading through cave water, swims up when low on air, and makes a door air pocket under a ceiling."
+    },
+    {
+      "title": "In-game check: background smelting, visible inventory, spare pickaxe",
+      "milestone": "0.9",
+      "labels": ["needs testing"],
+      "body": "Added in 0.8.x, unit-tested only so far:\n- Smelting in the background (mines nearby coal while the furnace works)\n- Visible inventory (inventory screen opens while crafting/equipping)\n- Spare pickaxe made before the only one breaks"
+    },
+    {
+      "title": "In-game check: chest rules, item-frame protection, AltoClef options page, presets",
+      "milestone": "0.9",
+      "labels": ["needs testing"],
+      "body": "Added in 0.8.0, unit-tested only so far:\n- Chest rules (allowed, safe-zone chests, leave at least N)\n- Item frames never hit / their block never broken\n- AltoClef options in Settings\n- Saving a command as a preset with *+*, shift-click to remove"
+    },
+    {
+      "title": "Multiplayer support",
+      "milestone": "1.0",
+      "labels": ["enhancement"],
+      "body": "Make AltoClef Plus work on servers that allow bots, starting with building."
+    }
+  ]
+}

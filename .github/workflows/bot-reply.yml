@@ -1,0 +1,44 @@
+name: Bot reply
+
+# Posts a comment as the AltoClef Plus Bot (a GitHub App), and optionally closes the issue.
+# Run from the Actions tab or with: gh workflow run bot-reply.yml -f issue=12 -f body="Thanks!"
+on:
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue or pull request number
+        required: true
+      body:
+        description: Comment text (Markdown)
+        required: true
+      close:
+        description: Close the issue after commenting
+        type: boolean
+        default: false
+
+permissions: {}
+
+jobs:
+  reply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bot token
+        id: bot
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
+      - name: Comment
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+          ISSUE: ${{ inputs.issue }}
+          BODY: ${{ inputs.body }}
+        run: gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body "$BODY"
+
+      - name: Close
+        if: inputs.close
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+          ISSUE: ${{ inputs.issue }}
+        run: gh issue close "$ISSUE" --repo "$GITHUB_REPOSITORY"

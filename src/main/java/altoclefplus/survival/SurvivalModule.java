@@ -126,6 +126,9 @@ public final class SurvivalModule implements Module {
             return;
         }
 
+        // Gear gates, boats and stashes wait while AltoClef is placing, crafting or using a container.
+        if (altoclefplus.core.logic.TaskChainState.inDelicateStep(s.taskChain)) return;
+
         String cmd = Plus.control().lastCommand();
         if (!cmd.equals(lastCommand)) {
             stashes.reset();

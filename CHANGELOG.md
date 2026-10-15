@@ -51,6 +51,9 @@ as its notes.
 - Full-height safe zones now also show their rectangle at your feet level, not only the corner posts.
 
 ### Fixed
+- Side jobs (spare tools, equipping, junk drops, gear gates) no longer interrupt AltoClef while it is placing
+  a crafting table, crafting or using a furnace. In a test run this made it re-place the same crafting table
+  over and over.
 - Safe zone rules (no breaking, no placing, no entering) now keep working after the first task: AltoClef reset
   Baritone's rule lists whenever a task started, which silently dropped them.
 - Presets no longer "finish" with items missing: at the end every step is checked again, and a step whose

@@ -69,6 +69,8 @@ public final class InventoryModule implements Module {
             return;
         }
         status = "idle";
+        // Never in the middle of placing a table, crafting or using a furnace: AltoClef would start over.
+        if (altoclefplus.core.logic.TaskChainState.inDelicateStep(s.taskChain)) return;
 
         if (cfg.equipArmor && tryEquipArmor(s)) return;
         if ((cfg.dropJunk || cfg.dropOutdatedTools) && tryDropJunk(s, cfg)) return;

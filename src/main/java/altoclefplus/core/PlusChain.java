@@ -56,6 +56,20 @@ public class PlusChain extends SingleTaskChain {
         return true;
     }
 
+    /**
+     * Emergency job (e.g. drowning): starts even while only the idle defense is running and ignores the
+     * backoff. The task runner must already be on.
+     */
+    public boolean startUrgent(Task task, String label) {
+        if (isActive() || task == null || Plus.mod() == null) return false;
+        jobLabel = label;
+        onFinish = () -> {};
+        deadlineMs = System.currentTimeMillis() + maxJobMs;
+        setTask(task);
+        Plus.bus().publish(new Notice(name, label));
+        return true;
+    }
+
     public void cancelJob() {
         if (isActive()) stop(Plus.mod());
         _mainTask = null;

@@ -6,7 +6,6 @@ import altoclefplus.zones.logic.AttackRules;
 import altoclefplus.zones.logic.BreakRules;
 import altoclefplus.zones.logic.MobCategory;
 import altoclefplus.zones.logic.ZoneSet;
-import baritone.altoclef.AltoClefSettings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.entity.Entity;
@@ -37,12 +36,16 @@ public final class Zones {
 
     private Zones() {}
 
-    /** Hook zones into Baritone's planning. Called once at startup. */
-    public static void registerWithBaritone() {
-        AltoClefSettings s = AltoClefSettings.getInstance();
-        s.avoidBlockBreak(pos -> enabled() && !mayBreak(pos));
-        s.avoidBlockPlace(pos -> enabled() && current.forbids(ZoneSet.Action.PLACE, pos.getX(), pos.getY(), pos.getZ()));
-        s.getForceAvoidWalkThroughPredicates().add(pos -> enabled()
+    /**
+     * Hook zones into Baritone's planning. Called once at startup. Registered in AltoClef's base behaviour
+     * state: AltoClef rewrites Baritone's avoid lists from its state stack on every push/pop, so rules added
+     * to AltoClefSettings directly were wiped as soon as the first task started.
+     */
+    public static void registerWithBaritone(adris.altoclef.AltoClef mod) {
+        var b = mod.getBehaviour();
+        b.avoidBlockBreaking(pos -> enabled() && !mayBreak(pos));
+        b.avoidBlockPlacing(pos -> enabled() && current.forbids(ZoneSet.Action.PLACE, pos.getX(), pos.getY(), pos.getZ()));
+        b.avoidWalkingThrough(pos -> enabled()
                 && current.forbids(ZoneSet.Action.ENTER, pos.getX(), pos.getY(), pos.getZ()));
     }
 

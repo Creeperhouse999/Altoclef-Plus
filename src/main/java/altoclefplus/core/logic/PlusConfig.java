@@ -131,6 +131,13 @@ public final class PlusConfig {
         public boolean defendWhileIdle = true;
         /** Wait for a full charge bar and hit on the way down from a jump (critical hits) when it's safe. */
         public boolean critHits = true;
+        /** Make paths through water in caves expensive (open lakes and oceans are not affected). */
+        public boolean avoidCaveWater = true;
+        public double caveWaterPenalty = 40;
+        /** Low on air underwater: swim up, or make an air pocket with a door. */
+        public boolean airRescue = true;
+        /** Keep a wooden door in the bag for underwater air pockets. */
+        public boolean carryDoor = true;
         /** Axe vs sword by situation (shields, groups, finishing blows) instead of AltoClef's fixed list. */
         public boolean smartWeapon = true;
         /** Stay on the block being mined; only switch to a much closer one, at most every few seconds. */

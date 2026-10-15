@@ -8,6 +8,17 @@ as its notes.
 
 ## [Unreleased]
 
+### Added
+- **Jump critical hits** in every fight: the bot waits for a full charge bar, jumps and hits on the way down
+  (only where that's safe: not in water or lava, on ladders, in boats or under a low ceiling).
+- **Axe or sword by situation**: an axe against shields and when one axe hit finishes the mob, a sword for
+  groups (sweeping), otherwise whatever does the most damage per second. Netherite now counts too.
+- **Avoid water in caves** (on by default): paths through cave water cost much more, so the bot goes around
+  instead of wading and drowning. Lakes, rivers and oceans under open sky are not affected.
+- **Getting air when drowning**: low on air underwater, the bot swims straight up if the surface is close;
+  under a cave ceiling it places a door next to itself (doors can't hold water) and breathes inside it.
+- **Carries a door** for those air pockets, made only from wood it already has.
+
 ### Changed
 - The HUD task line is now our own plain-English line: what you asked for and what the bot is doing right
   now, e.g. *Get iron pickaxe: Mining iron ore* or *Get spruce log x40: Picking up items*. AltoClef's own
@@ -16,6 +27,8 @@ as its notes.
 - Pressing the pause key with nothing running now says *Nothing to pause*.
 
 ### Fixed
+- Safe zone rules (no breaking, no placing, no entering) now keep working after the first task: AltoClef reset
+  Baritone's rule lists whenever a task started, which silently dropped them.
 - Presets no longer "finish" with items missing: at the end every step is checked again, and a step whose
   item was lost meanwhile (for example the chestplate after a death) is done again (at most 2 extra rounds).
 - Armor made by a preset is put on at the end instead of staying in the inventory.

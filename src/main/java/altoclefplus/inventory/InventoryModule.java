@@ -16,6 +16,7 @@ import altoclefplus.core.logic.Snapshot;
 import altoclefplus.core.logic.events.Notice;
 import altoclefplus.inventory.logic.ArmorPlanner;
 import altoclefplus.inventory.logic.CursorGuard;
+import altoclefplus.inventory.logic.DoorPlanner;
 import altoclefplus.inventory.logic.JunkClassifier;
 import altoclefplus.inventory.logic.SpareToolPlanner;
 import net.minecraft.client.MinecraftClient;
@@ -75,6 +76,8 @@ public final class InventoryModule implements Module {
             Optional<String> piece = ArmorPlanner.nextPiece(s);
             if (piece.isPresent() && start(TaskCatalogue.getItemTask(piece.get(), 1), "Crafting " + pretty(piece.get()))) return;
         }
+        if (Plus.config().survival.carryDoor && DoorPlanner.shouldCraft(s)
+                && start(TaskCatalogue.getItemTask("wooden_door", 1), "Making a door for underwater air pockets")) return;
         if (cfg.spareTools) {
             Optional<String> tool = SpareToolPlanner.next(s);
             if (tool.isPresent()) start(TaskCatalogue.getItemTask(tool.get(), 1), "Making a spare " + pretty(tool.get()));
@@ -105,7 +108,9 @@ public final class InventoryModule implements Module {
     private boolean tryDropJunk(Snapshot s, PlusConfig.Inventory cfg) {
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
         if (p == null || p.currentScreenHandler != p.playerScreenHandler || !s.cursorEmpty) return false;
-        JunkClassifier classifier = new JunkClassifier(new HashSet<>(cfg.protectedItems), new HashSet<>(cfg.junkItems),
+        Set<String> keep = new HashSet<>(cfg.protectedItems);
+        if (Plus.config().survival.carryDoor) keep.addAll(DoorPlanner.WOODEN_DOORS);
+        JunkClassifier classifier = new JunkClassifier(keep, new HashSet<>(cfg.junkItems),
                 new HashSet<>(cfg.buildingBlocks), cfg.buildingBlockCapPerType, cfg.buildingBlockCapTotal, cfg.junkFreeSlotThreshold);
         List<JunkClassifier.Drop> drops = classifier.toDrop(s.items, altoclefplus.core.TaskTargets.of(Plus.mod()), s.freeSlots);
         for (JunkClassifier.Drop d : drops) {

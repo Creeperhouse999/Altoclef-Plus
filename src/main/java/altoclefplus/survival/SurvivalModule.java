@@ -22,6 +22,7 @@ import altoclefplus.core.TaskTargets;
 import altoclefplus.survival.logic.GatePlanner;
 import altoclefplus.survival.logic.GateScope;
 import altoclefplus.survival.logic.IdleGuard;
+import altoclefplus.survival.logic.WaterSafety;
 import altoclefplus.survival.logic.StashPlanner;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -55,6 +56,8 @@ public final class SurvivalModule implements Module {
     private final PlusChain cautionChain;
     private final PlusChain boatChain;
     private final PlusChain stashChain;
+    /** Above tasks, food and normal fighting, below fleeing (70+): drowning beats almost everything. */
+    private final PlusChain airChain;
     private final StashPlanner stashes = new StashPlanner();
     private String lastCommand = "";
     private final GatePlanner gates = new GatePlanner();
@@ -77,6 +80,7 @@ public final class SurvivalModule implements Module {
         cautionChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus caution", 53f, 2 * 60_000L);
         boatChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus boat", 52.5f, 4 * 60_000L);
         stashChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus stashes", 51.5f);
+        airChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus air", 66f, 60_000L);
         Plus.bus().subscribe(StuckDetected.class, e -> {
             if (gateChain.isActive() && runningGate != null) failGate("stuck: " + e.kind());
         });
@@ -91,6 +95,7 @@ public final class SurvivalModule implements Module {
     public void tick(Snapshot s) {
         PlusConfig.Survival cfg = Plus.config().survival;
         guardWhileIdle(s, cfg);
+        if (cfg.airRescue && (s.userTaskRunning || idleGuard.engaged())) rescueAir();
         if (s.userTaskRunning || idleGuard.engaged()) combat.tick(mod, cfg);
         else combat.stop(mod);
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
@@ -186,6 +191,28 @@ public final class SurvivalModule implements Module {
             }
             case NONE -> { }
         }
+    }
+
+    /** Low on air underwater: swim up or make a door air pocket (AltoClef only jumps, and not while pathing). */
+    private void rescueAir() {
+        var p = mod.getPlayer();
+        if (p == null || airChain.isActive() || !p.isSubmergedInWater()) return;
+        WaterSafety.AirAction a = WaterSafety.airAction(p.getAir(), true, waterAbove(p), SurfaceForAirTask.carriedDoor(mod) != null);
+        if (a == WaterSafety.AirAction.NONE) return;
+        String label = a == WaterSafety.AirAction.SWIM_UP ? "Low on air: swimming up" : "Low on air: door air pocket";
+        if (airChain.startUrgent(new SurfaceForAirTask(a), label)) Plus.log().add("survival", label);
+    }
+
+    /** Water blocks above the head up to open air, or -1 if something solid is in the way. */
+    private static int waterAbove(net.minecraft.entity.player.PlayerEntity p) {
+        BlockPos pos = new BlockPos(p.getEyePos());
+        for (int i = 0; i < 24; i++) {
+            BlockPos b = pos.up(i);
+            var st = p.world.getBlockState(b);
+            if (st.isAir()) return i;
+            if (st.getFluidState().isEmpty() && st.getMaterial().blocksMovement()) return -1;
+        }
+        return -1;
     }
 
     private static boolean anyKeyPressed(GameOptions o) {
@@ -305,6 +332,7 @@ public final class SurvivalModule implements Module {
     public void onDisable() {
         if (idleGuard.engaged() && !mod.getUserTaskChain().isActive()) mod.getTaskRunner().disable();
         gateChain.cancelJob();
+        airChain.cancelJob();
         stashChain.cancelJob();
         boatChain.cancelJob();
         cautionChain.cancelJob();

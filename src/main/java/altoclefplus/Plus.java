@@ -53,11 +53,11 @@ public final class Plus {
         } catch (Exception e) {
             LOG.add("plus", "Could not register huntendermen command: " + e.getMessage());
         }
-        altoclefplus.zones.Zones.registerWithBaritone();
+        altoclefplus.zones.Zones.registerWithBaritone(mod);
         altoclefplus.core.BasicsApplier.apply(mod);
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard", "steady-mining", "weapon-choice", "cave-water"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> {

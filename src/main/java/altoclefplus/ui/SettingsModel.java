@@ -103,6 +103,9 @@ public final class SettingsModel {
         r.add(new Header("Survival"));
         r.add(new Toggle("Caution (heal, flee, avoid caves)", () -> c.survival.caution, v -> c.survival.caution = v));
         r.add(new Toggle("Defend myself when idle (AFK)", () -> c.survival.defendWhileIdle, v -> c.survival.defendWhileIdle = v));
+        r.add(new Toggle("Avoid water in caves", () -> c.survival.avoidCaveWater, v -> c.survival.avoidCaveWater = v));
+        r.add(new Toggle("Get air when drowning (swim up / door)", () -> c.survival.airRescue, v -> c.survival.airRescue = v));
+        r.add(new Toggle("Carry a door for air pockets", () -> c.survival.carryDoor, v -> c.survival.carryDoor = v));
         r.add(new Toggle("Jump critical hits", () -> c.survival.critHits, v -> c.survival.critHits = v));
         r.add(new Toggle("Pick axe or sword by situation", () -> c.survival.smartWeapon, v -> c.survival.smartWeapon = v));
         r.add(new Toggle("Steady mining (no target switching)", () -> c.survival.steadyMining, v -> c.survival.steadyMining = v));

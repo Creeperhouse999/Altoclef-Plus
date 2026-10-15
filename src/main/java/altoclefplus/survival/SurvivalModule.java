@@ -58,6 +58,9 @@ public final class SurvivalModule implements Module {
     private final PlusChain stashChain;
     /** Above tasks, food and normal fighting, below fleeing (70+): drowning beats almost everything. */
     private final PlusChain airChain;
+    /** Fighting a creeper that keeps following: above running from mobs (70), below a hissing creeper (50-100). */
+    private final PlusChain creeperChain;
+    private final altoclefplus.survival.logic.CreeperChase creeperChase = new altoclefplus.survival.logic.CreeperChase(80);
     private final StashPlanner stashes = new StashPlanner();
     private String lastCommand = "";
     private final GatePlanner gates = new GatePlanner();
@@ -82,6 +85,7 @@ public final class SurvivalModule implements Module {
         boatChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus boat", 52.5f, 4 * 60_000L);
         stashChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus stashes", 51.5f);
         airChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus air", 66f, 60_000L);
+        creeperChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus creeper", 72f, 30_000L);
         Plus.bus().subscribe(StuckDetected.class, e -> {
             if (gateChain.isActive() && runningGate != null) failGate("stuck: " + e.kind());
         });
@@ -97,6 +101,7 @@ public final class SurvivalModule implements Module {
         PlusConfig.Survival cfg = Plus.config().survival;
         guardWhileIdle(s, cfg);
         if (cfg.airRescue && (s.userTaskRunning || idleGuard.engaged())) rescueAir();
+        if (cfg.fightChasingCreepers && (s.userTaskRunning || idleGuard.engaged())) fightChasingCreeper(s);
         if (s.userTaskRunning || idleGuard.engaged()) combat.tick(mod, cfg);
         else combat.stop(mod);
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
@@ -216,6 +221,19 @@ public final class SurvivalModule implements Module {
         if (airChain.startUrgent(new SurfaceForAirTask(a), label)) {
             Plus.log().add("survival", label);
             nextAirTryMs = System.currentTimeMillis() + 5_000;
+        }
+    }
+
+    private void fightChasingCreeper(Snapshot s) {
+        var p = mod.getPlayer();
+        if (p == null || creeperChain.isActive() || p.isTouchingWater()) return;
+        var creepers = p.world.getEntitiesByClass(CreeperEntity.class, p.getBoundingBox().expand(10), e -> e.isAlive());
+        CreeperEntity nearest = creepers.stream().min(java.util.Comparator.comparingDouble(p::distanceTo)).orElse(null);
+        boolean weapon = !altoclefplus.survival.logic.CritTiming.bestWeapon(s.items).isEmpty();
+        if (!creeperChase.shouldFight(nearest != null, nearest == null ? 99 : p.distanceTo(nearest), weapon, s.health, s.tick)) return;
+        if (creeperChain.startUrgent(new CreeperFightTask(nearest), "A creeper keeps following: fighting it")) {
+            Plus.log().add("survival", "A creeper keeps following: fighting it");
+            creeperChase.reset();
         }
     }
 
@@ -364,6 +382,7 @@ public final class SurvivalModule implements Module {
         if (idleGuard.engaged() && !mod.getUserTaskChain().isActive()) mod.getTaskRunner().disable();
         gateChain.cancelJob();
         airChain.cancelJob();
+        creeperChain.cancelJob();
         stashChain.cancelJob();
         boatChain.cancelJob();
         cautionChain.cancelJob();

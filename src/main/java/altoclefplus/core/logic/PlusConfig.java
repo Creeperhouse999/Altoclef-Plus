@@ -162,6 +162,8 @@ public final class PlusConfig {
         public boolean defendWhileIdle = true;
         /** Wait for a full charge bar and hit on the way down from a jump (critical hits) when it's safe. */
         public boolean critHits = true;
+        /** Fight a creeper that keeps following instead of running from it forever. */
+        public boolean fightChasingCreepers = true;
         /** Make paths through water in caves expensive (open lakes and oceans are not affected). */
         public boolean avoidCaveWater = true;
         public double caveWaterPenalty = 40;

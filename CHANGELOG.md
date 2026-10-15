@@ -11,6 +11,8 @@ as its notes.
 ### Added
 - **Bed early in @gamer**: right after stone tools the bot gets one bed (AltoClef only collected beds at the very
   end), so it can sleep through the first night. Setting, on by default.
+- **Fights creepers that keep following** (hit, step back, repeat) instead of running from them for minutes.
+  If one starts hissing up close it still runs. Setting, on by default; safe-zone rules apply.
 - **Junk goes where it can't be picked up again**: into lava the bot can see nearby, otherwise into a 1x1 hole
   3 blocks deep dug right beside it.
 

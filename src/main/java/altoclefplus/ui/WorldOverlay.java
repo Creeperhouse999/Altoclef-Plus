@@ -11,10 +11,14 @@ import baritone.api.pathing.goals.GoalTwoBlocks;
 import baritone.api.pathing.path.IPathExecutor;
 import baritone.api.utils.BetterBlockPos;
 import net.minecraft.client.MinecraftClient;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -54,33 +58,90 @@ public final class WorldOverlay {
         BlockPos goal = goalPos(pathing.getGoal());
         Collection<BlockPos> toBreak = cfg.overlayBreak && exec instanceof baritone.pathing.path.PathExecutor pe ? pe.toBreak() : List.of();
 
-        VertexConsumerProvider.Immediate buffers = client.getBufferBuilders().getEntityVertexConsumers();
+        boolean fillTarget = cfg.overlayTarget && mining != null;
+        boolean fillGoal = cfg.overlayGoal && goal != null;
+        List<HostileEntity> mobs = cfg.overlayMobs ? client.world.getEntitiesByClass(HostileEntity.class,
+                client.player.getBoundingBox().expand(16), Entity::isAlive) : List.of();
+        boolean path = cfg.overlayPath && exec != null;
+        if (toBreak.isEmpty() && !fillTarget && !fillGoal && mobs.isEmpty() && !path) return;
 
-        // Soft glowing fills first (lightning layer: position+color quads, additive blend)...
-        VertexConsumer fill = buffers.getBuffer(RenderLayer.getLightning());
+        // Drawn straight to the screen like Baritone does (not through render layers), so it also shows with
+        // "Fabulous" graphics, where those layers go to buffers that are already combined at this point.
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buf = tess.getBuffer();
         Matrix4f pos = matrices.peek().getPositionMatrix();
-        for (BlockPos b : toBreak) fillBox(fill, pos, blockBox(b, cam, 0.002), 1f, 0.25f, 0.25f, 0.18f);
-        if (cfg.overlayTarget && mining != null) fillBox(fill, pos, blockBox(mining, cam, 0.004), 1f, 0.6f, 0.1f, 0.30f);
-        if (cfg.overlayGoal && goal != null) fillBox(fill, pos, blockBox(goal, cam, 0.004), 0.3f, 1f, 0.4f, 0.22f);
-        buffers.draw(RenderLayer.getLightning());
-
-        // ...then crisp outlines and the path line.
-        VertexConsumer lines = buffers.getBuffer(RenderLayer.getLines());
-        for (BlockPos b : toBreak) WorldRenderer.drawBox(matrices, lines, blockBox(b, cam, 0.002), 1f, 0.3f, 0.3f, 0.9f);
-        if (cfg.overlayTarget && mining != null) WorldRenderer.drawBox(matrices, lines, blockBox(mining, cam, 0.004), 1f, 0.65f, 0.15f, 1f);
-        if (cfg.overlayGoal && goal != null) WorldRenderer.drawBox(matrices, lines, blockBox(goal, cam, 0.004), 0.35f, 1f, 0.45f, 1f);
-        if (cfg.overlayMobs) {
-            for (HostileEntity e : client.world.getEntitiesByClass(HostileEntity.class,
-                    client.player.getBoundingBox().expand(16), Entity::isAlive)) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableCull();
+        RenderSystem.depthMask(false);
+        try {
+            // Soft translucent fills first...
+            if (!toBreak.isEmpty() || fillTarget || fillGoal) {
+                RenderSystem.setShader(GameRenderer::getPositionColorShader);
+                buf.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+                for (BlockPos b : toBreak) fillBox(buf, pos, blockBox(b, cam, 0.002), 1f, 0.25f, 0.25f, 0.18f);
+                if (fillTarget) fillBox(buf, pos, blockBox(mining, cam, 0.004), 1f, 0.6f, 0.1f, 0.30f);
+                if (fillGoal) fillBox(buf, pos, blockBox(goal, cam, 0.004), 0.3f, 1f, 0.4f, 0.22f);
+                tess.draw();
+            }
+            // ...then crisp outlines and the path line.
+            RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
+            RenderSystem.lineWidth(2f);
+            buf.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
+            for (BlockPos b : toBreak) WorldRenderer.drawBox(matrices, buf, blockBox(b, cam, 0.002), 1f, 0.3f, 0.3f, 0.9f);
+            if (fillTarget) WorldRenderer.drawBox(matrices, buf, blockBox(mining, cam, 0.004), 1f, 0.65f, 0.15f, 1f);
+            if (fillGoal) WorldRenderer.drawBox(matrices, buf, blockBox(goal, cam, 0.004), 0.35f, 1f, 0.45f, 1f);
+            for (HostileEntity e : mobs) {
                 double dx = e.prevX + (e.getX() - e.prevX) * tickDelta - e.getX();
                 double dy = e.prevY + (e.getY() - e.prevY) * tickDelta - e.getY();
                 double dz = e.prevZ + (e.getZ() - e.prevZ) * tickDelta - e.getZ();
                 Box box = e.getBoundingBox().offset(dx - cam.x, dy - cam.y, dz - cam.z);
-                WorldRenderer.drawBox(matrices, lines, box, 1f, 0.25f, 0.25f, 0.9f);
+                WorldRenderer.drawBox(matrices, buf, box, 1f, 0.25f, 0.25f, 0.9f);
             }
+            if (path) drawPath(matrices, buf, exec.getPath(), Math.max(0, exec.getPosition()), cam);
+            tess.draw();
+        } finally {
+            RenderSystem.lineWidth(1f);
+            RenderSystem.depthMask(true);
+            RenderSystem.enableCull();
+            RenderSystem.disableBlend();
         }
-        if (cfg.overlayPath && exec != null) drawPath(matrices, lines, exec.getPath(), Math.max(0, exec.getPosition()), cam);
-        buffers.draw(RenderLayer.getLines());
+    }
+
+    /** Safe-zone outlines when "Show safe zones" is on (plus the rectangle at your feet for full-height zones). */
+    public static void renderZones(MatrixStack matrices, Camera camera) {
+        if (Plus.mod() == null || !Plus.config().ui.showZones) return;
+        MinecraftClient client = MinecraftClient.getInstance();
+        var zones = altoclefplus.zones.Zones.current().zones();
+        if (client.world == null || zones.isEmpty()) return;
+        Vec3d cam = camera.getPos();
+        int bottom = client.world.getBottomY();
+        int top = client.world.getTopY();
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buf = tess.getBuffer();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
+        RenderSystem.lineWidth(2f);
+        try {
+            buf.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
+            for (altoclefplus.zones.logic.Zone z : zones) {
+                double minY = z.fullHeight ? Math.max(bottom, cam.y - 48) : z.minY;
+                double maxY = z.fullHeight ? Math.min(top, cam.y + 48) : z.maxY + 1;
+                Box box = new Box(z.minX, minY, z.minZ, z.maxX + 1, maxY, z.maxZ + 1).offset(-cam.x, -cam.y, -cam.z);
+                WorldRenderer.drawBox(matrices, buf, box, 0.35f, 0.9f, 0.45f, 1.0f);
+                if (z.fullHeight && client.player != null) {
+                    // Full-height zones reach far above and below: also draw the rectangle at your feet.
+                    double fy = Math.floor(client.player.getY());
+                    Box ground = new Box(z.minX, fy, z.minZ, z.maxX + 1, fy + 0.05, z.maxZ + 1).offset(-cam.x, -cam.y, -cam.z);
+                    WorldRenderer.drawBox(matrices, buf, ground, 0.45f, 1.0f, 0.55f, 1.0f);
+                }
+            }
+            tess.draw();
+        } finally {
+            RenderSystem.lineWidth(1f);
+            RenderSystem.disableBlend();
+        }
     }
 
     private static void drawPath(MatrixStack matrices, VertexConsumer lines, IPath path, int from, Vec3d cam) {

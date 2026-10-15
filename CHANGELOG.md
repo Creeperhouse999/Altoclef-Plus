@@ -36,7 +36,8 @@ as its notes.
   on by default).
 - **Our own world overlay** (replaces Baritone's while on): blocks the bot will break glow red, the block it
   is mining orange, its goal green, the path ahead is a cyan line, and nearby hostile mobs get red outlines.
-  Every layer can be switched off in Settings; switching the overlay off brings Baritone's back.
+  Every layer can be switched off in Settings; switching the overlay off brings Baritone's back. Works with
+  every graphics setting, including Fabulous (so do the safe-zone outlines now).
 - **Your inventory is respected**: open it while the bot runs and the bot waits (no clicks, no walking,
   nothing closes it); close it and the bot carries on.
 

@@ -204,11 +204,11 @@ settings from *Mods → AltoClef Plus → ⚙*.
 
 | Tab | What's there |
 |---|---|
-| **Tasks** | Beat the game, get items (searchable icon grid + amount), presets, any AltoClef command |
+| **Tasks** | Beat the game, get items (searchable icon grid + amount), presets, any AltoClef command (press *+* to keep a command as a preset, shift-click a preset to remove it) |
 | **Plan** | The `@gamer` checklist and the step history |
 | **Status** | What the bot is doing right now, the log, inventory summary, module health |
 | **Zones** | Your safe zones: create, rename, set rules, delete |
-| **Settings** | Basics (chest looting, sleeping…), safety rules, and every feature's on/off switch and tuning |
+| **Settings** | Basics (chest looting, sleeping…), safety rules, every feature's on/off switch and tuning, and AltoClef's own options |
 
 **Pause vs Stop:** AltoClef can't freeze a task halfway, so *Pause* stops the bot but remembers what it
 was doing, and *Resume* starts the same command again. Nothing in your inventory is lost. *Stop* forgets

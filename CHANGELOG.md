@@ -8,6 +8,12 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-15
+
+### Changed
+- New icon: a pixel-art diamond pickaxe with a green "+" badge.
+- Releases are now also published on Modrinth.
+
 ## [0.6.0] - 2026-10-15
 
 Safe zones, safety rules and many more settings. Built and unit-tested; please report anything odd you see
@@ -174,7 +180,8 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
   stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
 - Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
 
-[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.4.0...v0.5.0

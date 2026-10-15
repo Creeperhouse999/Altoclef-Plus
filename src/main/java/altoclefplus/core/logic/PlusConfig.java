@@ -49,6 +49,8 @@ public final class PlusConfig {
         public boolean hideAltoClefOverlay = true;
         public boolean redirectChat = true;
         public boolean blockChatCommands = true;
+        /** While you have your inventory open the bot waits, and nothing closes it. */
+        public boolean pauseWhileInventoryOpen = true;
         /** Draw safe-zone outlines in the world. */
         public boolean showZones = false;
         /** Item ids, or the tokens "food" and "bed" which sum all foods / beds. */
@@ -78,6 +80,10 @@ public final class PlusConfig {
         public boolean spareTools = true;
         public boolean dropJunk = true;
         public boolean cursorGuard = true;
+        /** Show the inventory screen while the bot moves items in its own inventory, at a watchable pace. */
+        public boolean visibleInventory = true;
+        /** Seconds between item moves in visible mode (AltoClef's default is 0.2). */
+        public float visibleClickDelay = 0.3f;
         public boolean placeNearCraftingTable = true;
         public int junkFreeSlotThreshold = 3;
         public int buildingBlockCapPerType = 64;

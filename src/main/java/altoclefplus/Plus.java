@@ -57,7 +57,7 @@ public final class Plus {
         altoclefplus.core.BasicsApplier.apply(mod);
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard", "steady-mining", "weapon-choice", "cave-water"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard", "steady-mining", "weapon-choice", "cave-water", "visible-inventory", "user-screen-pause", "keep-user-screen"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> {
@@ -130,6 +130,8 @@ public final class Plus {
         altoclefplus.zones.Zones.refresh();
         if (++basicsTick % 40 == 0) altoclefplus.core.BasicsApplier.apply(mod);
         altoclefplus.inventory.HotbarManager.onTick();
+        altoclefplus.core.UserScreens.tick();
+        altoclefplus.inventory.VisibleInventory.tick();
         last = sampler.sample(mod);
         modules.tickAll(last);
     }

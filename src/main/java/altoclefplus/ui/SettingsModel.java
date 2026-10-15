@@ -70,6 +70,7 @@ public final class SettingsModel {
         r.add(new Toggle("Show HUD", () -> c.ui.hud, v -> c.ui.hud = v));
         r.add(new Toggle("Hide AltoClef's overlay text", () -> c.ui.hideAltoClefOverlay, v -> c.ui.hideAltoClefOverlay = v));
         r.add(new Toggle("Bot messages to log, not chat", () -> c.ui.redirectChat, v -> c.ui.redirectChat = v));
+        r.add(new Toggle("Wait while my inventory is open", () -> c.ui.pauseWhileInventoryOpen, v -> c.ui.pauseWhileInventoryOpen = v));
         r.add(new Toggle("Block @ and # chat commands", () -> c.ui.blockChatCommands, v -> c.ui.blockChatCommands = v));
 
         r.add(new Header("Camera"));
@@ -83,6 +84,7 @@ public final class SettingsModel {
         r.add(new Toggle("Craft armor piece by piece", () -> c.inventory.craftArmorPiecewise, v -> c.inventory.craftArmorPiecewise = v));
         r.add(new Toggle("Keep spare tools", () -> c.inventory.spareTools, v -> c.inventory.spareTools = v));
         r.add(new Toggle("Drop junk when full", () -> c.inventory.dropJunk, v -> c.inventory.dropJunk = v));
+        r.add(new Toggle("Visible inventory (watch the bot sort and craft)", () -> c.inventory.visibleInventory, v -> c.inventory.visibleInventory = v));
         r.add(new Toggle("Unstick cursor items", () -> c.inventory.cursorGuard, v -> c.inventory.cursorGuard = v));
         r.add(new Toggle("New table/furnace instead of long walks", () -> c.inventory.placeNearCraftingTable, v -> c.inventory.placeNearCraftingTable = v));
         r.add(new Value("Drop junk when free slots <=", () -> c.inventory.junkFreeSlotThreshold, v -> c.inventory.junkFreeSlotThreshold = v, 0, 10, 1));

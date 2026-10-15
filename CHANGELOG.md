@@ -18,6 +18,10 @@ as its notes.
 - **Getting air when drowning**: low on air underwater, the bot swims straight up if the surface is close;
   under a cave ceiling it places a door next to itself (doors can't hold water) and breathes inside it.
 - **Carries a door** for those air pockets, made only from wood it already has.
+- **Visible inventory** (on by default): when the bot crafts in its 2x2 grid, sorts or equips, the inventory
+  screen opens so you can watch it click, at a slower human-like pace, and closes when it's done.
+- **Your inventory is respected**: open it while the bot runs and the bot waits (no clicks, no walking,
+  nothing closes it); close it and the bot carries on.
 
 ### Changed
 - The HUD task line is now our own plain-English line: what you asked for and what the bot is doing right

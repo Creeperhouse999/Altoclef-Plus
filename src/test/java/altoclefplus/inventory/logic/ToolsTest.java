@@ -119,4 +119,18 @@ class ToolsTest {
         for (int i = 0; i < 399; i++) assertEquals(CursorGuard.Action.NONE, g.tick(false, false, true));
         assertEquals(CursorGuard.Action.STASH, g.tick(false, false, true), "still rescues a truly stuck cursor");
     }
+
+    @Test
+    void sparePlanReplacesTheOnlyPickaxeBeforeItBreaks() {
+        Snapshot base = Snapshot.builder().item("stone_pickaxe", 1).item("stone_axe", 1).item("stone_shovel", 1)
+                .item("cobblestone", 10).item("oak_planks", 8).build();
+        assertEquals(Optional.empty(), SpareToolPlanner.next(base), "healthy pickaxe: nothing to do");
+        Snapshot worn = base.toBuilder().durability("stone_pickaxe", 0.12f).build();
+        assertEquals(Optional.of("stone_pickaxe"), SpareToolPlanner.next(worn), "replace while we still have the stuff");
+        Snapshot iron = Snapshot.builder().item("iron_pickaxe", 1).item("stone_axe", 1).item("stone_shovel", 1)
+                .durability("iron_pickaxe", 0.1f).item("iron_ingot", 3).item("stick", 2).build();
+        assertEquals(Optional.of("iron_pickaxe"), SpareToolPlanner.next(iron));
+        Snapshot ironNoIngots = iron.toBuilder().item("iron_ingot", 0).item("cobblestone", 5).build();
+        assertEquals(Optional.of("stone_pickaxe"), SpareToolPlanner.next(ironNoIngots), "at least a stone backup");
+    }
 }

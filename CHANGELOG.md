@@ -67,6 +67,8 @@ as its notes.
 - Full-height safe zones now also show their rectangle at your feet level, not only the corner posts.
 
 ### Fixed
+- **Spare pickaxe**: the only pickaxe is replaced at 15% durability while the materials are still in the bag
+  (same tier, else stone or wood). A pickaxe breaking deep underground used to send the bot back up for wood.
 - **Picks up what it mines**: a new pickup step walks straight to nearby drops the task needs (within 10
   blocks, once they've landed), one at a time, and gives up on one after 10 seconds. AltoClef often said
   "collecting" but stood still or walked off to the next tree and left the drops behind.

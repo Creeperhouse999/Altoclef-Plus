@@ -14,7 +14,6 @@ Fixes found while playing 0.8.0 (tested in-game).
 
 ### Fixed
 - Fixed a crash ("TimeoutWanderTask ... null") when stuck recovery walked the bot away.
-- Fixed a crash when leaving a world while the bot was fighting.
 - Mining no longer restarts the same block over and over: drops are picked up after a block is broken, not
   in the middle of breaking the next one, and a block already in reach is always finished first.
 - The new pickup step no longer interrupts block breaking, waits a moment between pickups and ignores items

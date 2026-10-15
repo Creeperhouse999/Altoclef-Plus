@@ -178,8 +178,27 @@ public final class PanelScreen extends PlusScreen {
                 () -> client.setScreen(new ItemListScreen(this, "Never break these blocks", Plus.config().rules.neverBreakBlocks)));
     }
 
-    private int rowsPerPage() {
+    private int rowsPerColumn() {
         return Math.max(3, (ch() - 26) / ROW_H);
+    }
+
+    /** Two columns of settings on wide screens, so there are far fewer pages. */
+    private int settingsColumns() {
+        return cw() >= 560 ? 2 : 1;
+    }
+
+    private int rowsPerPage() {
+        return rowsPerColumn() * settingsColumns();
+    }
+
+    /** Left x, right x and top y of the n-th row on the current settings page. */
+    private int[] settingsCell(int n) {
+        int cols = settingsColumns();
+        int gap = 16;
+        int colW = (cw() - gap * (cols - 1)) / cols;
+        int col = n / rowsPerColumn();
+        int x = cx() + col * (colW + gap);
+        return new int[]{x, x + colW, cy() + (n % rowsPerColumn()) * ROW_H};
     }
 
     private void initSettings() {
@@ -187,12 +206,13 @@ public final class PanelScreen extends PlusScreen {
         int perPage = rowsPerPage();
         int pages = Math.max(1, (rows.size() + perPage - 1) / perPage);
         settingsPage = Math.min(settingsPage, pages - 1);
-        int x = cx();
-        int right = x + cw();
-        int y = cy();
         int start = settingsPage * perPage;
         for (int i = start; i < Math.min(rows.size(), start + perPage); i++) {
             SettingsModel.Row row = rows.get(i);
+            int[] cell = settingsCell(i - start);
+            int x = cell[0];
+            int right = cell[1];
+            int y = cell[2];
             if (row instanceof SettingsModel.Toggle t) {
                 addDrawableChild(new ButtonWidget(right - 50, y, 50, 20, onOff(t.get().getAsBoolean()), b -> {
                     t.set().accept(!t.get().getAsBoolean());
@@ -206,15 +226,16 @@ public final class PanelScreen extends PlusScreen {
                     v.set().accept(Math.min(v.max(), v.get().getAsInt() + v.step()));
                 }));
             } else if (row instanceof SettingsModel.Action a) {
-                addDrawableChild(new ButtonWidget(x, y, Math.min(200, cw()), 20, new LiteralText(a.label()), b -> a.run().run()));
+                addDrawableChild(new ButtonWidget(x, y, Math.min(200, right - x), 20, new LiteralText(a.label()), b -> a.run().run()));
             } else if (row instanceof SettingsModel.Choice ch) {
                 addDrawableChild(new ButtonWidget(right - 130, y, 130, 20, new LiteralText(ch.currentLabel()), b -> {
                     ch.next();
                     b.setMessage(new LiteralText(ch.currentLabel()));
                 }));
             }
-            y += ROW_H;
         }
+        int x = cx();
+        int right = x + cw();
         int navY = bottomY() - 26;
         ButtonWidget prev = addDrawableChild(new ButtonWidget(x, navY, 20, 20, new LiteralText("<"), b -> {
             settingsPage--;
@@ -232,6 +253,14 @@ public final class PanelScreen extends PlusScreen {
             Plus.saveConfig();
             Plus.log().add("plus", "Settings saved");
         }));
+    }
+
+    /** Cut a label to fit {@code maxWidth} pixels, with an ellipsis. */
+    private String fit(String text, int maxWidth) {
+        if (maxWidth <= 0 || textRenderer.getWidth(text) <= maxWidth) return text;
+        String t = text;
+        while (t.length() > 1 && textRenderer.getWidth(t + "…") > maxWidth) t = t.substring(0, t.length() - 1);
+        return t + "…";
     }
 
     private static Text onOff(boolean on) {
@@ -341,12 +370,24 @@ public final class PanelScreen extends PlusScreen {
             textRenderer.drawWithShadow(m, sb.toString(), x, y, MUTED);
             y += line;
         }
-        StringBuilder hooks = new StringBuilder("Hooks: ");
-        for (Map.Entry<String, Boolean> e : Hooks.report().entrySet()) {
-            hooks.append(e.getValue() ? "§a" : "§7").append(e.getKey()).append("§r ");
+        Map<String, Boolean> report = Hooks.report();
+        long seen = report.values().stream().filter(Boolean::booleanValue).count();
+        textRenderer.drawWithShadow(m, "Hooks: " + seen + "/" + report.size() + " active §7(grey = not used yet)", x, y, MUTED);
+        y += line;
+        // Word-wrapped list, one colored name at a time, at most 3 lines.
+        int hx = x;
+        int hookLines = 0;
+        for (Map.Entry<String, Boolean> e : report.entrySet()) {
+            int w = textRenderer.getWidth(e.getKey() + " ");
+            if (hx + w > x + cw() && hx > x) {
+                if (++hookLines >= 3) break;
+                hx = x;
+                y += line;
+            }
+            textRenderer.drawWithShadow(m, e.getKey(), hx, y, e.getValue() ? 0x55FF55 : 0x777777);
+            hx += w;
         }
-        textRenderer.drawWithShadow(m, hooks.toString(), x, y, MUTED);
-        y += 14;
+        y += line + 4;
 
         textRenderer.drawWithShadow(m, "Log (scroll)", x, y, TEXT);
         y += 12;
@@ -369,26 +410,28 @@ public final class PanelScreen extends PlusScreen {
         List<SettingsModel.Row> rows = settingsRows();
         int perPage = rowsPerPage();
         int pages = Math.max(1, (rows.size() + perPage - 1) / perPage);
-        int x = cx();
-        int right = x + cw();
-        int y = cy();
+        int x0 = cx();
         int start = settingsPage * perPage;
         for (int i = start; i < Math.min(rows.size(), start + perPage); i++) {
             SettingsModel.Row row = rows.get(i);
+            int[] cell = settingsCell(i - start);
+            int x = cell[0];
+            int right = cell[1];
+            int y = cell[2];
+            int labelMax = right - x - (row instanceof SettingsModel.Choice ? 140 : row instanceof SettingsModel.Value ? 100 : 60);
             if (row instanceof SettingsModel.Header h) {
                 textRenderer.drawWithShadow(m, "§l" + h.label(), x, y + 6, 0xFFFF55);
             } else if (row instanceof SettingsModel.Toggle t) {
-                textRenderer.drawWithShadow(m, t.label(), x + 6, y + 6, TEXT);
+                textRenderer.drawWithShadow(m, fit(t.label(), labelMax), x + 6, y + 6, TEXT);
             } else if (row instanceof SettingsModel.Choice ch) {
-                textRenderer.drawWithShadow(m, ch.label(), x + 6, y + 6, TEXT);
+                textRenderer.drawWithShadow(m, fit(ch.label(), labelMax), x + 6, y + 6, TEXT);
             } else if (row instanceof SettingsModel.Value v) {
-                textRenderer.drawWithShadow(m, v.label(), x + 6, y + 6, TEXT);
+                textRenderer.drawWithShadow(m, fit(v.label(), labelMax), x + 6, y + 6, TEXT);
                 String val = String.valueOf(v.get().getAsInt());
                 drawCenteredText(m, textRenderer, val, right - 45, y + 6, 0x55FF55);
             }
-            y += ROW_H;
         }
-        drawCenteredText(m, textRenderer, (settingsPage + 1) + " / " + pages, x + 50, bottomY() - 20, MUTED);
+        drawCenteredText(m, textRenderer, (settingsPage + 1) + " / " + pages, x0 + 50, bottomY() - 20, MUTED);
     }
 
     // ---- input ----

@@ -22,6 +22,9 @@ as its notes.
   screen opens so you can watch it click, at a slower human-like pace, and closes when it's done.
 - **Drops outdated tools**: a wooden pickaxe goes once a stone one is carried, and so on (enchanted, named,
   needed or protected tools are kept). Separate setting from the junk drop.
+- **Our own world overlay** (replaces Baritone's while on): blocks the bot will break glow red, the block it
+  is mining orange, its goal green, the path ahead is a cyan line, and nearby hostile mobs get red outlines.
+  Every layer can be switched off in Settings; switching the overlay off brings Baritone's back.
 - **Your inventory is respected**: open it while the bot runs and the bot waits (no clicks, no walking,
   nothing closes it); close it and the bot carries on.
 
@@ -31,6 +34,10 @@ as its notes.
   top task name often stayed the same for minutes (a crafting table while it was really mining iron).
 - The Food / Pearls / Rods / Eyes / Beds line only shows while *Beat the game* (`@gamer`) runs.
 - Pressing the pause key with nothing running now says *Nothing to pause*.
+- Panel: Settings use two columns on wide screens (far fewer pages) and long labels are cut neatly; the
+  Status tab's hook list wraps instead of running off the screen; the Zones tab no longer draws the selected
+  zone's name over the corner hint, and its rules sit in two columns.
+- Full-height safe zones now also show their rectangle at your feet level, not only the corner posts.
 
 ### Fixed
 - Safe zone rules (no breaking, no placing, no entering) now keep working after the first task: AltoClef reset

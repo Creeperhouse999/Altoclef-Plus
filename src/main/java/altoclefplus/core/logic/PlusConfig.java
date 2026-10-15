@@ -53,6 +53,13 @@ public final class PlusConfig {
         public boolean pauseWhileInventoryOpen = true;
         /** Draw safe-zone outlines in the world. */
         public boolean showZones = false;
+        /** Our world overlay (replaces Baritone's): path, blocks to break, mining target, goal, mobs. */
+        public boolean overlay = true;
+        public boolean overlayPath = true;
+        public boolean overlayBreak = true;
+        public boolean overlayTarget = true;
+        public boolean overlayGoal = true;
+        public boolean overlayMobs = true;
         /** Item ids, or the tokens "food" and "bed" which sum all foods / beds. */
         public List<String> hudResourceItems = new ArrayList<>(List.of("food", "ender_pearl", "blaze_rod", "ender_eye", "bed"));
         public List<Preset> presets = new ArrayList<>(List.of(

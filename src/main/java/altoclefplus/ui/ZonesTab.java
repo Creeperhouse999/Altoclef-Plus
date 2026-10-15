@@ -32,6 +32,8 @@ final class ZonesTab {
     private final Consumer<ClickableWidget> add;
     private final Runnable rebuild;
     private TextFieldWidget name;
+    /** Top of the zone list / rules area (below the corner hint and the selected-zone title). */
+    private static final int LIST_OFFSET = 86;
 
     ZonesTab(Consumer<ClickableWidget> add, Runnable rebuild) {
         this.add = add;
@@ -74,7 +76,7 @@ final class ZonesTab {
         add.accept(create);
 
         // Zone list (left) and rules of the selected zone (right)
-        int listY = y + 70;
+        int listY = y + LIST_OFFSET;
         List<Zone> zones = mine();
         if (selected >= zones.size()) selected = zones.size() - 1;
         for (int i = 0; i < zones.size() && listY + i * 22 < y + h - 24; i++) {
@@ -90,15 +92,22 @@ final class ZonesTab {
             Zone z = zones.get(selected);
             ZoneRules r = z.rules();
             int rx = x + 170;
-            int ry = listY;
-            ry = toggle(rx, ry, "No breaking blocks", () -> r.noBreak, v -> r.noBreak = v);
-            ry = toggle(rx, ry, "No placing blocks", () -> r.noPlace, v -> r.noPlace = v);
-            ry = toggle(rx, ry, "No looting chests", () -> r.noLoot, v -> r.noLoot = v);
-            ry = toggle(rx, ry, "No entering", () -> r.noEnter, v -> r.noEnter = v);
-            ry = toggle(rx, ry, "No attacking hostile mobs", () -> r.noAttackHostile, v -> r.noAttackHostile = v);
-            ry = toggle(rx, ry, "No attacking neutral mobs", () -> r.noAttackNeutral, v -> r.noAttackNeutral = v);
-            ry = toggle(rx, ry, "No attacking friendly mobs", () -> r.noAttackFriendly, v -> r.noAttackFriendly = v);
-            add.accept(new ButtonWidget(rx, ry + 4, 80, 20, new LiteralText("§cDelete"), b -> {
+            // Two columns of rules when there is room, so the list doesn't run off the screen.
+            int colW = (w - 170) >= 2 * 176 ? 172 : Math.min(210, w - 170);
+            boolean two = colW == 172;
+            java.util.function.IntUnaryOperator colX = n -> two && n >= 4 ? rx + colW + 4 : rx;
+            java.util.function.IntUnaryOperator rowY = n -> listY + (two ? n % 4 : n) * 22;
+            String[] labels = {"No breaking blocks", "No placing blocks", "No looting chests", "No entering",
+                    "No attacking hostile", "No attacking neutral", "No attacking friendly"};
+            BooleanSupplier[] gets = {() -> r.noBreak, () -> r.noPlace, () -> r.noLoot, () -> r.noEnter,
+                    () -> r.noAttackHostile, () -> r.noAttackNeutral, () -> r.noAttackFriendly};
+            List<Consumer<Boolean>> sets = List.of(v -> r.noBreak = v, v -> r.noPlace = v, v -> r.noLoot = v,
+                    v -> r.noEnter = v, v -> r.noAttackHostile = v, v -> r.noAttackNeutral = v, v -> r.noAttackFriendly = v);
+            for (int i = 0; i < labels.length; i++) {
+                toggle(colX.applyAsInt(i), rowY.applyAsInt(i), colW, labels[i], gets[i], sets.get(i));
+            }
+            int deleteY = two ? listY + 4 * 22 + 4 : listY + labels.length * 22 + 4;
+            add.accept(new ButtonWidget(rx, deleteY, 80, 20, new LiteralText("§cDelete"), b -> {
                 Plus.config().zones.remove(z);
                 selected = -1;
                 saveAndRefresh();
@@ -106,8 +115,8 @@ final class ZonesTab {
         }
     }
 
-    private int toggle(int x, int y, String label, BooleanSupplier get, Consumer<Boolean> set) {
-        add.accept(new ButtonWidget(x, y, 210, 20, label(label, get.getAsBoolean()), b -> {
+    private int toggle(int x, int y, int width, String label, BooleanSupplier get, Consumer<Boolean> set) {
+        add.accept(new ButtonWidget(x, y, width, 20, label(label, get.getAsBoolean()), b -> {
             set.accept(!get.getAsBoolean());
             b.setMessage(label(label, get.getAsBoolean()));
             saveAndRefresh();
@@ -148,10 +157,10 @@ final class ZonesTab {
         tr.drawWithShadow(m, "Stand on a corner and press its button.", x, y + 58, 0x777777);
         List<Zone> zones = mine();
         if (zones.isEmpty()) {
-            tr.drawWithShadow(m, "No zones in this world yet.", x, y + 74, 0xAAAAAA);
+            tr.drawWithShadow(m, "No zones in this world yet.", x, y + LIST_OFFSET, 0xAAAAAA);
         } else if (selected >= 0 && selected < zones.size()) {
             Zone z = zones.get(selected);
-            tr.drawWithShadow(m, z.name + " - " + z.size() + " blocks", x + 170, y + 58, 0x55FF55);
+            tr.drawWithShadow(m, z.name + " - " + z.size() + " blocks", x + 170, y + LIST_OFFSET - 12, 0x55FF55);
         }
     }
 

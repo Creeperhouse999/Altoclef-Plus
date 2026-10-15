@@ -36,4 +36,12 @@ class ChestsAndScaffoldTest {
         Set<Long> now = Set.of(Schematic.key(0, 64, 0), Schematic.key(1, 64, 0), Schematic.key(2, 65, 0));
         assertEquals(Set.of(Schematic.key(2, 65, 0)), ScaffoldTracker.toRemove(before, schematic, now));
     }
+
+    @Test
+    void pickupTargetIsCappedSoTheChestKeepsItsMinimum() {
+        // Carrying 10, AltoClef wants 50 in total; the chest has 100 and must keep 64: may only reach 10 + 36.
+        assertEquals(46, ChestRules.cappedTarget(10, 50, 100, 64));
+        assertEquals(50, ChestRules.cappedTarget(10, 50, 200, 64), "plenty in the chest: AltoClef's own target");
+        assertEquals(10, ChestRules.cappedTarget(10, 50, 64, 64), "nothing to spare");
+    }
 }

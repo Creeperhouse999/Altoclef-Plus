@@ -9,6 +9,7 @@
     "BackgroundSmeltMixin",
     "BeatMinecraftFixesMixin",
     "CaveWaterCostMixin",
+    "ChestTakeRulesMixin",
     "CameraMixin",
     "ChatSendMixin",
     "CommandStatusOverlayMixin",

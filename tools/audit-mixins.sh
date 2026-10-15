@@ -21,7 +21,11 @@ MIXDIR="$ROOT/src/main/java/altoclefplus/mixin"
 miss=0
 checked=0
 
-has_member() { # $1=javap output, $2=name
+has_member() { # $1=javap output, $2=name ("<init>" = any constructor)
+  if [ "$2" = "<init>" ]; then
+    echo "$1" | grep -qE "^ *(public|protected|private)? *[A-Za-z0-9_.\$]+\("
+    return
+  fi
   echo "$1" | grep -qE "[ .\$]$2( |;|\()"
 }
 

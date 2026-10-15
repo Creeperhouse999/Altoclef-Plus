@@ -216,6 +216,12 @@ public final class PlusConfig {
         public boolean lootDesertTemples = true;
         public boolean barterForPearls = false;
         public int eyesToCollect = 14;
+        /** The bot may take items it needs from chests (gathering and building). */
+        public boolean takeFromChests = true;
+        /** ...also from chests inside safe zones (otherwise zones with "no looting" are left alone). */
+        public boolean takeFromZoneChests = true;
+        /** Always leave at least this many of an item in a chest (64 = one stack). */
+        public int chestLeaveAtLeast = 64;
     }
 
     public static final class Recovery {

@@ -4,6 +4,14 @@ package altoclefplus.build.logic;
 public final class ChestRules {
     private ChestRules() {}
 
+    /**
+     * AltoClef's container pickup works with "have this many in total": cap that total so the chest keeps
+     * its minimum. @return the new total target (never below what is already carried)
+     */
+    public static int cappedTarget(int carried, int wantedTotal, int inChest, int leaveAtLeast) {
+        return carried + takeable(inChest, leaveAtLeast, Math.max(0, wantedTotal - carried));
+    }
+
     public static int takeable(int inChest, int leaveAtLeast, int needed) {
         return Math.max(0, Math.min(needed, inChest - Math.max(0, leaveAtLeast)));
     }

@@ -21,6 +21,8 @@ as its notes.
 - **Carries a door** for those air pockets, made only from wood it already has.
 - **Your own presets**: type a command and press *+* next to *Run* to keep it as a preset button;
   shift-click a preset to remove it.
+- **Chest rules**: the bot only takes what it needs from chests if allowed (on), also from chests in safe
+  zones (on, can be switched off), and always leaves at least a set amount behind (default one stack, 64).
 - **Item frames are never touched**: the bot never hits an item frame or painting and never breaks the block
   one hangs on (frames often label chests).
 - **Never attack players** (no PvP, on by default) in Safety rules. AltoClef's own `punk` / `terminate`

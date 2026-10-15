@@ -50,6 +50,9 @@ public final class SettingsModel {
         r.add(new Toggle("Loot desert temples (@gamer)", () -> c.basics.lootDesertTemples, v -> c.basics.lootDesertTemples = v));
         r.add(new Toggle("Pearls by piglin trading, not hunting", () -> c.basics.barterForPearls, v -> c.basics.barterForPearls = v));
         r.add(new Value("Eyes of ender to collect", () -> c.basics.eyesToCollect, v -> c.basics.eyesToCollect = v, 12, 20, 1));
+        r.add(new Toggle("Take needed items from chests", () -> c.basics.takeFromChests, v -> c.basics.takeFromChests = v));
+        r.add(new Toggle("  ...also chests in safe zones", () -> c.basics.takeFromZoneChests, v -> c.basics.takeFromZoneChests = v));
+        r.add(new Value("  Leave at least this many in a chest", () -> c.basics.chestLeaveAtLeast, v -> c.basics.chestLeaveAtLeast = v, 0, 256, 16));
 
         r.add(new Header("Safety rules"));
         r.add(new Toggle("Never attack named mobs", () -> c.rules.neverAttackNamed, v -> c.rules.neverAttackNamed = v));

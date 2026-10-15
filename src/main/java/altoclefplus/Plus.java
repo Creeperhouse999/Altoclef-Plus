@@ -55,7 +55,7 @@ public final class Plus {
         }
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> {

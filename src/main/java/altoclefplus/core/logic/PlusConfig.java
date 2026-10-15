@@ -123,6 +123,9 @@ public final class PlusConfig {
         public boolean fairCombat = true;
         public int fairCombatMaxAngle = 30;
 
+        /** Path around doors with diagonal/step moves and don't eat while aiming at doors. */
+        public boolean fixDoors = true;
+
         public boolean shield = true;
         public boolean dodge = true;
         public boolean waterClutch = true;

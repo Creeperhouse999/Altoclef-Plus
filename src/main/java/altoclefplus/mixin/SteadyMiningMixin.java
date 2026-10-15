@@ -20,7 +20,8 @@ import java.util.Set;
 /**
  * AltoClef re-picks the nearest block every tick and jumps to any block it hasn't tried yet, so while walking
  * to one log/ore it kept switching targets several times a second. Keep the block we're already going for;
- * a new one only wins when it is much closer, and not more than once every 3 seconds.
+ * a new one only wins when it is much closer, and not more than once every 3 seconds. Once it heads for a
+ * dropped item it picks it up before going back to blocks (unless the item can't be reached for 15 s).
  */
 @Mixin(targets = "adris.altoclef.tasks.resources.MineAndCollectTask$MineOrCollectTask", remap = false)
 public abstract class SteadyMiningMixin {
@@ -32,6 +33,13 @@ public abstract class SteadyMiningMixin {
     private final TargetStickiness altoclefplus$sticky = new TargetStickiness(COOLDOWN_TICKS);
     @Unique
     private long altoclefplus$ticks;
+    /** Dropped item we are walking to: finish picking it up before going back to blocks. */
+    @Unique
+    private net.minecraft.entity.ItemEntity altoclefplus$chasing;
+    @Unique
+    private long altoclefplus$chaseStart;
+    @Unique
+    private int altoclefplus$gaveUpOn = -1;
 
     @Inject(method = "getClosestTo", at = @At("RETURN"), cancellable = true, require = 0)
     private void altoclefplus$keepTarget(AltoClef mod, Vec3d pos, CallbackInfoReturnable<Optional<Object>> cir) {
@@ -39,6 +47,23 @@ public abstract class SteadyMiningMixin {
         if (!Plus.config().survival.steadyMining) return;
         long tick = ++altoclefplus$ticks;
         Optional<Object> picked = cir.getReturnValue();
+        // Items: AltoClef flipped between "pick up that drop" and "mine that block" as distances changed.
+        if (altoclefplus$chasing != null) {
+            var item = altoclefplus$chasing;
+            boolean stillThere = item.isAlive() && !item.isRemoved() && item.squaredDistanceTo(pos) < 16 * 16;
+            if (stillThere && tick - altoclefplus$chaseStart < 300) {
+                if (picked == null || picked.isEmpty() || picked.get() != item) cir.setReturnValue(Optional.of(item));
+                return;
+            }
+            if (stillThere) altoclefplus$gaveUpOn = item.getId(); // unreachable for 15 s: let AltoClef decide
+            altoclefplus$chasing = null;
+        }
+        if (picked != null && picked.isPresent() && picked.get() instanceof net.minecraft.entity.ItemEntity item
+                && item.getId() != altoclefplus$gaveUpOn) {
+            altoclefplus$chasing = item;
+            altoclefplus$chaseStart = tick;
+            return;
+        }
         if (picked == null || picked.isEmpty() || !(picked.get() instanceof BlockPos candidate)) return;
         BlockPos current;
         Set<?> blacklist;

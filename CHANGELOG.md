@@ -51,6 +51,8 @@ as its notes.
 - Full-height safe zones now also show their rectangle at your feet level, not only the corner posts.
 
 ### Fixed
+- Steady mining now also covers dropped items: once the bot walks to a drop it picks it up before going back
+  to mining, instead of flipping between the item and a block (seen 44 times in one test run).
 - Side jobs (spare tools, equipping, junk drops, gear gates) no longer interrupt AltoClef while it is placing
   a crafting table, crafting or using a furnace. In a test run this made it re-place the same crafting table
   over and over.

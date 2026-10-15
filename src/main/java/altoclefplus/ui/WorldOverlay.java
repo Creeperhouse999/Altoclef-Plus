@@ -63,7 +63,9 @@ public final class WorldOverlay {
         List<HostileEntity> mobs = cfg.overlayMobs ? client.world.getEntitiesByClass(HostileEntity.class,
                 client.player.getBoundingBox().expand(16), Entity::isAlive) : List.of();
         boolean path = cfg.overlayPath && exec != null;
-        if (toBreak.isEmpty() && !fillTarget && !fillGoal && mobs.isEmpty() && !path) return;
+        Box preview = buildPreviewBox(cam);
+        Box running = runningBuildBox(cam);
+        if (toBreak.isEmpty() && !fillTarget && !fillGoal && mobs.isEmpty() && !path && preview == null && running == null) return;
 
         // Drawn straight to the screen like Baritone does (not through render layers), so it also shows with
         // "Fabulous" graphics, where those layers go to buffers that are already combined at this point.
@@ -99,12 +101,36 @@ public final class WorldOverlay {
                 WorldRenderer.drawBox(matrices, buf, box, 1f, 0.25f, 0.25f, 0.9f);
             }
             if (path) drawPath(matrices, buf, exec.getPath(), Math.max(0, exec.getPosition()), cam);
+            if (preview != null) WorldRenderer.drawBox(matrices, buf, preview, 0.3f, 0.9f, 1f, 1f);
+            if (running != null) WorldRenderer.drawBox(matrices, buf, running, 0.75f, 0.45f, 1f, 1f);
             tess.draw();
         } finally {
             RenderSystem.lineWidth(1f);
             RenderSystem.depthMask(true);
             RenderSystem.enableCull();
             RenderSystem.disableBlend();
+        }
+    }
+
+    /** Outline of the schematic being placed in the Build tab (cyan), while Preview is on. */
+    private static Box buildPreviewBox(Vec3d cam) {
+        var s = altoclefplus.build.Builds.previewSchematic;
+        var p = altoclefplus.build.Builds.previewPlacement;
+        if (!altoclefplus.build.Builds.previewOn || s == null || p == null) return null;
+        int[] b = p.bounds(s.sizeX(), s.sizeY(), s.sizeZ());
+        return new Box(b[0], b[1], b[2], b[3] + 1, b[4] + 1, b[5] + 1).offset(-cam.x, -cam.y, -cam.z);
+    }
+
+    /** Outline of the build in progress (purple). */
+    private static Box runningBuildBox(Vec3d cam) {
+        var job = altoclefplus.build.Builds.running().orElse(null);
+        if (job == null) return null;
+        try {
+            var s = altoclefplus.build.SchematicLibrary.load(job.file);
+            int[] b = job.placement().bounds(s.sizeX(), s.sizeY(), s.sizeZ());
+            return new Box(b[0], b[1], b[2], b[3] + 1, b[4] + 1, b[5] + 1).offset(-cam.x, -cam.y, -cam.z);
+        } catch (Exception e) {
+            return null;
         }
     }
 

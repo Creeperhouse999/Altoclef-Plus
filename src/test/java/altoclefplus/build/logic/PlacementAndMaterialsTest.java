@@ -73,4 +73,15 @@ class PlacementAndMaterialsTest {
         Map<String, Integer> need = m.stillNeeded(Map.of("minecraft:stone", 1, "minecraft:dirt", 5));
         assertEquals(Map.of("minecraft:stone", 1), need);
     }
+
+    @Test
+    void worldToSchematicIsTheExactInverse() {
+        for (int r = 0; r < 4; r++) {
+            Placement p = new Placement(10, 64, -5, r);
+            for (int x = 0; x < 3; x++) for (int z = 0; z < 4; z++) {
+                int[] w = p.toWorld(x, 2, z);
+                assertArrayEquals(new int[]{x, 2, z}, p.toSchematic(w[0], w[1], w[2]), "rotation " + r);
+            }
+        }
+    }
 }

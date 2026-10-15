@@ -20,6 +20,19 @@ public record Placement(int originX, int originY, int originZ, int rotation) {
         return new int[]{originX + rx, originY + y, originZ + rz};
     }
 
+    /** World position -> schematic position (inverse of {@link #toWorld}). */
+    public int[] toSchematic(int wx, int wy, int wz) {
+        int rx = wx - originX, rz = wz - originZ;
+        int x, z;
+        switch (rotation) {
+            case 1 -> { x = rz; z = -rx; }
+            case 2 -> { x = -rx; z = -rz; }
+            case 3 -> { x = -rz; z = rx; }
+            default -> { x = rx; z = rz; }
+        }
+        return new int[]{x, wy - originY, z};
+    }
+
     /** {minX, minY, minZ, maxX, maxY, maxZ} of a schematic of this size placed here. */
     public int[] bounds(int sizeX, int sizeY, int sizeZ) {
         int[] a = toWorld(0, 0, 0);

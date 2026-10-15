@@ -62,31 +62,34 @@ public record Materials(Map<String, Integer> items, Map<String, Integer> unplace
         Map<String, Integer> items = new TreeMap<>();
         Map<String, Integer> impossible = new TreeMap<>();
         for (int c : s.cells()) {
-            if (c == Schematic.NONE) continue;
-            String state = s.palette()[c];
-            String block = Schematic.blockId(state);
-            if (IGNORED.contains(block)) continue;
-            if (SURVIVAL_IMPOSSIBLE.contains(block)) {
-                impossible.merge(block, 1, Integer::sum);
-                continue;
-            }
-            // Second halves and fluid flow carry no item of their own.
-            if (has(state, "half=upper") || has(state, "part=head")) continue;
-            if ((block.equals("minecraft:water") || block.equals("minecraft:lava")) && !has(state, "level=0") && state.contains("level=")) continue;
-            int count = 1;
-            if (has(state, "type=double") && block.endsWith("_slab")) count = 2;
-            count = Math.max(count, number(state, "candles"));
-            count = Math.max(count, number(state, "pickles"));
-            count = Math.max(count, number(state, "eggs"));
-            count = Math.max(count, number(state, "layers"));
-            if (block.startsWith("minecraft:potted_")) {
-                items.merge("minecraft:flower_pot", 1, Integer::sum);
-                items.merge("minecraft:" + block.substring("minecraft:potted_".length()), 1, Integer::sum);
-                continue;
-            }
-            items.merge(itemFor(block), count, Integer::sum);
+            if (c != Schematic.NONE) addState(s.palette()[c], items, impossible);
         }
         return new Materials(items, impossible);
+    }
+
+    /** Adds what one block state needs to {@code items}, or to {@code impossible} if survival can't place it. */
+    public static void addState(String state, Map<String, Integer> items, Map<String, Integer> impossible) {
+        String block = Schematic.blockId(state);
+        if (IGNORED.contains(block)) return;
+        if (SURVIVAL_IMPOSSIBLE.contains(block)) {
+            impossible.merge(block, 1, Integer::sum);
+            return;
+        }
+        // Second halves and fluid flow carry no item of their own.
+        if (has(state, "half=upper") || has(state, "part=head")) return;
+        if ((block.equals("minecraft:water") || block.equals("minecraft:lava")) && state.contains("level=") && !has(state, "level=0")) return;
+        if (block.startsWith("minecraft:potted_")) {
+            items.merge("minecraft:flower_pot", 1, Integer::sum);
+            items.merge("minecraft:" + block.substring("minecraft:potted_".length()), 1, Integer::sum);
+            return;
+        }
+        int count = 1;
+        if (has(state, "type=double") && block.endsWith("_slab")) count = 2;
+        count = Math.max(count, number(state, "candles"));
+        count = Math.max(count, number(state, "pickles"));
+        count = Math.max(count, number(state, "eggs"));
+        count = Math.max(count, number(state, "layers"));
+        items.merge(itemFor(block), count, Integer::sum);
     }
 
     /** What is still missing after counting what we already have (carried, in reach, already placed...). */

@@ -22,7 +22,7 @@ import java.util.Map;
 
 /** The control panel: Tasks, Plan, Status and Settings tabs, with Stop / Pause always visible. */
 public final class PanelScreen extends PlusScreen {
-    public enum Tab { TASKS("Tasks"), PLAN("Plan"), STATUS("Status"), ZONES("Zones"), SETTINGS("Settings");
+    public enum Tab { TASKS("Tasks"), PLAN("Plan"), STATUS("Status"), BUILD("Build"), ZONES("Zones"), SETTINGS("Settings");
         final String label;
         Tab(String label) { this.label = label; }
     }
@@ -46,6 +46,7 @@ public final class PanelScreen extends PlusScreen {
     private ButtonWidget pauseButton;
     private String selectedItem = "";
     private ZonesTab zonesTab;
+    private BuildTab buildTab;
 
     public PanelScreen() {
         this(null, lastTab);
@@ -93,6 +94,13 @@ public final class PanelScreen extends PlusScreen {
                     init();
                 });
                 zonesTab.init(textRenderer, cx(), cy(), cw(), ch());
+            }
+            case BUILD -> {
+                buildTab = new BuildTab(this::addDrawableChild, () -> {
+                    clearChildren();
+                    init();
+                });
+                buildTab.init(textRenderer, cx(), cy(), cw(), ch());
             }
             default -> { }
         }
@@ -302,6 +310,9 @@ public final class PanelScreen extends PlusScreen {
             case STATUS -> renderStatus(m);
             case ZONES -> {
                 if (zonesTab != null) zonesTab.render(m, textRenderer, cx(), cy());
+            }
+            case BUILD -> {
+                if (buildTab != null) buildTab.render(m, textRenderer, cx(), cy(), cw(), ch());
             }
             case SETTINGS -> renderSettings(m);
         }

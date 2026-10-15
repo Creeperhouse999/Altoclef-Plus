@@ -50,6 +50,7 @@ public final class Plus {
 
         try {
             AltoClef.getCommandExecutor().registerNewCommand(new altoclefplus.survival.HuntEndermenCommand());
+            AltoClef.getCommandExecutor().registerNewCommand(new altoclefplus.build.BuildCommand());
         } catch (Exception e) {
             LOG.add("plus", "Could not register huntendermen command: " + e.getMessage());
         }
@@ -137,6 +138,7 @@ public final class Plus {
         altoclefplus.inventory.HotbarManager.onTick();
         altoclefplus.core.UserScreens.tick();
         altoclefplus.inventory.VisibleInventory.tick();
+        altoclefplus.build.Builds.tick();
         last = sampler.sample(mod);
         modules.tickAll(last);
     }

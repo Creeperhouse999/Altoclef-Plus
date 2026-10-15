@@ -54,6 +54,8 @@ public final class Hud {
                     id -> net.minecraft.util.registry.Registry.ITEM.containsId(new net.minecraft.util.Identifier("minecraft", id))
                             ? s.count(id) + (int) s.armor.values().stream().filter(id::equals).count() : -1);
             String action = TaskNarrator.action(s.taskChain, minedBlock(client, s));
+            String buildLine = altoclefplus.build.Builds.hudLine();
+            if (!buildLine.isEmpty()) goal = buildLine;
             String text = goal.isEmpty() ? action : action.isEmpty() || action.equalsIgnoreCase(goal) ? goal : goal + ": " + action;
             tr.drawWithShadow(m, shorten(text, 60), x, y, 0xFFFFFFFF);
             y += line;

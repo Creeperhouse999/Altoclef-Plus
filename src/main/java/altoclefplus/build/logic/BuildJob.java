@@ -20,6 +20,12 @@ public final class BuildJob {
     public int total;
     /** Why it waits (missing or impossible blocks), shown in the Build tab. */
     public String note = "";
+    /** You approved building without the blocks survival can't place (command blocks, spawners...). */
+    public boolean approvedSkipImpossible;
+    /** Block ids you chose to leave out (e.g. an item the bot can't get). */
+    public java.util.List<String> skipBlocks = new java.util.ArrayList<>();
+    /** Blocks that need the item it can't get; "Approve" adds them to {@link #skipBlocks}. */
+    public java.util.List<String> pendingSkip = new java.util.ArrayList<>();
 
     public BuildJob() {}
 

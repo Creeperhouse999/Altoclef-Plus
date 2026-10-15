@@ -19,6 +19,8 @@ public final class PlusConfig {
     public List<altoclefplus.zones.logic.Zone> zones = new ArrayList<>();
     /** AltoClef's own options changed from our panel: field name -> value (toggles as 0/1). */
     public java.util.Map<String, Double> altoclefOverrides = new java.util.HashMap<>();
+    /** Build jobs (queued, paused, waiting, done), per world. */
+    public List<altoclefplus.build.logic.BuildJob> builds = new ArrayList<>();
 
     public static final class Modules {
         public boolean ui = true;
@@ -273,6 +275,12 @@ public final class PlusConfig {
         if (basics == null) basics = d.basics;
         if (zones == null) zones = new ArrayList<>();
         if (altoclefOverrides == null) altoclefOverrides = new java.util.HashMap<>();
+        if (builds == null) builds = new ArrayList<>();
+        builds.removeIf(j -> j == null || j.file == null || j.world == null || j.state == null);
+        for (var j : builds) {
+            if (j.skipBlocks == null) j.skipBlocks = new ArrayList<>();
+            if (j.pendingSkip == null) j.pendingSkip = new ArrayList<>();
+        }
         altoclefOverrides.values().removeIf(v -> v == null || !Double.isFinite(v));
         zones.removeIf(z -> z == null || z.world == null);
         for (altoclefplus.zones.logic.Zone z : zones) {

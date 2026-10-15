@@ -51,7 +51,16 @@ it didn't attach (please report it).
       step (new path → skip spot → restart → walk away).
 - [ ] Die from a mob/fall while the bot runs: after respawn it walks back and picks the items up.
 
-## 8. Travel and pearls (later in a *Beat the game* run)
+## 8. Safe zones and rules
+- [ ] Zones tab: stand on one corner of a fenced animal pen, press *Corner 1*, walk to the opposite corner,
+      *Corner 2*, *Create*. Turn on *Settings → Show safe zones in the world*: an outline appears.
+- [ ] `get beef 3` next to the pen: the bot doesn't kill the cows inside the zone.
+- [ ] Mark your house: the bot doesn't break or place blocks inside, and doesn't open its chests.
+- [ ] Name-tag a cow: the bot never attacks it.
+- [ ] A zombie attacking the bot inside a zone: it defends itself.
+- [ ] Walk the bot through a house with doors: it opens them instead of standing in front.
+
+## 9. Travel and pearls (later in a *Beat the game* run)
 - [ ] Before the Nether it brings a boat; a bed is placed by the portal and spawn is set.
 - [ ] In the Nether, pearls are hunted in a warped forest with the boat trap (panel: *Hunt endermen*).
 - [ ] Stronghold: it throws two eyes from ~100 blocks apart and heads to a sensible spot (no y=1620),

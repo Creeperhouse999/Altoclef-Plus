@@ -8,6 +8,34 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-15
+
+Safe zones, safety rules and many more settings. Built and unit-tested; please report anything odd you see
+in-game.
+
+### Added
+- **Safe zones** (new *Zones* tab): name a zone, stand on two corners and press *Corner 1* / *Corner 2*,
+  choose full or exact height, and create it. Each zone has its own rules: no breaking, no placing, no
+  looting, no entering, and no attacking hostile, neutral or friendly mobs. New zones protect blocks, chests
+  and friendly/neutral mobs; hostile mobs and walking through are allowed until you switch them off.
+  Zones are saved per world, Baritone plans its paths around them, and *Show safe zones in the world* draws
+  their outlines.
+- **Safety rules**: never attack named mobs or tamed pets (on by default), a never-attack mob list, a
+  never-break block list, and self-defense inside zones (the bot may still hit a mob that attacks it —
+  never named or tamed ones).
+- **Basics** in Settings: chest looting (on by default), sleep at night, loot ruined portals / desert
+  temples, get pearls by piglin trading instead of hunting, eyes of ender to collect.
+- **Gear up for** setting: gear gates now run only for tasks that need them by default — `@gamer`, deep
+  ores (iron kit), Nether items (Nether gear) and End items (everything). Errands like "get dirt" start
+  right away. Choose *@gamer only* or *Every task* if you prefer.
+
+### Fixed
+- The bot getting stuck in front of doors: diagonal and step up/down moves no longer try to walk through
+  closed doors and fence gates, and the bot no longer starts eating while aiming at a door (which blocked
+  the door click and toggled it open and shut). New setting: *Door fixes*.
+- Camera: switching perspective (F5) snaps instead of swinging, and the view is never smoothed while
+  spectating another entity. Works in first person and both third-person views.
+
 ## [0.5.1] - 2026-10-15
 
 Safety fixes from a full code review, before wider in-game testing.
@@ -146,7 +174,8 @@ First preview. Built and unit-tested; not yet widely tested in-game — please r
   stays instant. Snaps back on teleports, dimension changes, open screens and when you take control.
 - Fair combat: the bot no longer hits mobs through walls, and turns to face a mob before hitting it.
 
-[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Creeperhouse999/Altoclef-Plus/compare/v0.3.0...v0.4.0

@@ -90,7 +90,9 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 ### Safer progression and survival ✅
 - **Fair combat:** no more hitting mobs through walls or while looking the other way. ✅
 - **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
-  full iron armor before hunting diamonds; armor and food before entering the Nether. ✅
+  full iron armor before hunting diamonds; armor and food before entering the Nether. ✅ Only for tasks that
+  need it by default (`@gamer`, ores, Nether and End items) — errands like "get dirt" start right away.
+- **No more getting stuck at doors.** ✅
 - **Caution:** stops to eat and heal when low, flees when in danger, avoids going deep when weak. ✅
 - **Shield:** puts one in the offhand and blocks arrows, fireballs and creepers. ✅
 - **Better projectile dodging** (only onto safe ground). ✅
@@ -103,6 +105,14 @@ Legend: ✅ built · 🚧 being built now · 🗓️ planned (not available yet)
 - **Precise Nether travel to the stronghold:** brings obsidian and flint and steel, travels to the exact
   matching Nether coordinates, and builds an exit portal that drops it right next to the stronghold —
   one trip, no back-and-forth. ✅
+
+### Safe zones and safety rules ✅
+- **Safe zones:** mark your house, farm or petting zoo from the *Zones* tab (stand on two corners, press a
+  button). Per zone you choose: no breaking, no placing, no looting, no entering, no attacking hostile /
+  neutral / friendly mobs. Baritone plans around zones, and you can show their outlines in the world.
+- **Never attack** named mobs and tamed pets (on by default), plus any mob types you pick.
+- **Never break** the block types you pick.
+- **Self-defense:** inside a zone the bot may still hit a mob that is attacking it (never named or tamed).
 
 ### Stuck recovery ✅
 - Detects: no progress, endless pillaring (the "Nether elevator"), mining the same block, walking back and
@@ -175,7 +185,8 @@ settings from *Mods → AltoClef Plus → ⚙*.
 | **Tasks** | Beat the game, get items (searchable icon grid + amount), presets, any AltoClef command |
 | **Plan** | The `@gamer` checklist and the step history |
 | **Status** | What the bot is doing right now, the log, inventory summary, module health |
-| **Settings** | Turn each feature on/off and tune it (camera smoothness, junk limits, gates, stashes…) |
+| **Zones** | Your safe zones: create, rename, set rules, delete |
+| **Settings** | Basics (chest looting, sleeping…), safety rules, and every feature's on/off switch and tuning |
 
 **Pause vs Stop:** AltoClef can't freeze a task halfway, so *Pause* stops the bot but remembers what it
 was doing, and *Resume* starts the same command again. Nothing in your inventory is lost. *Stop* forgets
@@ -199,7 +210,8 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.3** | Safer progression: gear gates, caution, shield, dodging, water clutch | ✅ Released |
 | **0.4** | Stuck recovery and death item recovery | ✅ Released |
 | **0.5** | Enderman boat-trap hunting, boat travel, safety stashes, precise Nether travel to the stronghold | ✅ Released |
-| **0.6** | In-game testing feedback, polish and fixes | 🚧 Next |
+| **0.6** | Safe zones, safety rules, basics settings, door fix, gate scope | ✅ Released |
+| **0.7** | In-game testing feedback, polish and fixes | 🚧 Next |
 | Later | Building commands — `@build house`, `@build farm`, schematics | 💡 Idea |
 
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.

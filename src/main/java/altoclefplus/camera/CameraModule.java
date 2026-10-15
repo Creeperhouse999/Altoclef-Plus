@@ -23,6 +23,7 @@ public final class CameraModule implements Module {
     private long lastFrameNs;
     private double lastX, lastY, lastZ;
     private String lastDimension = "";
+    private Object lastPerspective;
 
     public CameraModule() {
         instance = this;
@@ -71,10 +72,16 @@ public final class CameraModule implements Module {
         boolean dimChanged = !dim.equals(lastDimension);
         lastDimension = dim;
 
+        Object perspective = client.options.getPerspective();
+        boolean perspectiveChanged = lastPerspective != null && perspective != lastPerspective;
+        lastPerspective = perspective;
+        boolean onPlayer = client.getCameraEntity() == player;
+
         PlusConfig.Camera cfg = Plus.config().camera;
         boolean enabled = Plus.modules() != null && Plus.modules().isEnabled("camera");
         CameraPolicy.Decision d = CameraPolicy.decide(new CameraPolicy.Input(
-                enabled, botActive, client.currentScreen != null, moved, dimChanged, combat), cfg.snapDistance);
+                enabled, botActive, client.currentScreen != null, moved, dimChanged, combat,
+                perspectiveChanged, onPlayer), cfg.snapDistance);
 
         if (d.mode() == CameraPolicy.Mode.SNAP) {
             smoother.snap(yaw, pitch);

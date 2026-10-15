@@ -84,6 +84,7 @@ public final class SettingsModel {
         r.add(new Toggle("Craft armor piece by piece", () -> c.inventory.craftArmorPiecewise, v -> c.inventory.craftArmorPiecewise = v));
         r.add(new Toggle("Keep spare tools", () -> c.inventory.spareTools, v -> c.inventory.spareTools = v));
         r.add(new Toggle("Drop junk when full", () -> c.inventory.dropJunk, v -> c.inventory.dropJunk = v));
+        r.add(new Toggle("Drop outdated tools", () -> c.inventory.dropOutdatedTools, v -> c.inventory.dropOutdatedTools = v));
         r.add(new Toggle("Visible inventory (watch the bot sort and craft)", () -> c.inventory.visibleInventory, v -> c.inventory.visibleInventory = v));
         r.add(new Toggle("Unstick cursor items", () -> c.inventory.cursorGuard, v -> c.inventory.cursorGuard = v));
         r.add(new Toggle("New table/furnace instead of long walks", () -> c.inventory.placeNearCraftingTable, v -> c.inventory.placeNearCraftingTable = v));

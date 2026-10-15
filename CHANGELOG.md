@@ -20,6 +20,8 @@ as its notes.
 - **Carries a door** for those air pockets, made only from wood it already has.
 - **Visible inventory** (on by default): when the bot crafts in its 2x2 grid, sorts or equips, the inventory
   screen opens so you can watch it click, at a slower human-like pace, and closes when it's done.
+- **Drops outdated tools**: a wooden pickaxe goes once a stone one is carried, and so on (enchanted, named,
+  needed or protected tools are kept). Separate setting from the junk drop.
 - **Your inventory is respected**: open it while the bot runs and the bot waits (no clicks, no walking,
   nothing closes it); close it and the bot carries on.
 

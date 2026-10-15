@@ -72,6 +72,27 @@ public final class JunkClassifier {
         return drops;
     }
 
+    /**
+     * Tools beaten by a better one of the same kind (a wooden pickaxe once a stone one is carried). Only once
+     * the best is stone or better; spares of the best tier, needed and protected items are kept.
+     */
+    public static List<Drop> outdatedTools(Map<String, Integer> items, Set<String> neededByTask, Set<String> protectedIds) {
+        Map<String, Integer> best = new HashMap<>();
+        for (String id : items.keySet()) {
+            String type = ItemInfo.toolType(id);
+            if (!type.isEmpty()) best.merge(type, ItemInfo.tier(id), Math::max);
+        }
+        List<Drop> drops = new ArrayList<>();
+        for (Map.Entry<String, Integer> e : new TreeMap<>(items).entrySet()) {
+            String id = e.getKey();
+            String type = ItemInfo.toolType(id);
+            if (type.isEmpty() || neededByTask.contains(id) || protectedIds.contains(id)) continue;
+            int top = best.get(type);
+            if (top >= ItemInfo.STONE && ItemInfo.tier(id) < top) drops.add(new Drop(id, e.getValue()));
+        }
+        return drops;
+    }
+
     private boolean droppable(String id, Set<String> needed) {
         return !protectedIds.contains(id) && !needed.contains(id)
                 && ItemInfo.toolType(id).isEmpty() && ItemInfo.armorSlot(id).isEmpty() && !id.equals("shield");

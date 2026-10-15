@@ -71,7 +71,7 @@ public final class InventoryModule implements Module {
         status = "idle";
 
         if (cfg.equipArmor && tryEquipArmor(s)) return;
-        if (cfg.dropJunk && tryDropJunk(s, cfg)) return;
+        if ((cfg.dropJunk || cfg.dropOutdatedTools) && tryDropJunk(s, cfg)) return;
         if (cfg.craftArmorPiecewise) {
             Optional<String> piece = ArmorPlanner.nextPiece(s);
             if (piece.isPresent() && start(TaskCatalogue.getItemTask(piece.get(), 1), "Crafting " + pretty(piece.get()))) return;
@@ -112,7 +112,10 @@ public final class InventoryModule implements Module {
         if (Plus.config().survival.carryDoor) keep.addAll(DoorPlanner.WOODEN_DOORS);
         JunkClassifier classifier = new JunkClassifier(keep, new HashSet<>(cfg.junkItems),
                 new HashSet<>(cfg.buildingBlocks), cfg.buildingBlockCapPerType, cfg.buildingBlockCapTotal, cfg.junkFreeSlotThreshold);
-        List<JunkClassifier.Drop> drops = classifier.toDrop(s.items, altoclefplus.core.TaskTargets.of(Plus.mod()), s.freeSlots);
+        Set<String> needed = altoclefplus.core.TaskTargets.of(Plus.mod());
+        List<JunkClassifier.Drop> drops = new ArrayList<>();
+        if (cfg.dropOutdatedTools) drops.addAll(JunkClassifier.outdatedTools(s.items, needed, keep));
+        if (cfg.dropJunk) drops.addAll(classifier.toDrop(s.items, needed, s.freeSlots));
         for (JunkClassifier.Drop d : drops) {
             Item item = Registry.ITEM.get(new Identifier("minecraft", d.id()));
             if (Plus.mod().getModSettings().isImportant(item)) continue;

@@ -63,6 +63,8 @@ public final class SurvivalModule implements Module {
     /** Running when outnumbered: above AltoClef fighting (65) and its own run-away (70-80). */
     private final PlusChain fleeChain;
     private altoclefplus.survival.logic.Outnumbered outnumbered;
+    /** Waiting out an early night: above the task and gear gates, below eating (55) and fighting. */
+    private final PlusChain shelterChain;
     private final altoclefplus.survival.logic.CreeperChase creeperChase = new altoclefplus.survival.logic.CreeperChase(80);
     private final StashPlanner stashes = new StashPlanner();
     private String lastCommand = "";
@@ -89,6 +91,7 @@ public final class SurvivalModule implements Module {
         stashChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus stashes", 51.5f);
         airChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus air", 66f, 60_000L);
         creeperChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus creeper", 72f, 30_000L);
+        shelterChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus night shelter", 54f, 10 * 60_000L);
         fleeChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus run away", 85f, 60_000L);
         Plus.bus().subscribe(StuckDetected.class, e -> {
             if (gateChain.isActive() && runningGate != null) failGate("stuck: " + e.kind());
@@ -144,6 +147,11 @@ public final class SurvivalModule implements Module {
             stashes.reset();
             gates.resetRun();
             lastCommand = cmd;
+        }
+        if (cfg.nightShelter && cmd.contains("gamer")) shelterAtNight(s);
+        if (shelterChain.isActive()) {
+            status = shelterChain.jobLabel();
+            return;
         }
         if (gateChain.isActive() || boatChain.isActive() || stashChain.isActive()) {
             status = gateChain.isActive() ? gateChain.jobLabel() : boatChain.isActive() ? boatChain.jobLabel() : stashChain.jobLabel();
@@ -246,6 +254,23 @@ public final class SurvivalModule implements Module {
         } else if (!run && fleeChain.isActive()) {
             fleeChain.cancelJob();
             Plus.log().add("survival", "Got away - back to the task");
+        }
+    }
+
+    private void shelterAtNight(Snapshot s) {
+        var p = mod.getPlayer();
+        if (p == null || shelterChain.isActive()) return;
+        var chest = p.getInventory().getArmorStack(2).getItem();
+        int tier = chest == net.minecraft.item.Items.IRON_CHESTPLATE || chest == net.minecraft.item.Items.DIAMOND_CHESTPLATE
+                || chest == net.minecraft.item.Items.NETHERITE_CHESTPLATE ? 4 : 0;
+        boolean canSleep = mod.getItemStorage().hasItem(adris.altoclef.util.helpers.ItemHelper.BED)
+                || mod.getBlockTracker().anyFound(adris.altoclef.util.helpers.ItemHelper.itemsToBlocks(adris.altoclef.util.helpers.ItemHelper.BED));
+        int blocks = mod.getItemStorage().getItemCount(mod.getModSettings().getThrowawayItems(mod));
+        String dim = p.world.getRegistryKey().getValue().getPath();
+        if (!altoclefplus.survival.logic.NightShelter.shouldShelter(true, p.world.getTimeOfDay(), dim, tier, canSleep,
+                p.isTouchingWater(), blocks)) return;
+        if (shelterChain.startJob(new NightShelterTask(), "Night without armor: sheltering", null)) {
+            Plus.log().add("survival", "Night without armor or bed: sheltering until dawn");
         }
     }
 

@@ -139,6 +139,8 @@ public final class PlusConfig {
         public boolean gateIronKit = true;
         /** Part of the iron kit: a water bucket for fall clutches and putting out fire. */
         public boolean gateWaterBucket = true;
+        /** @gamer: get one bed right after stone tools (AltoClef only gets beds at the very end). */
+        public boolean gateEarlyBed = true;
         public boolean gateIronArmor = true;
         public boolean gateNetherEntry = true;
         public int netherMinFoodUnits = 20;

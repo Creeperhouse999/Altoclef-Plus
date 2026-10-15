@@ -182,17 +182,16 @@ public final class InventoryModule implements Module {
         List<JunkClassifier.Drop> drops = new ArrayList<>();
         if (cfg.dropOutdatedTools) drops.addAll(JunkClassifier.outdatedTools(s.items, needed, keep));
         if (cfg.dropJunk) drops.addAll(classifier.toDrop(s.items, needed, s.freeSlots));
+        List<String> toThrow = new ArrayList<>();
         for (JunkClassifier.Drop d : drops) {
             Item item = Registry.ITEM.get(new Identifier("minecraft", d.id()));
             if (Plus.mod().getModSettings().isImportant(item)) continue;
-            int slot = findDroppableSlot(p, d.id(), s.selectedSlot);
-            if (slot < 0) continue;
-            int window = slot < 9 ? 36 + slot : slot;
-            MinecraftClient.getInstance().interactionManager.clickSlot(p.playerScreenHandler.syncId, window, 1, SlotActionType.THROW, p);
-            Plus.bus().publish(new Notice("inventory", "Dropped junk: " + pretty(d.id())));
-            return true;
+            if (findDroppableSlot(p, d.id(), s.selectedSlot) < 0) continue;
+            toThrow.add(d.id());
         }
-        return false;
+        if (toThrow.isEmpty()) return false;
+        // Into lava or a hole beside the bot, so it doesn't walk over the junk and pick it up again.
+        return start(new JunkDisposalTask(toThrow), "Throwing away junk");
     }
 
     /** Main inventory first, never the held slot, never named or enchanted stacks. */

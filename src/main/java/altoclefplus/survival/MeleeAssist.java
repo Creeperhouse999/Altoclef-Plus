@@ -29,6 +29,8 @@ public final class MeleeAssist {
 
     /** Called right before AltoClef swings at {@code target}. False = don't swing this tick. */
     public static boolean allowSwing(Entity target) {
+        // AltoClef's quick "force field" hits mobs with an empty hand on purpose; use a weapon instead.
+        if (target instanceof net.minecraft.entity.mob.Monster) ensureWeaponInHand();
         if (!Plus.config().survival.critHits || !(target instanceof LivingEntity)) return true;
         AltoClef mod = Plus.mod();
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
@@ -49,6 +51,17 @@ public final class MeleeAssist {
                 if (!p.isOnGround()) p.setSprinting(false); // sprinting cancels the critical hit
                 return true;
             }
+        }
+    }
+
+    private static void ensureWeaponInHand() {
+        ClientPlayerEntity p = MinecraftClient.getInstance().player;
+        if (p == null) return;
+        String held = Registry.ITEM.getId(p.getMainHandStack().getItem()).getPath();
+        if (held.endsWith("_sword") || held.endsWith("_axe")) return;
+        if (!equipWeapon()) {
+            String best = CritTiming.bestWeapon(Plus.snapshot().items);
+            if (!best.isEmpty()) HotbarManager.equipItem(Registry.ITEM.get(new Identifier("minecraft", best)));
         }
     }
 

@@ -114,6 +114,7 @@ public final class SettingsModel {
                 () -> c.survival.gateScope, v -> c.survival.gateScope = v));
         r.add(new Toggle("Stone sword/axe/shovel first", () -> c.survival.gateStoneKit, v -> c.survival.gateStoneKit = v));
         r.add(new Toggle("Iron sword and shield", () -> c.survival.gateIronKit, v -> c.survival.gateIronKit = v));
+        r.add(new Toggle("Bed early in @gamer (after stone tools)", () -> c.survival.gateEarlyBed, v -> c.survival.gateEarlyBed = v));
         r.add(new Toggle("  ...and a water bucket", () -> c.survival.gateWaterBucket, v -> c.survival.gateWaterBucket = v));
         r.add(new Toggle("Full iron armor before diamonds", () -> c.survival.gateIronArmor, v -> c.survival.gateIronArmor = v));
         r.add(new Toggle("Armor + food before Nether", () -> c.survival.gateNetherEntry, v -> c.survival.gateNetherEntry = v));

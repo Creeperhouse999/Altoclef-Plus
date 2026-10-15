@@ -100,7 +100,18 @@ public final class WorldOverlay {
                 Box box = e.getBoundingBox().offset(dx - cam.x, dy - cam.y, dz - cam.z);
                 WorldRenderer.drawBox(matrices, buf, box, 1f, 0.25f, 0.25f, 0.9f);
             }
-            if (path) drawPath(matrices, buf, exec.getPath(), Math.max(0, exec.getPosition()), cam);
+            if (path) {
+                // The path is drawn through blocks (like Baritone), so you can follow it behind walls.
+                tess.draw();
+                RenderSystem.disableDepthTest();
+                buf.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
+                drawPath(matrices, buf, exec.getPath(), Math.max(0, exec.getPosition()), cam);
+                var next = Plus.mod().getClientBaritone().getPathingBehavior().getNext();
+                if (next != null) drawPath(matrices, buf, next.getPath(), 0, cam);
+                tess.draw();
+                RenderSystem.enableDepthTest();
+                buf.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
+            }
             if (preview != null) WorldRenderer.drawBox(matrices, buf, preview, 0.3f, 0.9f, 1f, 1f);
             if (running != null) WorldRenderer.drawBox(matrices, buf, running, 0.75f, 0.45f, 1f, 1f);
             tess.draw();

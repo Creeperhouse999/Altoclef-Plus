@@ -321,6 +321,7 @@ public final class SurvivalModule implements Module {
 
     private static Task taskFor(GatePlanner.Need n) {
         if (n.item().equals("food")) return new CollectFoodTask(n.count());
+        if (n.item().equals("bed")) return TaskCatalogue.getItemTask("bed", 1);
         Item item = Registry.ITEM.get(new Identifier("minecraft", n.item()));
         if (item == Items.AIR) return null;
         return TaskCatalogue.getItemTask(item, n.count());

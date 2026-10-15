@@ -143,4 +143,20 @@ class GatePlannerTest {
                 .item("stone_shovel", 1).offhand("shield").build();
         assertNotEquals("water_bucket", item(next(g, s)), "bucket switched off: go straight to iron armor");
     }
+
+    @Test
+    void earlyBedAfterStoneToolsInGamerOnly() {
+        GatePlanner g = new GatePlanner();
+        Snapshot s = Snapshot.builder().item("stone_pickaxe", 1).item("stone_sword", 1).item("stone_axe", 1)
+                .item("stone_shovel", 1).build();
+        var gamer = GateScope.allowed(GateScope.Scope.NEEDED, "gamer", java.util.Set.of());
+        var n = g.next(s, cfg, 0, gamer);
+        assertEquals("bed", item(n), "@gamer, sleep at night on, stone tools done, no bed: get one now");
+        assertNotEquals("bed", item(g.next(s.toBuilder().item("white_bed", 1).build(), cfg, 0, gamer)), "has a bed");
+        var all = GateScope.allowed(GateScope.Scope.ALL, "get dirt 10", java.util.Set.of("dirt"));
+        assertNotEquals("bed", item(g.next(s, cfg, 0, all)), "never for other tasks");
+        cfg.gateEarlyBed = false;
+        assertNotEquals("bed", item(g.next(s, cfg, 0, gamer)), "switch off");
+        cfg.gateEarlyBed = true;
+    }
 }

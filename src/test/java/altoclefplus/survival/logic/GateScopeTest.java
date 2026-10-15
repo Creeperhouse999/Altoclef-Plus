@@ -33,7 +33,7 @@ class GateScopeTest {
 
     @Test
     void endItemsNeedEverything() {
-        assertEquals(EnumSet.allOf(GatePlanner.Gate.class), needed("get end_stone 32", "end_stone"));
+        assertEquals(EnumSet.complementOf(EnumSet.of(GatePlanner.Gate.EARLY_BED)), needed("get end_stone 32", "end_stone"));
     }
 
     @Test
@@ -48,7 +48,7 @@ class GateScopeTest {
 
     @Test
     void otherScopes() {
-        assertEquals(EnumSet.allOf(GatePlanner.Gate.class), GateScope.allowed(GateScope.Scope.ALL, "get dirt 1", Set.of("dirt")));
+        assertEquals(EnumSet.complementOf(EnumSet.of(GatePlanner.Gate.EARLY_BED)), GateScope.allowed(GateScope.Scope.ALL, "get dirt 1", Set.of("dirt")));
         assertEquals(EnumSet.noneOf(GatePlanner.Gate.class), GateScope.allowed(GateScope.Scope.GAMER_ONLY, "get diamond 3", Set.of("diamond")));
         assertEquals(EnumSet.allOf(GatePlanner.Gate.class), GateScope.allowed(GateScope.Scope.GAMER_ONLY, "gamer", Set.of()));
     }

@@ -17,7 +17,7 @@ import java.util.Optional;
  * deadlocks on an item it can't get.
  */
 public final class GatePlanner {
-    public enum Gate { STONE_KIT, IRON_KIT, IRON_ARMOR, NETHER_ENTRY }
+    public enum Gate { STONE_KIT, EARLY_BED, IRON_KIT, IRON_ARMOR, NETHER_ENTRY }
 
     /** An item to obtain before continuing. item "food" means food units (count) rather than an item id. */
     public record Need(Gate gate, String item, int count) {}
@@ -31,7 +31,7 @@ public final class GatePlanner {
     private Set<Gate> scope = EnumSet.allOf(Gate.class);
 
     public Optional<Need> next(Snapshot s, PlusConfig.Survival cfg, long nowMs) {
-        return next(s, cfg, nowMs, EnumSet.allOf(Gate.class));
+        return next(s, cfg, nowMs, EnumSet.complementOf(EnumSet.of(Gate.EARLY_BED)));
     }
 
     /** @param inScope gates that apply to the running task (see {@link GateScope}) */
@@ -45,6 +45,11 @@ public final class GatePlanner {
             for (String type : new String[]{"sword", "axe", "shovel"}) {
                 if (ItemInfo.bestTier(s, type) < ItemInfo.STONE) return need(Gate.STONE_KIT, "stone_" + type);
             }
+        }
+        // AltoClef's @gamer only gets beds at the very end; one early bed lets it sleep and set spawn.
+        if (active(Gate.EARLY_BED, cfg.gateEarlyBed, nowMs) && pick >= ItemInfo.STONE
+                && ItemInfo.countMatching(s, ItemInfo::isBed) == 0) {
+            return need(Gate.EARLY_BED, "bed");
         }
         if (active(Gate.IRON_KIT, cfg.gateIronKit, nowMs) && pick >= ItemInfo.IRON) {
             if (ItemInfo.bestTier(s, "sword") < ItemInfo.IRON) return need(Gate.IRON_KIT, "iron_sword");

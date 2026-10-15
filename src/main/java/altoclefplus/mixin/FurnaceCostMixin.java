@@ -34,15 +34,18 @@ public abstract class FurnaceCostMixin {
         } catch (ReflectiveOperationException | RuntimeException e) {
             return;
         }
+        // Costs are in Baritone walking units: reuse any furnace within this many blocks instead of placing a
+        // new one (a cost of 10 was cheaper than walking 3 blocks, so it placed furnace after furnace).
+        double perBlock = 4.633;
         if (mod.getItemStorage().hasItem(Items.FURNACE)) {
-            cir.setReturnValue(10.0);
+            cir.setReturnValue(24 * perBlock);
             return;
         }
         int cobble = mod.getItemStorage().getItemCount(Items.COBBLESTONE);
-        if (cobble > 8) {
-            cir.setReturnValue(Math.max(100.0 - 90.0 * cobble / 8.0, 10.0));
+        if (cobble >= 8) {
+            cir.setReturnValue(40 * perBlock);
         } else {
-            cir.setReturnValue(StorageHelper.miningRequirementMetInventory(mod, MiningRequirement.WOOD) ? 50.0 : 100.0);
+            cir.setReturnValue((StorageHelper.miningRequirementMetInventory(mod, MiningRequirement.WOOD) ? 64 : 96) * perBlock);
         }
     }
 

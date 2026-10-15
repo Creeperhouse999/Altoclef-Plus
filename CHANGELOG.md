@@ -8,6 +8,23 @@ as its notes.
 
 ## [Unreleased]
 
+### Added
+- **Bed early in @gamer**: right after stone tools the bot gets one bed (AltoClef only collected beds at the very
+  end), so it can sleep through the first night. Setting, on by default.
+- **Junk goes where it can't be picked up again**: into lava the bot can see nearby, otherwise into a 1x1 hole
+  3 blocks deep dug right beside it.
+
+### Changed
+- The path line is drawn through blocks, like Baritone's, so you can follow it behind walls; the next path
+  segment is shown too.
+- The @gamer plan names steps as goals ("Stock up food (4/20)") instead of finished facts ("Food stocked").
+
+### Fixed
+- The bot placed a new furnace instead of walking a few blocks to the one it already had.
+- AltoClef's quick hits on nearby mobs while mining were made with an empty hand; it now switches to a weapon.
+- A pickup that has started is finished, even if the bot breaks blocks on the way to the item (it kept
+  switching between picking up and mining).
+
 ## [0.8.1] - 2026-10-15
 
 Fixes found while playing 0.8.0 (tested in-game).

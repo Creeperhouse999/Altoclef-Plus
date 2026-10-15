@@ -32,12 +32,13 @@ public final class GateScope {
     public static Set<GatePlanner.Gate> allowed(Scope scope, String command, Set<String> taskTargets) {
         String cmd = command == null ? "" : command.trim();
         boolean gamer = cmd.startsWith("gamer");
-        if (scope == Scope.ALL || gamer) return EnumSet.allOf(GatePlanner.Gate.class);
+        if (gamer) return EnumSet.allOf(GatePlanner.Gate.class);
+        if (scope == Scope.ALL) return EnumSet.complementOf(EnumSet.of(GatePlanner.Gate.EARLY_BED));
         if (scope == Scope.GAMER_ONLY) return EnumSet.noneOf(GatePlanner.Gate.class);
 
         Set<String> targets = new HashSet<>(taskTargets);
         targets.addAll(itemsInCommand(cmd));
-        if (targets.stream().anyMatch(END::contains)) return EnumSet.allOf(GatePlanner.Gate.class);
+        if (targets.stream().anyMatch(END::contains)) return EnumSet.complementOf(EnumSet.of(GatePlanner.Gate.EARLY_BED));
         if (targets.stream().anyMatch(NETHER::contains)) {
             return EnumSet.of(GatePlanner.Gate.STONE_KIT, GatePlanner.Gate.IRON_KIT,
                     GatePlanner.Gate.IRON_ARMOR, GatePlanner.Gate.NETHER_ENTRY);

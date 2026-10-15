@@ -110,6 +110,7 @@ public final class Zones {
 
     public static boolean mayAttack(Entity target) {
         PlusConfig.Rules r = Plus.config().rules;
+        if (r.neverAttackPlayers && target instanceof net.minecraft.entity.player.PlayerEntity) return false;
         AttackRules rules = new AttackRules(r.neverAttackNamed, r.neverAttackTamed, new HashSet<>(r.neverAttackMobs), r.selfDefense);
         var player = MinecraftClient.getInstance().player;
         boolean attackingMe = player != null && target instanceof MobEntity mob && mob.getTarget() == player;

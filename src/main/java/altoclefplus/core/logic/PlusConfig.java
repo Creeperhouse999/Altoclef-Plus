@@ -196,6 +196,8 @@ public final class PlusConfig {
     public static final class Rules {
         public boolean neverAttackNamed = true;
         public boolean neverAttackTamed = true;
+        /** No PvP: never hit other players (friends on LAN). */
+        public boolean neverAttackPlayers = true;
         /** Inside zones, still hit a mob that is attacking the bot (never named/tamed ones). */
         public boolean selfDefense = true;
         /** Entity type ids never attacked anywhere, e.g. "villager". */

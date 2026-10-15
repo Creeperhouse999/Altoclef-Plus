@@ -54,6 +54,7 @@ public final class SettingsModel {
         r.add(new Header("Safety rules"));
         r.add(new Toggle("Never attack named mobs", () -> c.rules.neverAttackNamed, v -> c.rules.neverAttackNamed = v));
         r.add(new Toggle("Never attack tamed pets", () -> c.rules.neverAttackTamed, v -> c.rules.neverAttackTamed = v));
+        r.add(new Toggle("Never attack players (no PvP)", () -> c.rules.neverAttackPlayers, v -> c.rules.neverAttackPlayers = v));
         r.add(new Toggle("Self-defense inside zones", () -> c.rules.selfDefense, v -> c.rules.selfDefense = v));
         r.add(new Action("Never-attack mob list...", openNeverAttack));
         r.add(new Action("Never-break block list...", openNeverBreak));

@@ -127,7 +127,18 @@ public final class PanelScreen extends PlusScreen {
         for (PlusConfig.Preset p : Plus.config().ui.presets) {
             int w = Math.max(50, textRenderer.getWidth(p.name) + 12);
             if (px + w > x + cw()) break;
-            ButtonWidget pb = addDrawableChild(new ButtonWidget(px, y, w, 20, new LiteralText(p.name), b -> run(p.command)));
+            ButtonWidget pb = addDrawableChild(new ButtonWidget(px, y, w, 20, new LiteralText(p.name), b -> {
+                if (hasShiftDown()) {
+                    // Shift-click removes a preset.
+                    Plus.config().ui.presets.remove(p);
+                    Plus.saveConfig();
+                    Plus.log().add("plus", "Removed preset " + p.name);
+                    clearChildren();
+                    init();
+                } else {
+                    run(p.command);
+                }
+            }));
             pb.active = game;
             px += w + 4;
         }
@@ -147,13 +158,26 @@ public final class PanelScreen extends PlusScreen {
         grid.setBounds(x, gridTop, cw(), Math.max(18, gridBottom - gridTop));
 
         int cyCmd = bottomY() - 28;
-        command = addDrawableChild(new TextFieldWidget(textRenderer, x + 70, cyCmd, cw() - 140, 18, new LiteralText("Command")));
+        command = addDrawableChild(new TextFieldWidget(textRenderer, x + 70, cyCmd, cw() - 164, 18, new LiteralText("Command")));
         command.setMaxLength(256);
         ButtonWidget runCmd = addDrawableChild(new ButtonWidget(x + cw() - 64, cyCmd - 1, 64, 20, new LiteralText("Run"), b -> {
             String c = command.getText().trim();
             if (!c.isEmpty()) run(c.startsWith("@") ? c.substring(1) : c);
         }));
         runCmd.active = game;
+        // Save the typed command as a preset button (shift-click a preset to remove it).
+        addDrawableChild(new ButtonWidget(x + cw() - 88, cyCmd - 1, 20, 20, new LiteralText("+"), b -> {
+            String c = command.getText().trim();
+            if (c.startsWith("@")) c = c.substring(1);
+            if (c.isEmpty()) return;
+            String name = altoclefplus.ui.logic.TaskNarrator.goal(c);
+            if (name.length() > 18) name = name.substring(0, 17) + "…";
+            Plus.config().ui.presets.add(new PlusConfig.Preset(name, c));
+            Plus.saveConfig();
+            Plus.log().add("plus", "Saved preset " + name + " (shift-click it to remove)");
+            clearChildren();
+            init();
+        }));
     }
 
     private void runGet() {

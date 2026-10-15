@@ -19,6 +19,8 @@ as its notes.
   under a cave ceiling it places a door next to itself (doors can't hold water) and breathes inside it;
   with no door and no open water above, it leaves the way out to the pathfinder.
 - **Carries a door** for those air pockets, made only from wood it already has.
+- **Your own presets**: type a command and press *+* next to *Run* to keep it as a preset button;
+  shift-click a preset to remove it.
 - **Never attack players** (no PvP, on by default) in Safety rules.
 - **AltoClef options in the panel**: 18 of AltoClef's own settings (auto-eat, auto-respawn, replant crops,
   mining and chest search range, food to keep and collect, building blocks to keep, ...) can now be changed

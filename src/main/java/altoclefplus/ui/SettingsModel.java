@@ -95,6 +95,7 @@ public final class SettingsModel {
         r.add(new Toggle("Keep spare tools", () -> c.inventory.spareTools, v -> c.inventory.spareTools = v));
         r.add(new Toggle("Drop junk when full", () -> c.inventory.dropJunk, v -> c.inventory.dropJunk = v));
         r.add(new Toggle("Drop outdated tools", () -> c.inventory.dropOutdatedTools, v -> c.inventory.dropOutdatedTools = v));
+        r.add(new Toggle("Pick up dropped items right away", () -> c.inventory.pickupDrops, v -> c.inventory.pickupDrops = v));
         r.add(new Toggle("Visible inventory (watch the bot sort and craft)", () -> c.inventory.visibleInventory, v -> c.inventory.visibleInventory = v));
         r.add(new Value("  Click pace (ms)", () -> Math.round(c.inventory.visibleClickDelay * 1000), v -> c.inventory.visibleClickDelay = v / 1000f, 100, 1000, 50));
         r.add(new Toggle("Smelt in the background (get coal meanwhile)", () -> c.inventory.backgroundSmelting, v -> c.inventory.backgroundSmelting = v));

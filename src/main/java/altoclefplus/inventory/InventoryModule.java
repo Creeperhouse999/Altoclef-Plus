@@ -39,12 +39,16 @@ public final class InventoryModule implements Module {
 
     private final PlusChain chain;
     private final CursorGuard cursorGuard = new CursorGuard(100);
+    /** Our own pickup: AltoClef often wandered off and left drops it had just mined. */
+    private final PlusChain pickupChain;
+    private final altoclefplus.inventory.logic.PickupPlanner pickup = new altoclefplus.inventory.logic.PickupPlanner(10, 200);
     private boolean clickedThisTick;
     private long ticks;
     private String status = "idle";
 
     public InventoryModule(AltoClef mod) {
         chain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus inventory", 52f, 90_000);
+        pickupChain = new PlusChain(mod.getTaskRunner(), "AltoClef Plus pickup", 52.2f, 30_000);
         EventBus.subscribe(SlotClickChangedEvent.class, e -> clickedThisTick = true);
     }
 
@@ -62,6 +66,7 @@ public final class InventoryModule implements Module {
         if (cfg.cursorGuard && cursorGuard.tick(s.cursorEmpty, clicked, s.containerOpen) == CursorGuard.Action.STASH) {
             if (s.userTaskRunning) chain.startJob(new CursorStashTask(), "Putting away a stuck cursor item", null);
         }
+        if (ticks % 5 == 0) tryPickup(s, cfg);
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
         if (!s.userTaskRunning || s.mobDefenseActive || s.eating || s.screenOpen || s.dead || "the_end".equals(s.dimension)) return;
         if (chain.isActive()) {
@@ -84,6 +89,32 @@ public final class InventoryModule implements Module {
             Optional<String> tool = SpareToolPlanner.next(s);
             if (tool.isPresent()) start(TaskCatalogue.getItemTask(tool.get(), 1), "Making a spare " + pretty(tool.get()));
         }
+    }
+
+    /** Walk to the nearest dropped item the task needs (within 10 blocks, landed), one at a time. */
+    private void tryPickup(Snapshot s, PlusConfig.Inventory cfg) {
+        if (!cfg.pickupDrops || !s.userTaskRunning || pickupChain.isActive() || s.mobDefenseActive || s.screenOpen
+                || s.dead || s.freeSlots == 0) return;
+        if (altoclefplus.core.logic.TaskChainState.inDelicateStep(s.taskChain)) return;
+        ClientPlayerEntity p = MinecraftClient.getInstance().player;
+        if (p == null || p.world == null) return;
+        Set<String> wanted = altoclefplus.core.TaskTargets.of(Plus.mod());
+        if (wanted.isEmpty()) return;
+        List<net.minecraft.entity.ItemEntity> nearby = p.world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class,
+                p.getBoundingBox().expand(10), e -> e.isAlive());
+        List<altoclefplus.inventory.logic.PickupPlanner.Drop> drops = new ArrayList<>();
+        for (var e : nearby) {
+            drops.add(new altoclefplus.inventory.logic.PickupPlanner.Drop(e.getId(), StateSampler.id(e.getStack()),
+                    e.distanceTo(p), e.isOnGround() || e.isTouchingWater()));
+        }
+        pickup.choose(drops, wanted, s.tick).ifPresent(id -> {
+            for (var e : nearby) {
+                if (e.getId() == id) {
+                    pickupChain.startJob(new PickupDropTask(e), "Picking up " + pretty(StateSampler.id(e.getStack())), null);
+                    return;
+                }
+            }
+        });
     }
 
     private boolean start(Task task, String label) {

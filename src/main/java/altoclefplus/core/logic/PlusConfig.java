@@ -94,6 +94,8 @@ public final class PlusConfig {
         public boolean dropJunk = true;
         /** Drop a tool once a better one of the same kind is carried (wooden pickaxe after a stone one). */
         public boolean dropOutdatedTools = true;
+        /** Walk to nearby drops the task needs right away (AltoClef sometimes left them behind). */
+        public boolean pickupDrops = true;
         public boolean cursorGuard = true;
         /** Show the inventory screen while the bot moves items in its own inventory, at a watchable pace. */
         public boolean visibleInventory = true;

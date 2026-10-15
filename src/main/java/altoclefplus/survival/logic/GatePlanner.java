@@ -5,6 +5,8 @@ import altoclefplus.core.logic.PlusConfig;
 import altoclefplus.core.logic.Snapshot;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -26,8 +28,15 @@ public final class GatePlanner {
     private final Map<Gate, Long> skipUntil = new EnumMap<>(Gate.class);
     private int failuresBeforeSkip = 3;
     private long skipMs = 10 * 60_000L;
+    private Set<Gate> scope = EnumSet.allOf(Gate.class);
 
     public Optional<Need> next(Snapshot s, PlusConfig.Survival cfg, long nowMs) {
+        return next(s, cfg, nowMs, EnumSet.allOf(Gate.class));
+    }
+
+    /** @param inScope gates that apply to the running task (see {@link GateScope}) */
+    public Optional<Need> next(Snapshot s, PlusConfig.Survival cfg, long nowMs, Set<Gate> inScope) {
+        scope = inScope;
         failuresBeforeSkip = cfg.gateFailuresBeforeSkip;
         skipMs = cfg.gateSkipMinutes * 60_000L;
         int pick = ItemInfo.bestTier(s, "pickaxe");
@@ -76,7 +85,7 @@ public final class GatePlanner {
     }
 
     private boolean active(Gate gate, boolean enabled, long nowMs) {
-        return enabled && !isSkipped(gate, nowMs);
+        return enabled && scope.contains(gate) && !isSkipped(gate, nowMs);
     }
 
     private static Optional<Need> need(Gate gate, String item) {

@@ -18,7 +18,9 @@ import altoclefplus.core.logic.events.StuckDetected;
 import altoclefplus.core.logic.ItemInfo;
 import altoclefplus.survival.logic.BoatTravel;
 import altoclefplus.survival.logic.CautionPolicy;
+import altoclefplus.core.TaskTargets;
 import altoclefplus.survival.logic.GatePlanner;
+import altoclefplus.survival.logic.GateScope;
 import altoclefplus.survival.logic.StashPlanner;
 import net.minecraft.block.Blocks;
 import baritone.api.pathing.goals.Goal;
@@ -122,7 +124,9 @@ public final class SurvivalModule implements Module {
             status = "idle";
             return;
         }
-        Optional<GatePlanner.Need> need = gates.next(s, cfg, now);
+        GateScope.Scope scope = GateScope.Scope.valueOf(cfg.gateScope);
+        Optional<GatePlanner.Need> need = gates.next(s, cfg, now,
+                GateScope.allowed(scope, s.userCommand, TaskTargets.of(mod)));
         if (need.isEmpty()) {
             status = "idle";
             tryStash(s, cfg);

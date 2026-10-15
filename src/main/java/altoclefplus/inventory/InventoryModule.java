@@ -4,10 +4,8 @@ import adris.altoclef.AltoClef;
 import adris.altoclef.TaskCatalogue;
 import adris.altoclef.eventbus.EventBus;
 import adris.altoclef.eventbus.events.SlotClickChangedEvent;
-import adris.altoclef.tasks.ResourceTask;
 import adris.altoclef.tasks.misc.EquipArmorTask;
 import adris.altoclef.tasksystem.Task;
-import adris.altoclef.util.ItemTarget;
 import altoclefplus.Plus;
 import altoclefplus.core.PlusChain;
 import altoclefplus.core.StateSampler;
@@ -109,7 +107,7 @@ public final class InventoryModule implements Module {
         if (p == null || p.currentScreenHandler != p.playerScreenHandler || !s.cursorEmpty) return false;
         JunkClassifier classifier = new JunkClassifier(new HashSet<>(cfg.protectedItems), new HashSet<>(cfg.junkItems),
                 new HashSet<>(cfg.buildingBlocks), cfg.buildingBlockCapPerType, cfg.buildingBlockCapTotal, cfg.junkFreeSlotThreshold);
-        List<JunkClassifier.Drop> drops = classifier.toDrop(s.items, neededByTask(), s.freeSlots);
+        List<JunkClassifier.Drop> drops = classifier.toDrop(s.items, altoclefplus.core.TaskTargets.of(Plus.mod()), s.freeSlots);
         for (JunkClassifier.Drop d : drops) {
             Item item = Registry.ITEM.get(new Identifier("minecraft", d.id()));
             if (Plus.mod().getModSettings().isImportant(item)) continue;
@@ -134,19 +132,6 @@ public final class InventoryModule implements Module {
             }
         }
         return -1;
-    }
-
-    /** Items any resource task in the running chain is collecting. */
-    private static Set<String> neededByTask() {
-        Set<String> needed = new HashSet<>();
-        for (Task t : Plus.mod().getUserTaskChain().getTasks()) {
-            if (t instanceof ResourceTask rt) {
-                for (ItemTarget target : rt.getItemTargets()) {
-                    for (Item it : target.getMatches()) needed.add(Registry.ITEM.getId(it).getPath());
-                }
-            }
-        }
-        return needed;
     }
 
     private static String pretty(String id) {

@@ -23,6 +23,13 @@ class ToolsTest {
     }
 
     @Test
+    void usesTheBestToolItOwns() {
+        int slot = ToolChoice.pick(List.of(c(0, "crafting_table", 1f), c(1, "netherite_shovel", 9f), c(2, "stone_shovel", 4f)),
+                Set.of(), Set.of());
+        assertEquals(1, slot);
+    }
+
+    @Test
     void neverUsesArmorBlocksOrTablesToBreak() {
         int slot = ToolChoice.pick(List.of(c(0, "iron_helmet", 1f), c(1, "crafting_table", 1f), c(2, "", 1f)),
                 Set.of("crafting_table"), Set.of());

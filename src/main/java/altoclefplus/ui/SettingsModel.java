@@ -9,10 +9,24 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
 /** Rows shown in the Settings tab. Changes apply immediately; "Save" writes the config file. */
 public final class SettingsModel {
-    public sealed interface Row permits Header, Toggle, Value, Action {}
+    public sealed interface Row permits Header, Toggle, Value, Action, Choice {}
+
+    /** Cycles through options; labels are shown, values are stored. */
+    public record Choice(String label, List<String> values, List<String> labels, Supplier<String> get, Consumer<String> set) implements Row {
+        public String currentLabel() {
+            int i = values.indexOf(get.get());
+            return i < 0 ? get.get() : labels.get(i);
+        }
+
+        public void next() {
+            int i = values.indexOf(get.get());
+            set.accept(values.get((i + 1) % values.size()));
+        }
+    }
 
     public record Header(String label) implements Row {}
 
@@ -61,6 +75,9 @@ public final class SettingsModel {
         r.add(new Action("Edit hotbar layout...", openHotbar));
 
         r.add(new Header("Progression gates"));
+        r.add(new Choice("Gear up for", List.of("NEEDED", "GAMER_ONLY", "ALL"),
+                List.of("Tasks that need it", "@gamer only", "Every task"),
+                () -> c.survival.gateScope, v -> c.survival.gateScope = v));
         r.add(new Toggle("Stone sword/axe/shovel first", () -> c.survival.gateStoneKit, v -> c.survival.gateStoneKit = v));
         r.add(new Toggle("Iron sword, shield, water bucket", () -> c.survival.gateIronKit, v -> c.survival.gateIronKit = v));
         r.add(new Toggle("Full iron armor before diamonds", () -> c.survival.gateIronArmor, v -> c.survival.gateIronArmor = v));

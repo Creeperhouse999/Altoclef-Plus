@@ -65,6 +65,22 @@ class GatePlannerTest {
     }
 
     @Test
+    void gatesOutsideTheTaskScopeAreSkipped() {
+        GatePlanner g = new GatePlanner();
+        Snapshot s = Snapshot.builder().item("stone_pickaxe", 1).build();
+        assertEquals("none", item(g.next(s, cfg, 0, java.util.EnumSet.noneOf(GatePlanner.Gate.class))));
+        assertEquals("stone_sword", item(g.next(s, cfg, 0, java.util.EnumSet.of(GatePlanner.Gate.STONE_KIT))));
+    }
+
+    @Test
+    void betterGearAlreadyOwnedSatisfiesTheGate() {
+        GatePlanner g = new GatePlanner();
+        Snapshot s = Snapshot.builder().item("stone_pickaxe", 1).item("netherite_shovel", 1)
+                .item("diamond_axe", 1).item("iron_sword", 1).build();
+        assertEquals("none", item(next(g, s)));
+    }
+
+    @Test
     void disabledGateIsSkipped() {
         GatePlanner g = new GatePlanner();
         cfg.gateStoneKit = false;

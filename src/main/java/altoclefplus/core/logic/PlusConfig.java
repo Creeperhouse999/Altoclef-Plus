@@ -102,6 +102,8 @@ public final class PlusConfig {
     }
 
     public static final class Survival {
+        /** NEEDED (@gamer + tasks whose items need gear), GAMER_ONLY or ALL. */
+        public String gateScope = "NEEDED";
         public boolean gateStoneKit = true;
         public boolean gateIronKit = true;
         public boolean gateIronArmor = true;
@@ -219,6 +221,11 @@ public final class PlusConfig {
         recovery.noProgressSeconds = clamp(recovery.noProgressSeconds, 10, 600);
         recovery.safeModeAfterCycles = clamp(recovery.safeModeAfterCycles, 1, 20);
         recovery.stopAfterSafeModeCycles = clamp(recovery.stopAfterSafeModeCycles, 0, 20);
+        try {
+            altoclefplus.survival.logic.GateScope.Scope.valueOf(survival.gateScope);
+        } catch (RuntimeException e) {
+            survival.gateScope = d.survival.gateScope;
+        }
         survival.boatMinWaterRun = clamp(survival.boatMinWaterRun, 8, 256);
         survival.netherTravelMinDistance = clamp(survival.netherTravelMinDistance, 100, 10_000);
         return this;

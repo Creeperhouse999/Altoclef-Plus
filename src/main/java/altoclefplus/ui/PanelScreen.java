@@ -197,6 +197,11 @@ public final class PanelScreen extends PlusScreen {
                 }));
             } else if (row instanceof SettingsModel.Action a) {
                 addDrawableChild(new ButtonWidget(x, y, Math.min(200, cw()), 20, new LiteralText(a.label()), b -> a.run().run()));
+            } else if (row instanceof SettingsModel.Choice ch) {
+                addDrawableChild(new ButtonWidget(right - 130, y, 130, 20, new LiteralText(ch.currentLabel()), b -> {
+                    ch.next();
+                    b.setMessage(new LiteralText(ch.currentLabel()));
+                }));
             }
             y += ROW_H;
         }
@@ -361,6 +366,8 @@ public final class PanelScreen extends PlusScreen {
                 textRenderer.drawWithShadow(m, "§l" + h.label(), x, y + 6, 0xFFFF55);
             } else if (row instanceof SettingsModel.Toggle t) {
                 textRenderer.drawWithShadow(m, t.label(), x + 6, y + 6, TEXT);
+            } else if (row instanceof SettingsModel.Choice ch) {
+                textRenderer.drawWithShadow(m, ch.label(), x + 6, y + 6, TEXT);
             } else if (row instanceof SettingsModel.Value v) {
                 textRenderer.drawWithShadow(m, v.label(), x + 6, y + 6, TEXT);
                 String val = String.valueOf(v.get().getAsInt());

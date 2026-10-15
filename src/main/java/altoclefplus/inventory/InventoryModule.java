@@ -41,6 +41,8 @@ public final class InventoryModule implements Module {
     private final CursorGuard cursorGuard = new CursorGuard(100);
     /** Our own pickup: AltoClef often wandered off and left drops it had just mined. */
     private final PlusChain pickupChain;
+    private long lastBreakTick = Long.MIN_VALUE / 2;
+    private long lastPickupTick = Long.MIN_VALUE / 2;
     private final altoclefplus.inventory.logic.PickupPlanner pickup = new altoclefplus.inventory.logic.PickupPlanner(10, 200);
     private boolean clickedThisTick;
     private long ticks;
@@ -96,6 +98,9 @@ public final class InventoryModule implements Module {
     private void tryPickup(Snapshot s, PlusConfig.Inventory cfg) {
         if (!cfg.pickupDrops || !s.userTaskRunning || pickupChain.isActive() || s.mobDefenseActive || s.screenOpen
                 || s.dead || s.freeSlots == 0) return;
+        // Never in the middle of breaking a block (progress would reset), and a short pause between pickups.
+        if (s.breakingPos != Snapshot.NO_POS) lastBreakTick = s.tick;
+        if (s.tick - lastBreakTick < 20 || s.tick - lastPickupTick < 40) return;
         if (altoclefplus.core.logic.TaskChainState.inDelicateStep(s.taskChain)) return;
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
         if (p == null || p.world == null) return;
@@ -105,12 +110,14 @@ public final class InventoryModule implements Module {
                 p.getBoundingBox().expand(10), e -> e.isAlive());
         List<altoclefplus.inventory.logic.PickupPlanner.Drop> drops = new ArrayList<>();
         for (var e : nearby) {
+            if (e.distanceTo(p) < 1.5) continue; // already being picked up
             drops.add(new altoclefplus.inventory.logic.PickupPlanner.Drop(e.getId(), StateSampler.id(e.getStack()),
                     e.distanceTo(p), e.isOnGround() || e.isTouchingWater()));
         }
         pickup.choose(drops, wanted, s.tick).ifPresent(id -> {
             for (var e : nearby) {
                 if (e.getId() == id) {
+                    lastPickupTick = s.tick;
                     pickupChain.startJob(new PickupDropTask(e), "Picking up " + pretty(StateSampler.id(e.getStack())), null);
                     return;
                 }

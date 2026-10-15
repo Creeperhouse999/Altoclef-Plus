@@ -26,6 +26,7 @@
     "KeepUserScreenMixin",
     "KeyBindingAccessor",
     "ObsidianCastMixin",
+    "PickupWaitsForBreakMixin",
     "SafeInterruptMixin",
     "SlotHandlerMixin",
     "SteadyMiningMixin",

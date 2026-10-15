@@ -8,6 +8,20 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-15
+
+Fixes found while playing 0.8.0 (tested in-game).
+
+### Fixed
+- Fixed a crash ("TimeoutWanderTask ... null") when stuck recovery walked the bot away.
+- Fixed a crash when leaving a world while the bot was fighting.
+- Mining no longer restarts the same block over and over: drops are picked up after a block is broken, not
+  in the middle of breaking the next one, and a block already in reach is always finished first.
+- The new pickup step no longer interrupts block breaking, waits a moment between pickups and ignores items
+  already being picked up.
+- The HUD no longer shows [Recovering] for minutes while a side job (like picking up items) runs.
+- "Defend myself when idle" is now the first switch in Settings > Basics.
+
 ## [0.8.0] - 2026-10-15
 
 Building from .litematic schematics, smarter fighting, water safety, a world overlay and many fixes from

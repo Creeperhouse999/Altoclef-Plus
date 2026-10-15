@@ -6,6 +6,8 @@ package altoclefplus.survival.logic;
  * is replaced right away.
  */
 public final class TargetStickiness {
+    /** Blocks within reach (about 4.5 blocks) are always finished first. */
+    private static final double REACH_SQ = 4.5 * 4.5;
     private final long cooldownTicks;
     private long lastSwitchTick = Long.MIN_VALUE / 2;
 
@@ -16,6 +18,7 @@ public final class TargetStickiness {
     /** Distances are squared. {@code currentValid} = the current target still exists and isn't blacklisted. */
     public boolean shouldSwitch(boolean currentValid, double currentDistSq, double candidateDistSq, long tick) {
         if (!currentValid) return true;
+        if (currentDistSq <= REACH_SQ) return false; // in reach: finish it
         if (tick - lastSwitchTick < cooldownTicks) return false;
         return candidateDistSq < currentDistSq / 4;
     }

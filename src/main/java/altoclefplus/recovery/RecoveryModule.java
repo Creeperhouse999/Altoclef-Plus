@@ -84,7 +84,11 @@ public final class RecoveryModule implements Module {
             status = chain.jobLabel();
             return;
         }
-        // Our own side jobs (resting, crafting a gate item...) are not "stuck".
+        if (s.seconds() - lastActionSec > RECOVERING_SHOWN_SECONDS) {
+            Plus.control().setRecovering(false);
+            status = "watching";
+        }
+        // Our own side jobs (resting, crafting a gate item, picking up drops...) are not "stuck".
         if (mod.getTaskRunner().getCurrentTaskChain() instanceof PlusChain) return;
 
         boolean anyStuck = false;
@@ -97,10 +101,6 @@ public final class RecoveryModule implements Module {
             break;
         }
         if (!anyStuck && s.userTaskRunning) ladder.onProgress(s.seconds());
-        if (s.seconds() - lastActionSec > RECOVERING_SHOWN_SECONDS) {
-            Plus.control().setRecovering(false);
-            status = "watching";
-        }
     }
 
     private void act(EscalationLadder.Level level, StuckKind kind, Snapshot s) {
@@ -118,7 +118,7 @@ public final class RecoveryModule implements Module {
                 what = "restarting the task";
             }
             case ESCAPE -> {
-                chain.startJob(new TimeoutWanderTask(35), "Stuck: walking away to try again", null);
+                chain.startJob(new altoclefplus.core.StartedFirstTask(new TimeoutWanderTask(35)), "Stuck: walking away to try again", null);
                 what = "walking away and trying again";
             }
             case SAFE_MODE -> {

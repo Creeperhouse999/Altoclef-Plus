@@ -32,6 +32,20 @@ public final class JunkPit {
         return Optional.empty();
     }
 
+    /**
+     * Where to look when throwing junk into the pit beside the bot: the opening at ground level, a little past its
+     * centre. Looking at the bottom made the throw so steep that items landed on the rim in front of the hole.
+     *
+     * @param px  bot x (block centre), @param pz bot z; @param tx, ty, tz the pit's top cell (ty = foot level)
+     */
+    public static double[] aimPoint(double px, double pz, int tx, int ty, int tz) {
+        double cx = tx + 0.5, cz = tz + 0.5;
+        double dx = cx - px, dz = cz - pz;
+        double len = Math.max(1e-6, Math.sqrt(dx * dx + dz * dz));
+        double past = 0.3;
+        return new double[]{cx + dx / len * past, ty, cz + dz / len * past};
+    }
+
     public static boolean isOpenPit(World w, int x, int y, int z) {
         for (int i = 0; i < DEPTH; i++) if (w.at(x, y - i, z) != Cell.AIR) return false;
         return w.at(x, y - DEPTH, z) == Cell.SOLID;

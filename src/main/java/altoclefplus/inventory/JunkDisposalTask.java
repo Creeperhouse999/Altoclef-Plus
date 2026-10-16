@@ -70,7 +70,8 @@ public final class JunkDisposalTask extends Task {
                 }
             }
         }
-        Vec3d aim = lava ? Vec3d.ofCenter(target) : Vec3d.ofCenter(target.down(JunkPit.DEPTH - 1)).add(0, -0.3, 0);
+        double[] a = JunkPit.aimPoint(p.getX(), p.getZ(), target.getX(), target.getY(), target.getZ());
+        Vec3d aim = lava ? Vec3d.ofCenter(target) : new Vec3d(a[0], a[1], a[2]);
         LookHelper.lookAt(mod, aim);
         // Throw on the next ticks, once the server has our new look direction.
         if (++lookedTicks < 3) return null;

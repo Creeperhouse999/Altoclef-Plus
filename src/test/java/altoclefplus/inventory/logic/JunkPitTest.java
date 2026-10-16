@@ -44,4 +44,13 @@ class JunkPitTest {
         assertTrue(JunkPit.isOpenPit(world(java.util.Map.of("1,64,0", '.', "1,63,0", '.', "1,62,0", '.'), 'S'), 1, 64, 0));
         assertFalse(JunkPit.isOpenPit(world(java.util.Map.of("1,64,0", '.', "1,63,0", '.'), 'S'), 1, 64, 0), "only 2 deep");
     }
+
+    @Test
+    void aimsAtTheFarSideOfTheOpeningNotTheBottom() {
+        // Bot at (10.5, 64, 10.5) standing on y=64; pit column at x=11 (opening at y=64).
+        double[] aim = JunkPit.aimPoint(10.5, 10.5, 11, 64, 10);
+        assertEquals(64.0, aim[1], 1e-9, "ground level: a shallow enough throw to carry the item into the hole");
+        assertTrue(aim[0] > 11.5 && aim[0] < 12.0, "past the centre, on the far side: x=" + aim[0]);
+        assertEquals(10.5, aim[2], 1e-9);
+    }
 }

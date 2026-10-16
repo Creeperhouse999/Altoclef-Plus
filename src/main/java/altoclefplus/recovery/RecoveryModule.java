@@ -151,9 +151,15 @@ public final class RecoveryModule implements Module {
             return "skipping that block";
         }
         if (kind == StuckKind.PILLAR) {
-            int target = (int) Math.max(s.dimension.equals("the_nether") ? 40 : -50, s.y - 20);
-            chain.startJob(new GetToYTask(target), "Stuck pillaring: getting back down", null);
-            return "getting back down";
+            var p = mod.getPlayer();
+            boolean sky = p != null && p.world.isSkyVisible(p.getBlockPos().up());
+            var target = altoclefplus.recovery.logic.PillarRecovery.descendTo(s.y, s.dimension, sky);
+            if (target.isPresent()) {
+                chain.startJob(new GetToYTask(target.getAsInt()), "Stuck pillaring: getting back down", null);
+                return "getting back down";
+            }
+            chain.startJob(new altoclefplus.core.StartedFirstTask(new TimeoutWanderTask(20)), "Stuck pillaring: walking away", null);
+            return "walking away";
         }
         Goal goal = mod.getClientBaritone().getPathingBehavior().getGoal();
         BlockPos target = goal instanceof GoalBlock g ? g.getGoalPos() : goal instanceof GoalGetToBlock g2 ? g2.getGoalPos() : null;

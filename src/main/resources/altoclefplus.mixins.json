@@ -28,6 +28,7 @@
     "ObsidianCastMixin",
     "PickupWaitsForBreakMixin",
     "SafeInterruptMixin",
+    "CraftGridScreenMixin",
     "SlotHandlerMixin",
     "SteadyMiningMixin",
     "UserScreenPauseMixin",

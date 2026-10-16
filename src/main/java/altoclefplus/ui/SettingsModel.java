@@ -65,6 +65,7 @@ public final class SettingsModel {
         r.add(new Toggle("Show safe zones in the world", () -> c.ui.showZones, v -> c.ui.showZones = v));
         r.add(new Toggle("World overlay (instead of Baritone's)", () -> c.ui.overlay, v -> c.ui.overlay = v));
         r.add(new Toggle("  Overlay: path line", () -> c.ui.overlayPath, v -> c.ui.overlayPath = v));
+        r.add(new Toggle("  Overlay: blueprint blocks", () -> c.ui.overlayBlueprint, v -> c.ui.overlayBlueprint = v));
         r.add(new Toggle("  Overlay: blocks to break", () -> c.ui.overlayBreak, v -> c.ui.overlayBreak = v));
         r.add(new Toggle("  Overlay: block being mined", () -> c.ui.overlayTarget, v -> c.ui.overlayTarget = v));
         r.add(new Toggle("  Overlay: goal", () -> c.ui.overlayGoal, v -> c.ui.overlayGoal = v));

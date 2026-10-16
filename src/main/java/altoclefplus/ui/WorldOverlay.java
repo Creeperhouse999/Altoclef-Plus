@@ -42,6 +42,9 @@ import java.util.regex.Pattern;
 public final class WorldOverlay {
     private static final Pattern DESTROY = Pattern.compile("Destroy block at (-?\\d+), (-?\\d+), (-?\\d+)");
     private static Boolean appliedHideBaritone;
+    /** Blueprint ghosts, recomputed once a second (checking the world every frame is too slow). */
+    private static List<altoclefplus.build.logic.BlueprintPlanner.Ghost> ghosts = List.of();
+    private static long ghostsAtMs;
 
     private WorldOverlay() {}
 
@@ -65,7 +68,9 @@ public final class WorldOverlay {
         boolean path = cfg.overlayPath && exec != null;
         Box preview = buildPreviewBox(cam);
         Box running = runningBuildBox(cam);
-        if (toBreak.isEmpty() && !fillTarget && !fillGoal && mobs.isEmpty() && !path && preview == null && running == null) return;
+        List<altoclefplus.build.logic.BlueprintPlanner.Ghost> blueprint = cfg.overlayBlueprint ? blueprintGhosts(client, cam) : List.of();
+        if (toBreak.isEmpty() && !fillTarget && !fillGoal && mobs.isEmpty() && !path && preview == null && running == null
+                && blueprint.isEmpty()) return;
 
         // Drawn straight to the screen like Baritone does (not through render layers), so it also shows with
         // "Fabulous" graphics, where those layers go to buffers that are already combined at this point.
@@ -78,9 +83,14 @@ public final class WorldOverlay {
         RenderSystem.depthMask(false);
         try {
             // Soft translucent fills first...
-            if (!toBreak.isEmpty() || fillTarget || fillGoal) {
+            if (!toBreak.isEmpty() || fillTarget || fillGoal || !blueprint.isEmpty()) {
                 RenderSystem.setShader(GameRenderer::getPositionColorShader);
                 buf.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+                for (var g : blueprint) {
+                    if (g.kind() == altoclefplus.build.logic.BlueprintPlanner.Kind.MISSING) {
+                        fillBox(buf, pos, blockBox(new BlockPos(g.x(), g.y(), g.z()), cam, -0.02), 0.25f, 0.55f, 1f, 0.28f);
+                    }
+                }
                 for (BlockPos b : toBreak) fillBox(buf, pos, blockBox(b, cam, 0.002), 1f, 0.25f, 0.25f, 0.18f);
                 if (fillTarget) fillBox(buf, pos, blockBox(mining, cam, 0.004), 1f, 0.6f, 0.1f, 0.30f);
                 if (fillGoal) fillBox(buf, pos, blockBox(goal, cam, 0.004), 0.3f, 1f, 0.4f, 0.22f);
@@ -112,6 +122,11 @@ public final class WorldOverlay {
                 RenderSystem.enableDepthTest();
                 buf.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
             }
+            for (var g : blueprint) {
+                Box b = blockBox(new BlockPos(g.x(), g.y(), g.z()), cam, g.kind() == altoclefplus.build.logic.BlueprintPlanner.Kind.WRONG ? 0.004 : -0.02);
+                if (g.kind() == altoclefplus.build.logic.BlueprintPlanner.Kind.WRONG) WorldRenderer.drawBox(matrices, buf, b, 1f, 0.2f, 0.2f, 1f);
+                else WorldRenderer.drawBox(matrices, buf, b, 0.35f, 0.65f, 1f, 0.55f);
+            }
             if (preview != null) WorldRenderer.drawBox(matrices, buf, preview, 0.3f, 0.9f, 1f, 1f);
             if (running != null) WorldRenderer.drawBox(matrices, buf, running, 0.75f, 0.45f, 1f, 1f);
             tess.draw();
@@ -121,6 +136,37 @@ public final class WorldOverlay {
             RenderSystem.enableCull();
             RenderSystem.disableBlend();
         }
+    }
+
+    /** Ghost blocks for the previewed schematic, or else the build in progress (see BlueprintPlanner). */
+    private static List<altoclefplus.build.logic.BlueprintPlanner.Ghost> blueprintGhosts(MinecraftClient client, Vec3d cam) {
+        long now = System.currentTimeMillis();
+        if (now - ghostsAtMs < 1000) return ghosts;
+        ghostsAtMs = now;
+        ghosts = List.of();
+        altoclefplus.build.logic.Schematic s = null;
+        altoclefplus.build.logic.Placement p = null;
+        if (altoclefplus.build.Builds.previewOn && altoclefplus.build.Builds.previewSchematic != null) {
+            s = altoclefplus.build.Builds.previewSchematic;
+            p = altoclefplus.build.Builds.previewPlacement;
+        } else {
+            var job = altoclefplus.build.Builds.running().orElse(null);
+            if (job != null) {
+                try {
+                    s = altoclefplus.build.SchematicLibrary.load(job.file);
+                    p = job.placement();
+                } catch (Exception e) {
+                    return ghosts;
+                }
+            }
+        }
+        if (s == null || p == null) return ghosts;
+        var world = client.world;
+        BlockPos.Mutable m = new BlockPos.Mutable();
+        ghosts = altoclefplus.build.logic.BlueprintPlanner.plan(s, p,
+                (x, y, z) -> net.minecraft.util.registry.Registry.BLOCK.getId(world.getBlockState(m.set(x, y, z)).getBlock()).toString(),
+                cam.x, cam.y, cam.z, 48, 4000);
+        return ghosts;
     }
 
     /** Outline of the schematic being placed in the Build tab (cyan), while Preview is on. */

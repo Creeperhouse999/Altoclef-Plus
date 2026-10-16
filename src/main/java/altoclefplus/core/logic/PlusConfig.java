@@ -62,6 +62,8 @@ public final class PlusConfig {
         /** Our world overlay (replaces Baritone's): path, blocks to break, mining target, goal, mobs. */
         public boolean overlay = true;
         public boolean overlayPath = true;
+        /** Build preview / running build: missing blocks as see-through blue cubes, wrong blocks outlined red. */
+        public boolean overlayBlueprint = true;
         public boolean overlayBreak = true;
         public boolean overlayTarget = true;
         public boolean overlayGoal = true;

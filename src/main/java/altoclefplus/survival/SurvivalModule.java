@@ -252,12 +252,13 @@ public final class SurvivalModule implements Module {
         var chest = p.getInventory().getArmorStack(2).getItem();
         boolean armored = chest == net.minecraft.item.Items.IRON_CHESTPLATE || chest == net.minecraft.item.Items.DIAMOND_CHESTPLATE
                 || chest == net.minecraft.item.Items.NETHERITE_CHESTPLATE;
+        String why = pillagers > 0 && !armored ? "Pillager nearby, no iron armor" : close >= cfg.runWhenOutnumbered ? "Outnumbered (" + close + " mobs)" : "Still being chased";
         close = altoclefplus.survival.logic.Outnumbered.effectiveClose(close, pillagers, armored, cfg.runWhenOutnumbered);
         around = altoclefplus.survival.logic.Outnumbered.effectiveClose(around, pillagers, armored, 2);
         boolean run = outnumbered.shouldRun(close, around, ticks);
         if (run && !fleeChain.isActive()) {
-            if (fleeChain.startUrgent(new RunAwayFromHostilesTask(24, true), "Outnumbered (" + close + " mobs): running away")) {
-                Plus.log().add("survival", "Outnumbered (" + close + " mobs): running away");
+            if (fleeChain.startUrgent(new RunAwayFromHostilesTask(24, true), why + ": running away")) {
+                Plus.log().add("survival", why + ": running away");
             }
         } else if (!run && fleeChain.isActive()) {
             fleeChain.cancelJob();

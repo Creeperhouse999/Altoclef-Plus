@@ -97,12 +97,17 @@ Legend: ✅ built · 🧪 new, only unit-tested so far (please report anything o
 - Drops tools once it has a better one of the same kind (a wooden pickaxe after a stone one). 🧪
 - **Visible inventory:** when it crafts or sorts in its own inventory, the inventory screen opens so you can
   watch the clicks at a human-like pace. 🧪
-- **Respects your inventory:** open it while the bot runs and the bot waits until you close it. 🧪
+- **Respects your inventory and the panel:** open either while the bot runs and it waits until you close
+  it (each can be switched off). ✅
 - **Smelts in the background:** fetches some coal instead of standing at the furnace, then comes back. 🧪
 - Presets check at the end that everything is still there (a death can cost the chestplate) and redo
   what's missing, then put the armor on. 🧪
 - Fixes items getting stuck on the cursor and the eye-of-ender crafting bug.
 - Places a new crafting table instead of walking hundreds of blocks back to an old one.
+- **Carries its crafting table and furnace:** picks up the ones it placed after using them, so it doesn't
+  craft a new one every time (never touches yours or a village's). 🧪
+- **Crafts by hand when the recipe book fails** (some modpacks with JEI/Create), instead of waiting forever. ✅
+- Tells you straight away when it can't get an item (Silk Touch blocks, items from other mods). ✅
 
 ### Safer progression and survival ✅
 - **Fair combat:** no more hitting mobs through walls or while looking the other way. ✅
@@ -113,6 +118,11 @@ Legend: ✅ built · 🧪 new, only unit-tested so far (please report anything o
   for a finishing blow and a sword for groups. 🧪
 - **Water safety:** avoids wading through water in caves, swims up when low on air, or makes an air pocket
   with a door it carries when a ceiling is in the way. 🧪
+- **Swims like a player** in deep water instead of bobbing on the surface. 🧪
+- **Never walks into powder snow** (freezing) or through wither roses. 🧪
+- **Gets food when starving** on a normal task with nothing to eat, then carries on. 🧪
+- **Night shelter in `@gamer`:** without iron armor or a bed, waits out the night in a covered hole. ✅
+- **Pillagers:** without iron armor it runs from them, and after a run it avoids their area for a few minutes. ✅
 - **Gear before risk:** stone sword before mining iron; iron pickaxe, sword, shield and water bucket next;
   full iron armor before hunting diamonds; armor and food before entering the Nether. ✅ Only for tasks that
   need it by default (`@gamer`, ores, Nether and End items) — errands like "get dirt" start right away.
@@ -218,7 +228,7 @@ settings from *Mods → AltoClef Plus → ⚙*.
 | **Status** | What the bot is doing right now, the log, inventory summary, module health |
 | **Build** | Pick a .litematic, place and preview it (blueprint blocks), build, pause, resume |
 | **Zones** | Your safe zones: create, rename, set rules, delete |
-| **Settings** | Basics (chest looting, sleeping…), safety rules, every feature's on/off switch and tuning, and AltoClef's own options |
+| **Settings** | Basics (chest looting, sleeping…), safety rules, every feature's on/off switch and tuning, and AltoClef's own options; a search box finds any setting by name |
 
 **Pause vs Stop:** AltoClef can't freeze a task halfway, so *Pause* stops the bot but remembers what it
 was doing, and *Resume* starts the same command again. Nothing in your inventory is lost. *Stop* forgets

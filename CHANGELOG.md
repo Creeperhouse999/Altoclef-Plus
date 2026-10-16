@@ -8,6 +8,19 @@ as its notes.
 
 ## [Unreleased]
 
+### Added
+- Settings search: a search box on the Settings tab finds settings by name.
+- New setting "Wait while this panel is open" (on): the bot holds still while the AltoClef Plus panel is open,
+  and AltoClef no longer closes the panel under you.
+
+### Fixed
+- The HUD counts food as items (it showed hunger points, e.g. "Food 180").
+- The `@gamer` beds step counts to the beds it really collects (11), so the plan no longer says "Enter the
+  Nether" while the bot is still out collecting beds.
+- Carrying a bed, `@gamer` sleeps where it is instead of walking to an old bed far away (it went 370 blocks).
+- The crafting table it placed is picked up right after a task ends too, and recognised even when it appears
+  just after placing.
+
 ## [0.9.3] - 2026-10-16
 
 Unit-tested only.

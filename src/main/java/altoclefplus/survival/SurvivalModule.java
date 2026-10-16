@@ -77,6 +77,7 @@ public final class SurvivalModule implements Module {
     /** Last tick the player pressed a movement/attack/use key (they are playing, not AFK). */
     private long lastInputTick = Long.MIN_VALUE / 2;
     private long nextAirTryMs;
+    private long nextShelterTryMs;
     private GatePlanner.Gate runningGate;
     /** After any boat attempt, wait before considering another (stops retry loops at awkward shores). */
     private long nextBoatTryMs;
@@ -266,7 +267,7 @@ public final class SurvivalModule implements Module {
 
     private void shelterAtNight(Snapshot s) {
         var p = mod.getPlayer();
-        if (p == null || shelterChain.isActive()) return;
+        if (p == null || shelterChain.isActive() || System.currentTimeMillis() < nextShelterTryMs) return;
         var chest = p.getInventory().getArmorStack(2).getItem();
         int tier = chest == net.minecraft.item.Items.IRON_CHESTPLATE || chest == net.minecraft.item.Items.DIAMOND_CHESTPLATE
                 || chest == net.minecraft.item.Items.NETHERITE_CHESTPLATE ? 4 : 0;
@@ -276,6 +277,8 @@ public final class SurvivalModule implements Module {
         String dim = p.world.getRegistryKey().getValue().getPath();
         if (!altoclefplus.survival.logic.NightShelter.shouldShelter(true, p.world.getTimeOfDay(), dim, tier, canSleep,
                 p.isTouchingWater(), blocks)) return;
+        // A spot that turns out unsafe ends the job at once: don't retry every tick.
+        nextShelterTryMs = System.currentTimeMillis() + 30_000;
         if (shelterChain.startJob(new NightShelterTask(), "Night without armor: sheltering", null)) {
             Plus.log().add("survival", "Night without armor or bed: sheltering until dawn");
         }

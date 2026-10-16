@@ -29,6 +29,7 @@
     "PickupWaitsForBreakMixin",
     "SafeInterruptMixin",
     "CraftGridScreenMixin",
+    "FoodChainAccessor",
     "SlotHandlerMixin",
     "SteadyMiningMixin",
     "UserScreenPauseMixin",

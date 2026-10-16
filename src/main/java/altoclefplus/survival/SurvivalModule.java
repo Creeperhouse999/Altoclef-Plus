@@ -78,6 +78,7 @@ public final class SurvivalModule implements Module {
     private long lastInputTick = Long.MIN_VALUE / 2;
     private long nextAirTryMs;
     private long nextShelterTryMs;
+    private long nextFleeMs;
     private GatePlanner.Gate runningGate;
     /** After any boat attempt, wait before considering another (stops retry loops at awkward shores). */
     private long nextBoatTryMs;
@@ -256,7 +257,9 @@ public final class SurvivalModule implements Module {
         close = altoclefplus.survival.logic.Outnumbered.effectiveClose(close, pillagers, armored, cfg.runWhenOutnumbered);
         around = altoclefplus.survival.logic.Outnumbered.effectiveClose(around, pillagers, armored, 2);
         boolean run = outnumbered.shouldRun(close, around, ticks);
-        if (run && !fleeChain.isActive()) {
+        if (run && !fleeChain.isActive() && System.currentTimeMillis() >= nextFleeMs) {
+            // A run that ends at once (nothing in range to run from) would restart every tick.
+            nextFleeMs = System.currentTimeMillis() + 5_000;
             if (fleeChain.startUrgent(new RunAwayFromHostilesTask(24, true), why + ": running away")) {
                 Plus.log().add("survival", why + ": running away");
             }

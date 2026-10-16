@@ -50,6 +50,14 @@ public final class CautionPolicy {
         return Action.NONE;
     }
 
+    /**
+     * Health only regenerates with 18+ hunger, but AltoClef eats only when much hungrier or badly hurt: a rest at
+     * 14 health and 17 hunger healed nothing and repeated for an hour. Eat to full while resting.
+     */
+    public static boolean fillUpWhileResting(int hunger, boolean hasFood) {
+        return hasFood && hunger < REGEN_HUNGER;
+    }
+
     /** The rest timed out without reaching resume health: don't try again for a while. */
     public void restEndedWithoutHealing(double nowSec) {
         holding = false;

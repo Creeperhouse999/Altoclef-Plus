@@ -21,6 +21,10 @@ public final class RestTask extends Task {
     @Override
     protected Task onTick(AltoClef mod) {
         setDebugState("Resting to heal (" + Math.round(mod.getPlayer().getHealth()) + " hp)");
+        boolean hasFood = altoclefplus.core.logic.ItemInfo.totalFoodUnits(Plus.snapshot()) > 0;
+        if (altoclefplus.survival.logic.CautionPolicy.fillUpWhileResting(mod.getPlayer().getHungerManager().getFoodLevel(), hasFood)) {
+            ((altoclefplus.mixin.FoodChainAccessor) mod.getFoodChain()).altoclefplus$setRequestFillup(true);
+        }
         return null;
     }
 

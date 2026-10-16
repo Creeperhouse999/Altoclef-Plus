@@ -139,4 +139,11 @@ class SurvivalLogicTest {
         far.record(60_000, 500, 500);
         assertFalse(far.isLoop(rc, 60_000));
     }
+
+    @Test
+    void restingEatsUntilHealingCanStart() {
+        assertTrue(CautionPolicy.fillUpWhileResting(17, true), "health only regenerates from 18 hunger");
+        assertFalse(CautionPolicy.fillUpWhileResting(18, true));
+        assertFalse(CautionPolicy.fillUpWhileResting(10, false), "nothing to eat");
+    }
 }

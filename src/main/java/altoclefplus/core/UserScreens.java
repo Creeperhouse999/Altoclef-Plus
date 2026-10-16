@@ -22,7 +22,11 @@ public final class UserScreens {
 
     /** The bot should hold still for the player right now. */
     public static boolean pauseBot() {
-        return Plus.mod() != null && Plus.config().ui.pauseWhileInventoryOpen && userInventoryOpen();
+        if (Plus.mod() == null) return false;
+        var screen = MinecraftClient.getInstance().currentScreen;
+        return altoclefplus.core.logic.ScreenPause.shouldPause(Plus.config().ui.pauseWhileInventoryOpen,
+                screen instanceof InventoryScreen, !VisibleInventory.isOurs(),
+                screen instanceof altoclefplus.ui.PlusScreen, Plus.config().ui.pauseWhilePanelOpen);
     }
 
     /** Once per client tick: keep Baritone paused and let go of keys while the player's inventory is open. */

@@ -209,7 +209,14 @@ public final class PanelScreen extends PlusScreen {
     }
 
     // ---- Settings tab ----
+    /** Settings search text (kept while the screen rebuilds on every keystroke). */
+    private static String settingsQuery = "";
+
     private List<SettingsModel.Row> settingsRows() {
+        return SettingsModel.filter(allSettingsRows(), settingsQuery);
+    }
+
+    private List<SettingsModel.Row> allSettingsRows() {
         return SettingsModel.rows(
                 () -> client.setScreen(new ItemListScreen(this, "Protected items (never dropped)", Plus.config().inventory.protectedItems)),
                 () -> client.setScreen(new ItemListScreen(this, "Junk items (may be dropped when full)", Plus.config().inventory.junkItems)),
@@ -289,6 +296,23 @@ public final class PanelScreen extends PlusScreen {
             init();
         }));
         next.active = settingsPage < pages - 1;
+        TextFieldWidget find = addDrawableChild(new TextFieldWidget(textRenderer, x + 110, navY + 1, Math.max(60, right - x - 186), 18,
+                new LiteralText("Search settings")));
+        find.setText(settingsQuery);
+        find.setSuggestion(settingsQuery.isEmpty() ? "Search settings..." : null);
+        find.setChangedListener(t -> {
+            if (t.equals(settingsQuery)) return;
+            settingsQuery = t;
+            settingsPage = 0;
+            find.setSuggestion(t.isEmpty() ? "Search settings..." : null);
+            clearChildren();
+            init();
+        });
+        if (!settingsQuery.isEmpty()) {
+            // Rebuilt after a keystroke: keep typing in the new field.
+            find.setTextFieldFocused(true);
+            setFocused(find);
+        }
         addDrawableChild(new ButtonWidget(right - 60, navY, 60, 20, new LiteralText("Save"), b -> {
             Plus.saveConfig();
             Plus.log().add("plus", "Settings saved");
@@ -477,6 +501,7 @@ public final class PanelScreen extends PlusScreen {
             }
         }
         drawCenteredText(m, textRenderer, (settingsPage + 1) + " / " + pages, x0 + 50, bottomY() - 20, MUTED);
+        if (!settingsQuery.isEmpty() && rows.isEmpty()) textRenderer.drawWithShadow(m, "No setting matches \"" + settingsQuery + "\"", x0, cy() + 6, MUTED);
     }
 
     // ---- input ----

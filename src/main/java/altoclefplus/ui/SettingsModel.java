@@ -36,6 +36,36 @@ public final class SettingsModel {
 
     public record Action(String label, Runnable run) implements Row {}
 
+    private static String label(Row r) {
+        if (r instanceof Header h) return h.label();
+        if (r instanceof Toggle t) return t.label();
+        if (r instanceof Value v) return v.label();
+        if (r instanceof Action a) return a.label();
+        if (r instanceof Choice c) return c.label();
+        return "";
+    }
+
+    /** Settings search: rows whose name contains the text (any case), each under its group heading. */
+    public static List<Row> filter(List<Row> rows, String query) {
+        String q = query == null ? "" : query.trim().toLowerCase(java.util.Locale.ROOT);
+        if (q.isEmpty()) return rows;
+        List<Row> out = new java.util.ArrayList<>();
+        Header pending = null;
+        for (Row r : rows) {
+            if (r instanceof Header h) {
+                pending = h;
+                continue;
+            }
+            if (!label(r).toLowerCase(java.util.Locale.ROOT).contains(q)) continue;
+            if (pending != null) {
+                out.add(pending);
+                pending = null;
+            }
+            out.add(r);
+        }
+        return out;
+    }
+
     private SettingsModel() {}
 
     public static List<Row> rows(Runnable openProtected, Runnable openJunk, Runnable openHotbar,
@@ -83,6 +113,7 @@ public final class SettingsModel {
         r.add(new Toggle("Hide AltoClef's overlay text", () -> c.ui.hideAltoClefOverlay, v -> c.ui.hideAltoClefOverlay = v));
         r.add(new Toggle("Bot messages to log, not chat", () -> c.ui.redirectChat, v -> c.ui.redirectChat = v));
         r.add(new Toggle("Wait while my inventory is open", () -> c.ui.pauseWhileInventoryOpen, v -> c.ui.pauseWhileInventoryOpen = v));
+        r.add(new Toggle("Wait while this panel is open", () -> c.ui.pauseWhilePanelOpen, v -> c.ui.pauseWhilePanelOpen = v));
         r.add(new Toggle("Block @ and # chat commands", () -> c.ui.blockChatCommands, v -> c.ui.blockChatCommands = v));
 
         r.add(new Header("Camera"));

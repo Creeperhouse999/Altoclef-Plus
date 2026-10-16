@@ -55,6 +55,8 @@ public final class PlusConfig {
         public boolean blockChatCommands = true;
         /** While you have your inventory open the bot waits, and nothing closes it. */
         public boolean pauseWhileInventoryOpen = true;
+        /** The bot waits while the AltoClef Plus panel is open (and AltoClef doesn't close it). */
+        public boolean pauseWhilePanelOpen = true;
         /** Draw safe-zone outlines in the world. */
         public boolean showZones = false;
         /** Version the player last played with (for the one-time "updated" note). */

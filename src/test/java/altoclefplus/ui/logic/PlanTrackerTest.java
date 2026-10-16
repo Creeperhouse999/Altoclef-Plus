@@ -130,4 +130,14 @@ class PlanTrackerTest {
         t.update(Snapshot.builder().item("iron_pickaxe", 1).item("iron_sword", 1).offhand("shield").build());
         assertTrue(t.isDone(Milestone.IRON_KIT));
     }
+
+    @Test
+    void bedsAreDoneOnlyWithAsManyAsTheGamerTaskCollects() {
+        PlanTracker t = new PlanTracker(12, 11);
+        t.update(Snapshot.builder().item("white_bed", 4).build());
+        assertFalse(t.isDone(Milestone.BEDS), "4 of 11: @gamer is still collecting beds");
+        t.update(Snapshot.builder().item("white_bed", 11).build());
+        assertTrue(t.isDone(Milestone.BEDS));
+        assertEquals(11, t.targetBeds());
+    }
 }

@@ -66,7 +66,8 @@ public final class Hud {
             for (Milestone mi : Milestone.values()) {
                 if (cur == null || mi.ordinal() < cur.ordinal() || shown >= 3) continue;
                 String prefix = mi == cur ? "▶ " : "○ ";
-                String extra = mi == Milestone.FOOD ? " (" + ItemInfo.foodItems(s) + " items)" : "";
+                String extra = mi == Milestone.FOOD ? " (" + ItemInfo.foodItems(s) + " items)"
+                        : mi == Milestone.BEDS ? " (" + ItemInfo.countMatching(s, ItemInfo::isBed) + "/" + ui.plan().targetBeds() + ")" : "";
                 tr.drawWithShadow(m, prefix + mi.label + extra, x, y, mi == cur ? 0xFFFFFF55 : 0xFFAAAAAA);
                 y += line;
                 shown++;

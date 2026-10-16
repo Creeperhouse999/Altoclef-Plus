@@ -23,11 +23,22 @@ public final class PlanTracker {
             "Opening End Portal", "Setting spawn near end portal", "Getting equipment for End", "Entering End"};
 
     private final int targetEyes;
+    private final int targetBeds;
+
+    public int targetBeds() {
+        return targetBeds;
+    }
     private final Set<Milestone> done = EnumSet.noneOf(Milestone.class);
     private Consumer<Milestone> listener = m -> {};
 
     public PlanTracker(int targetEyes) {
+        this(targetEyes, 1);
+    }
+
+    /** @param targetBeds beds @gamer collects before the Nether (AltoClef: required beds + 1 for the spawn) */
+    public PlanTracker(int targetEyes, int targetBeds) {
         this.targetEyes = targetEyes;
+        this.targetBeds = Math.max(1, targetBeds);
     }
 
     private boolean requireWaterBucket = true;
@@ -93,7 +104,7 @@ public final class PlanTracker {
             case DIAMONDS -> s.has("diamond") || pick >= ItemInfo.DIAMOND;
             case DIAMOND_GEAR -> pick >= ItemInfo.DIAMOND && ItemInfo.bestTier(s, "sword") >= ItemInfo.DIAMOND
                     && ItemInfo.bestArmorTier(s, "chest") >= ItemInfo.DIAMOND;
-            case BEDS -> ItemInfo.countMatching(s, ItemInfo::isBed) > 0;
+            case BEDS -> ItemInfo.countMatching(s, ItemInfo::isBed) >= targetBeds;
             case NETHER -> "the_nether".equals(s.dimension);
             case BLAZE_RODS -> s.count("blaze_rod") + (s.count("blaze_powder") + 1) / 2 + (s.count("ender_eye") + 1) / 2
                     >= (targetEyes + 1) / 2;

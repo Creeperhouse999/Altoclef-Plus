@@ -20,7 +20,11 @@ public final class UiModule implements Module {
     private String lastCommand = "";
 
     public UiModule(int targetEyes) {
-        plan = new PlanTracker(targetEyes);
+        this(targetEyes, 1);
+    }
+
+    public UiModule(int targetEyes, int targetBeds) {
+        plan = new PlanTracker(targetEyes, targetBeds);
         plan.setListener(m -> Plus.log().add("plan", "Milestone reached: " + m.label));
         Plus.bus().subscribe(StuckDetected.class, e -> alert("Stuck (" + e.kind().toLowerCase().replace('_', ' ') + ")"));
         Plus.bus().subscribe(RecoveryAction.class, e -> alert(e.action()));

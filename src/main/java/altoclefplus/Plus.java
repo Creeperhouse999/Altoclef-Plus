@@ -95,7 +95,14 @@ public final class Plus {
         } catch (RuntimeException e) {
             LOG.add("plus", "Could not read @gamer config, assuming 12 eyes");
         }
-        ui = new UiModule(targetEyes);
+        int targetBeds = 11;
+        try {
+            // AltoClef collects its required beds plus one for setting the spawn before the Nether.
+            targetBeds = adris.altoclef.tasks.speedrun.BeatMinecraft2Task.getConfig().requiredBeds + 1;
+        } catch (RuntimeException e) {
+            LOG.add("plus", "Could not read @gamer bed count, assuming 11");
+        }
+        ui = new UiModule(targetEyes, targetBeds);
         modules.register(ui, config.modules.ui);
         modules.register(new altoclefplus.camera.CameraModule(), config.modules.camera);
         modules.register(new altoclefplus.inventory.InventoryModule(mod), config.modules.inventory);

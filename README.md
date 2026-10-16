@@ -247,6 +247,9 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.8** | Building from .litematic files, better melee, water safety, world overlay, visible inventory | ✅ Released |
 | **0.9** | Presets tab and kits, blueprint blocks, golden boots only for the Nether, many `@gamer` fixes | ✅ Released |
 | **0.10** | Schematic contents (chests, signs, frames), chest labels, scaffolding cleanup, more fixes | 🗓️ Planned |
+| **1.0** | Multiplayer parties (team `@gamer`, guard, build together) and lots of polish: the first stable release | 🗓️ Planned |
+
+<sub><sup>psst… a website is on the way</sup></sub>
 
 Live progress: the [milestones](https://github.com/Creeperhouse999/Altoclef-Plus/milestones) list every planned item as an issue, closed when it's done.
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.

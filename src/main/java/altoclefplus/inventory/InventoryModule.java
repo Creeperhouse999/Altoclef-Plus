@@ -120,8 +120,8 @@ public final class InventoryModule implements Module {
             }
         }
         String chainText = String.join(" ", s.taskChain).toLowerCase(java.util.Locale.ROOT);
-        boolean placing = chainText.contains("placing container") || chainText.contains("place [block{minecraft:crafting_table")
-                || chainText.contains("place [block{minecraft:furnace");
+        boolean placing = chainText.contains("placing container") || chainText.contains("block{minecraft:crafting_table")
+                || chainText.contains("block{minecraft:furnace");
         boolean using = chainText.contains("doing stuff in crafting_table") || chainText.contains("doing stuff in [furnace]")
                 || chainText.contains("crafting (w/ recipe)") || chainText.contains("receiving output") || placing;
         stations.observe(now, placing, s.tick);

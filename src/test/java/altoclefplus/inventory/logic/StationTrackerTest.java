@@ -40,4 +40,14 @@ class StationTrackerTest {
         t.collected(8L);
         assertFalse(t.ours().contains(8L));
     }
+
+    @Test
+    void aTableThatShowsUpJustAfterPlacingFinishedIsStillOurs() {
+        StationTracker t = new StationTracker();
+        t.observe(Set.of(), true, 100);           // placing seen
+        t.observe(Set.of(5L), false, 120);        // block appears a scan later, task text already says "Crafting"
+        assertEquals(Set.of(5L), t.ours());
+        t.observe(Set.of(5L, 6L), false, 300);    // long after placing: not ours
+        assertEquals(Set.of(5L), t.ours());
+    }
 }

@@ -19,14 +19,24 @@ public final class StationTracker {
     private Set<Long> known = new HashSet<>();
     private final Set<Long> ours = new HashSet<>();
     private long lastUseTick = Long.MIN_VALUE / 2;
+    private long lastPlacingTick = Long.MIN_VALUE / 2;
+    public static final long PLACING_GRACE_TICKS = 40;
 
     /**
      * @param stationsNow positions (BlockPos.asLong) of crafting tables / furnaces near the bot right now
      * @param placing     AltoClef is placing a container at the moment
      */
     public void observe(Set<Long> stationsNow, boolean placing, long tick) {
+        if (placing) lastPlacingTick = tick;
+        // The block often appears a scan after the task text moved on from "placing": allow 2 seconds.
+        boolean recentlyPlacing = tick - lastPlacingTick <= PLACING_GRACE_TICKS;
         for (long p : stationsNow) {
-            if (!known.contains(p) && placing) ours.add(p);
+            if (!known.contains(p) && recentlyPlacing) {
+                ours.add(p);
+                // One placing makes one station: anything else appearing now isn't ours.
+                lastPlacingTick = Long.MIN_VALUE / 2;
+                recentlyPlacing = false;
+            }
         }
         ours.retainAll(stationsNow);
         known = new HashSet<>(stationsNow);

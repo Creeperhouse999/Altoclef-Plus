@@ -19,6 +19,8 @@ public final class LogBuffer {
         // Strip Minecraft formatting codes (section sign + one char).
         String clean = message == null ? "" : message.replaceAll("§.", "");
         lines.addLast(new LogLine(System.currentTimeMillis(), source, clean));
+        // Also in the game log, so a run can be checked afterwards from latest.log.
+        System.out.println("[AltoClef Plus/" + source + "] " + clean);
         while (lines.size() > capacity) lines.removeFirst();
     }
 

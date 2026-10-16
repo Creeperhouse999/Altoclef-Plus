@@ -49,6 +49,8 @@ public final class RecoveryModule implements Module {
     private final List<Detector> detectors;
     private final EscalationLadder ladder;
     private final DeathLoopGuard deathLoops = new DeathLoopGuard();
+    /** Pillagers within 32 blocks when the bot died (they shoot from range, so one death is enough to stay away). */
+    private int pillagersAtDeath;
     private Snapshot prev = Snapshot.builder().build();
     private double lastActionSec = Double.NEGATIVE_INFINITY;
     private String status = "watching";
@@ -192,6 +194,9 @@ public final class RecoveryModule implements Module {
         deathDim = prev.dimension;
         deathY = prev.y;
         deathTick = s.tick;
+        var p = Plus.mod().getPlayer();
+        pillagersAtDeath = p == null || p.world == null ? 0 : p.world.getEntitiesByClass(
+                net.minecraft.entity.mob.PillagerEntity.class, p.getBoundingBox().expand(32), e -> e.isAlive()).size();
         double bottom = prev.dimension.equals("overworld") ? -64 : 0;
         deathCause = prev.inLava ? "lava" : prev.y < bottom ? "void" : "other";
         Set<Item> items = new HashSet<>();
@@ -215,11 +220,13 @@ public final class RecoveryModule implements Module {
         // Checked before "anything to pick up?": a bot that keeps dying with empty pockets (e.g. respawning
         // next to a pillager outpost) is exactly the case that needs it. Ranged mobs shoot from 16+ blocks,
         // so the avoided area covers the whole loop radius.
-        if (deathLoops.isLoop(Plus.config().recovery, System.currentTimeMillis())) {
+        boolean loop = deathLoops.isLoop(Plus.config().recovery, System.currentTimeMillis());
+        int avoid = altoclefplus.recovery.logic.DeathDanger.avoidRadius(pillagersAtDeath, loop, Plus.config().recovery.deathLoopRadius);
+        if (avoid > 0) {
             altoclefplus.zones.Zones.DANGER.add(deathDim, deathPos.getX(), deathPos.getY(), deathPos.getZ(),
-                    Plus.config().recovery.deathLoopRadius, 10 * 60_000L, System.currentTimeMillis());
-            Plus.bus().publish(new Notice("recovery", "Keeps dying near " + deathPos.toShortString()
-                    + " - avoiding that area for 10 minutes"));
+                    avoid, 10 * 60_000L, System.currentTimeMillis());
+            Plus.bus().publish(new Notice("recovery", (pillagersAtDeath > 0 ? "Killed near pillagers at " : "Keeps dying near ")
+                    + deathPos.toShortString() + " - avoiding that area for 10 minutes"));
             deathPos = null;
             return;
         }

@@ -112,4 +112,17 @@ class BotControlTest {
         assertEquals("get iron_ingot 10", control.lastCommand());
         assertTrue(runner.calls.isEmpty());
     }
+
+    @Test
+    void aGetForItemsAltoClefCannotFetchDoesNotStart() {
+        BotControl c = new BotControl(runner, cmd -> GetCheck.problem(cmd, id -> !id.equals("grass_block") && !id.equals("cogwheel")));
+        String problem = c.start("get [dirt 64, grass_block 1, cogwheel 2]");
+        assertNotNull(problem);
+        assertTrue(problem.contains("grass block") && problem.contains("cogwheel"), problem);
+        assertEquals(BotState.IDLE, c.state(), "not shown as running while nothing happens");
+        assertTrue(runner.calls.isEmpty());
+        assertNull(c.start("get dirt 64"));
+        assertEquals(BotState.RUNNING, c.state());
+        assertNull(GetCheck.problem("gamer", id -> false), "only get commands are checked");
+    }
 }

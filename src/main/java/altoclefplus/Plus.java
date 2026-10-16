@@ -44,7 +44,11 @@ public final class Plus {
         modules = new ModuleRegistry(BUS);
         BUS.subscribe(ModuleError.class, e -> LOG.add("plus", "Module '" + e.moduleId() + "' disabled after error: " + e.message()));
 
-        control = new BotControl(new AltoClefCommandRunner(mod));
+        control = new BotControl(new AltoClefCommandRunner(mod), cmd -> {
+            String problem = altoclefplus.ui.logic.GetCheck.problem(cmd, adris.altoclef.TaskCatalogue::taskExists);
+            if (problem != null) bus().publish(new altoclefplus.core.logic.events.Notice("plus", problem));
+            return problem;
+        });
         EventBus.subscribe(TaskFinishedEvent.class, evt -> control.onTaskFinished());
         configureBaritoneChat();
 
@@ -58,7 +62,7 @@ public final class Plus {
         altoclefplus.core.BasicsApplier.apply(mod);
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard", "steady-mining", "weapon-choice", "cave-water", "visible-inventory", "user-screen-pause", "keep-user-screen", "background-smelt", "chest-rules", "craft-grid-screen"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard", "steady-mining", "weapon-choice", "cave-water", "visible-inventory", "user-screen-pause", "keep-user-screen", "background-smelt", "chest-rules", "craft-grid-screen", "recipe-book-fallback"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> {

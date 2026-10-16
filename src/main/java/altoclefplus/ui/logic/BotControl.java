@@ -11,14 +11,31 @@ public final class BotControl {
     /** True while we cancel on purpose (pause/restart) so the resulting "finished" event is ignored. */
     private boolean cancelling;
 
-    public BotControl(CommandRunner runner) {
-        this.runner = runner;
+    /** Says why a command can't run (or null if it can). */
+    @FunctionalInterface
+    public interface CommandCheck {
+        String problem(String command);
     }
 
-    public void start(String command) {
+    private final CommandCheck check;
+
+    public BotControl(CommandRunner runner) {
+        this(runner, c -> null);
+    }
+
+    public BotControl(CommandRunner runner, CommandCheck check) {
+        this.runner = runner;
+        this.check = check;
+    }
+
+    /** @return why the command was not started, or null if it is running now */
+    public String start(String command) {
+        String problem = check.problem(command);
+        if (problem != null) return problem;
         lastCommand = command;
         state = BotState.RUNNING;
         runner.run(command);
+        return null;
     }
 
     /** A task was started some other way (e.g. by a preset chain); track it without re-running. */

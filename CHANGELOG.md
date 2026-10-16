@@ -8,6 +8,18 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-10-16
+
+Fixes from playing a Create (Fabric) modpack with JEI. Unit-tested only.
+
+### Fixed
+- Crafting got stuck on "Waiting for recipe book click..." in modpacks where the recipe book click does
+  nothing (seen with JEI and Create): after 3 seconds the bot now places the items in the grid by hand. This
+  also unblocks anything that needs crafting first, like `get stone` (furnace) or a crafting table.
+- Asking for an item AltoClef can't get (grass block and other Silk Touch blocks, items from other mods such
+  as Create) no longer shows "Running" while nothing happens: it doesn't start and says which items it can't
+  get.
+
 ## [0.9.0] - 2026-10-16
 
 New Presets tab with kits, and blueprint blocks for building. Both are unit-tested only so far.

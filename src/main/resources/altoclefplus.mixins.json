@@ -30,6 +30,7 @@
     "SafeInterruptMixin",
     "CraftGridScreenMixin",
     "FoodChainAccessor",
+    "RecipeBookFallbackMixin",
     "SlotHandlerMixin",
     "SteadyMiningMixin",
     "UserScreenPauseMixin",

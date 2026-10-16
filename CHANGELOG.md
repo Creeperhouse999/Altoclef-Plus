@@ -8,6 +8,25 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.8.4] - 2026-10-16
+
+Fixes from a morning @gamer run to the Nether portal. Tested in-game: golden boots at the portal, the furnace
+loop fix, throwing away old armor. Unit-tested only: eating while resting, the pillaring fix, flee cooldown.
+
+### Changed
+- @gamer wears full diamond (boots too) outside the Nether. Golden boots are fetched before the Nether, put on
+  next to the portal and in the Nether, and thrown away once the bot is back out with ender eyes.
+
+### Fixed
+- The furnace opened and closed forever while crafting flint and steel (AltoClef read the furnace's output slot
+  as the crafting grid).
+- Chest take rules ("leave at least ...") no longer apply to furnaces.
+- Junk now includes armor no better than what is worn, more than two of the best tool, and stones and ores
+  @gamer never uses (calcite, raw copper, amethyst, ...), so the inventory doesn't fill up.
+- Resting eats to full so health can regenerate (it rested at 14 hp for an hour without healing).
+- Undoing a useless pillar no longer digs straight down underground (it dug into lava).
+- Running from mobs restarts at most every 5 seconds; the message says why (pillager, outnumbered, still chased).
+
 ## [0.8.3] - 2026-10-16
 
 Fixes from an overnight @gamer run in a world with pillagers all around spawn. Tested in-game: the night

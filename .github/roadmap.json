@@ -6,7 +6,7 @@
     },
     {
       "title": "1.0",
-      "description": "Multiplayer support (commands from friends, follow/guard, PvP, bots together) and enchanting in @gamer."
+      "description": "Multiplayer support (commands from friends, follow/guard, PvP, bots together) and enchanting in `@gamer`."
     }
   ],
   "issues": [
@@ -87,12 +87,12 @@
       "body": "Make AltoClef Plus work on servers that allow bots, starting with building."
     },
     {
-      "title": "Enchanting in @gamer (enchanting table, diamond gear)",
+      "title": "Enchanting in `@gamer` (enchanting table, diamond gear)",
       "milestone": "1.0",
       "labels": [
         "enhancement"
       ],
-      "body": "Optional step in @gamer, right after diamond gear: build an enchanting table with a settable number of bookshelves (0-15), gather XP, and enchant the diamond pickaxe, sword and armor (Protection, Sharpness, Efficiency, Unbreaking...).\n\n- Enchanting table only, no villagers\n- Mending can't come from a table: used only if a Mending book is already in the inventory (applied with an anvil)\n- Toggle in Settings"
+      "body": "Optional step in `@gamer`, right after diamond gear: build an enchanting table with a settable number of bookshelves (0-15), gather XP, and enchant the diamond pickaxe, sword and armor (Protection, Sharpness, Efficiency, Unbreaking...).\n\n- Enchanting table only, no villagers\n- Mending can't come from a table: used only if a Mending book is already in the inventory (applied with an anvil)\n- Toggle in Settings"
     }
   ]
 }

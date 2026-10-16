@@ -8,6 +8,17 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-10-16
+
+Unit-tested only.
+
+### Fixed
+- The bot crafted and placed a new crafting table and furnace every time. It now picks up the table or furnace
+  it placed itself about 3 seconds after it is done with it (while still within 8 blocks) and carries it, so the
+  next craft places the carried one. Tables and furnaces it didn't place (villages, your base) are never
+  touched, and a furnace is only picked up once nothing of ours is left inside. Setting: Carry crafting table and
+  furnace.
+
 ## [0.9.2] - 2026-10-16
 
 Fixes from playtesting normal tasks. Unit-tested only, except where noted.

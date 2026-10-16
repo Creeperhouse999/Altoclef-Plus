@@ -101,6 +101,8 @@ public final class PlusConfig {
         /** Walk to nearby drops the task needs right away (AltoClef sometimes left them behind). */
         public boolean pickupDrops = true;
         /** Craft torches from carried coal and place them in dark places (off by default). */
+        /** Pick up crafting tables / furnaces the bot placed after using them, instead of crafting new ones. */
+        public boolean carryStations = true;
         public boolean placeTorches = false;
         public boolean cursorGuard = true;
         /** Show the inventory screen while the bot moves items in its own inventory, at a watchable pace. */

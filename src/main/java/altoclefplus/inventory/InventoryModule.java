@@ -71,6 +71,7 @@ public final class InventoryModule implements Module {
         }
         if (ticks % 5 == 0) tryPickup(s, cfg);
         if (ticks % 40 == 0) tryPlanksShortcut(s);
+        if (ticks % 10 == 0 && cfg.carryStations) tryCarryStations(s);
         if (++ticks % DECIDE_EVERY_TICKS != 0) return;
         if (!s.userTaskRunning || s.mobDefenseActive || s.eating || s.screenOpen || s.dead || "the_end".equals(s.dimension)) return;
         if (chain.isActive()) {
@@ -93,6 +94,51 @@ public final class InventoryModule implements Module {
         if (cfg.spareTools) {
             Optional<String> tool = SpareToolPlanner.next(s);
             if (tool.isPresent()) start(TaskCatalogue.getItemTask(tool.get(), SpareToolPlanner.targetCount(s, tool.get())), "Making a spare " + pretty(tool.get()));
+        }
+    }
+
+    private final altoclefplus.inventory.logic.StationTracker stations = new altoclefplus.inventory.logic.StationTracker();
+
+    /** See StationTracker: pick our own crafting table / furnace back up once we're done with it. */
+    private void tryCarryStations(Snapshot s) {
+        ClientPlayerEntity p = MinecraftClient.getInstance().player;
+        if (p == null || p.world == null || !s.userTaskRunning) return;
+        java.util.Set<Long> now = new java.util.HashSet<>();
+        java.util.Map<Long, Double> dist = new java.util.HashMap<>();
+        net.minecraft.util.math.BlockPos c = p.getBlockPos();
+        for (net.minecraft.util.math.BlockPos b : net.minecraft.util.math.BlockPos.iterate(c.add(-8, -4, -8), c.add(8, 4, 8))) {
+            var st = p.world.getBlockState(b);
+            if (st.isOf(net.minecraft.block.Blocks.CRAFTING_TABLE) || st.isOf(net.minecraft.block.Blocks.FURNACE)) {
+                now.add(b.asLong());
+                dist.put(b.asLong(), Math.sqrt(p.squaredDistanceTo(b.getX() + 0.5, b.getY() + 0.5, b.getZ() + 0.5)));
+            }
+        }
+        String chainText = String.join(" ", s.taskChain).toLowerCase(java.util.Locale.ROOT);
+        boolean placing = chainText.contains("placing container") || chainText.contains("place [block{minecraft:crafting_table")
+                || chainText.contains("place [block{minecraft:furnace");
+        boolean using = chainText.contains("doing stuff in crafting_table") || chainText.contains("doing stuff in [furnace]")
+                || chainText.contains("crafting (w/ recipe)") || chainText.contains("receiving output") || placing;
+        stations.observe(now, placing, s.tick);
+        var pick = stations.toCollect(dist, using, s.tick);
+        if (pick.isEmpty() || chain.isActive() || s.mobDefenseActive) return;
+        net.minecraft.util.math.BlockPos pos = net.minecraft.util.math.BlockPos.fromLong(pick.get());
+        boolean furnace = p.world.getBlockState(pos).isOf(net.minecraft.block.Blocks.FURNACE);
+        if (furnace) {
+            // Never while our items are still inside, and only with a pickaxe (or it drops nothing).
+            var cache = Plus.mod().getItemStorage().getContainerAtPosition(pos);
+            boolean hasPick = ItemInfo.bestTier(s, "pickaxe") != ItemInfo.NONE;
+            if (!hasPick) {
+                stations.collected(pick.get()); // can't take it: forget it
+                return;
+            }
+            if (cache.isPresent() && cache.get().getEmptySlotCount() < 3) return; // still smelting: try later
+        }
+        long key = pick.get();
+        var block = furnace ? net.minecraft.block.Blocks.FURNACE : net.minecraft.block.Blocks.CRAFTING_TABLE;
+        var item = furnace ? net.minecraft.item.Items.FURNACE : net.minecraft.item.Items.CRAFTING_TABLE;
+        if (chain.startJob(new PickUpStationTask(pos, block, item), "Picking up our " + (furnace ? "furnace" : "crafting table"),
+                () -> stations.collected(key))) {
+            stations.collected(key);
         }
     }
 

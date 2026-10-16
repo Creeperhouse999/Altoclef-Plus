@@ -22,7 +22,7 @@ import java.util.Map;
 
 /** The control panel: Tasks, Plan, Status and Settings tabs, with Stop / Pause always visible. */
 public final class PanelScreen extends PlusScreen {
-    public enum Tab { TASKS("Tasks"), PLAN("Plan"), STATUS("Status"), BUILD("Build"), ZONES("Zones"), SETTINGS("Settings");
+    public enum Tab { TASKS("Tasks"), PRESETS("Presets"), PLAN("Plan"), STATUS("Status"), BUILD("Build"), ZONES("Zones"), SETTINGS("Settings");
         final String label;
         Tab(String label) { this.label = label; }
     }
@@ -47,6 +47,7 @@ public final class PanelScreen extends PlusScreen {
     private String selectedItem = "";
     private ZonesTab zonesTab;
     private BuildTab buildTab;
+    private PresetsTab presetsTab;
 
     public PanelScreen() {
         this(null, lastTab);
@@ -101,6 +102,13 @@ public final class PanelScreen extends PlusScreen {
                     init();
                 });
                 buildTab.init(textRenderer, cx(), cy(), cw(), ch());
+            }
+            case PRESETS -> {
+                presetsTab = new PresetsTab(this::addDrawableChild, () -> {
+                    clearChildren();
+                    init();
+                }, this::run, inGame());
+                presetsTab.init(textRenderer, cx(), cy(), cw(), ch());
             }
             default -> { }
         }
@@ -315,11 +323,13 @@ public final class PanelScreen extends PlusScreen {
                 if (buildTab != null) buildTab.render(m, textRenderer, cx(), cy(), cw(), ch());
             }
             case SETTINGS -> renderSettings(m);
+            case PRESETS -> { }
         }
         BotState st = Plus.control() == null ? BotState.IDLE : Plus.control().state();
         textRenderer.drawWithShadow(m, "State: " + st.label, 150, bottomY() + 6, MUTED);
         super.render(m, mouseX, mouseY, delta);
         if (tab == Tab.TASKS && grid != null) grid.render(m, mouseX, mouseY);
+        if (tab == Tab.PRESETS && presetsTab != null) presetsTab.render(m, textRenderer, mouseX, mouseY);
     }
 
     private void renderTasks(MatrixStack m, int mouseX, int mouseY) {
@@ -473,12 +483,14 @@ public final class PanelScreen extends PlusScreen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (tab == Tab.TASKS && grid != null && grid.mouseClicked(mouseX, mouseY)) return true;
+        if (tab == Tab.PRESETS && presetsTab != null && presetsTab.mouseClicked(mouseX, mouseY)) return true;
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (tab == Tab.TASKS && grid != null && grid.mouseScrolled(mouseX, mouseY, amount)) return true;
+        if (tab == Tab.PRESETS && presetsTab != null && presetsTab.mouseScrolled(mouseX, mouseY, amount)) return true;
         if (tab == Tab.STATUS) {
             logScroll = Math.max(0, Math.min(Plus.log().snapshot().size() - 1, logScroll + (int) Math.signum(amount) * 3));
             return true;

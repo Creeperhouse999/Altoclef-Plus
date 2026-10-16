@@ -89,9 +89,11 @@ final class BuildTab {
                 fillContents = !fillContents;
                 rebuild.run();
             }));
-            ButtonWidget build = new ButtonWidget(rx, ry2 + 24, 274, 20, new LiteralText("Build it"), b -> startBuild());
+            ButtonWidget build = new ButtonWidget(rx, ry2 + 24, 206, 20, new LiteralText("Build it"), b -> startBuild());
             build.active = inWorld;
             add.accept(build);
+            // Take the schematic out of the world view (the outline and blueprint blocks disappear).
+            add.accept(new ButtonWidget(rx + 210, ry2 + 24, 64, 20, new LiteralText("Unload"), b -> unload()));
         }
 
         // Jobs (bottom)
@@ -184,6 +186,15 @@ final class BuildTab {
             tr.drawWithShadow(m, shorten(j.name, 16) + " - " + stateName(j.state) + progress, x, jy + i * 22 + 6, 0xFFFFFF);
             if (!j.note.isEmpty()) tr.drawWithShadow(m, shorten(j.note, 40), x + 150, jy + i * 22 + 6, 0xFFAA00);
         }
+    }
+
+    private void unload() {
+        Builds.previewSchematic = null;
+        Builds.previewPlacement = null;
+        selectedId = "";
+        materials = null;
+        loadError = "";
+        rebuild.run();
     }
 
     private void select(String id) {

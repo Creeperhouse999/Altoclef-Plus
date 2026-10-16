@@ -8,6 +8,22 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-16
+
+New Presets tab with kits, and blueprint blocks for building. Both are unit-tested only so far.
+
+### Added
+- **Presets tab:** about 45 ready-made presets in groups (tools, armor, kits such as "Wood tools + leather
+  armor", resources, food and base, speedrun) next to your own presets. Click to run; shift-click one of yours
+  to delete it, ctrl-click to edit it.
+- **Kit builder** (*Make a kit*): pick items from the item grid with an amount (+1 / +16 / +64 or typed), name
+  the kit and save it as a preset, or run it right away. The bot gathers everything as one task. Items AltoClef
+  can't get are refused with a message.
+- **Blueprint blocks** in the build preview and while building, like Litematica: missing blocks are
+  see-through blue cubes, a wrong block in their place is outlined red, placed blocks disappear. Setting:
+  Overlay: blueprint blocks.
+- **Unload** button in the Build tab: takes the selected schematic out of the world view.
+
 ## [0.8.4] - 2026-10-16
 
 Fixes from a morning @gamer run to the Nether portal. Tested in-game: golden boots at the portal, the furnace

@@ -60,7 +60,12 @@ goal is to fix the things that make watching the bot frustrating:
 Legend: ✅ built · 🧪 new, only unit-tested so far (please report anything odd) · 🚧 being built now · 🗓️ planned (not available yet)
 
 ### Control panel and HUD ✅
-- **Control panel** (Right Shift) with tabs: *Tasks*, *Plan*, *Status*, *Settings*. ✅
+- **Control panel** (Right Shift) with tabs: *Tasks*, *Presets*, *Plan*, *Status*, *Build*, *Zones*, *Settings*. ✅
+- **Presets tab:** about 45 ready-made presets (tools, armor, kits, resources, food, speedrun) and a kit
+  builder: pick items and amounts ("a stack of dirt, 16 bread, iron sword, ...") and save it as your own
+  preset; the bot gathers it all in one go. 🧪
+- **Blueprint blocks:** the build preview shows the schematic's missing blocks as see-through blue cubes and
+  wrong blocks outlined in red, like Litematica. 🧪
 - **Start anything with a click:** Beat the game (`@gamer`), get any item from a searchable item grid,
   presets like "Iron gear" or "Food", or any other AltoClef command. ✅
 - **Stop, Pause and Resume** buttons and hotkeys. ✅
@@ -208,8 +213,10 @@ settings from *Mods → AltoClef Plus → ⚙*.
 | Tab | What's there |
 |---|---|
 | **Tasks** | Beat the game, get items (searchable icon grid + amount), presets, any AltoClef command (press *+* to keep a command as a preset, shift-click a preset to remove it) |
+| **Presets** | Ready-made presets and your own; *Make a kit* to build an item list and save it (shift-click your preset to delete it, ctrl-click to edit it) |
 | **Plan** | The `@gamer` checklist and the step history |
 | **Status** | What the bot is doing right now, the log, inventory summary, module health |
+| **Build** | Pick a .litematic, place and preview it (blueprint blocks), build, pause, resume |
 | **Zones** | Your safe zones: create, rename, set rules, delete |
 | **Settings** | Basics (chest looting, sleeping…), safety rules, every feature's on/off switch and tuning, and AltoClef's own options |
 
@@ -238,8 +245,8 @@ hand; if the file is broken, AltoClef Plus uses defaults and tells you in the lo
 | **0.6** | Safe zones, safety rules, basics settings, door fix, gate scope | ✅ Released |
 | **0.7** | In-game testing feedback, polish and fixes | ✅ Released |
 | **0.8** | Building from .litematic files, better melee, water safety, world overlay, visible inventory | ✅ Released |
-| **0.9** | Schematic contents (chests, signs, frames), chest labels, scaffolding cleanup, more fixes | 🚧 Next |
-| **1.0** | Multiplayer support (e.g. building) | 🗓️ Planned |
+| **0.9** | Presets tab and kits, blueprint blocks, golden boots only for the Nether, many `@gamer` fixes | ✅ Released |
+| **0.10** | Schematic contents (chests, signs, frames), chest labels, scaffolding cleanup, more fixes | 🗓️ Planned |
 
 Live progress: the [milestones](https://github.com/Creeperhouse999/Altoclef-Plus/milestones) list every planned item as an issue, closed when it's done.
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.

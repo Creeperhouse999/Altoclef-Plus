@@ -124,6 +124,13 @@ public final class ItemInfo {
         return total;
     }
 
+    /** How many food items are carried (what a player counts), not hunger points. */
+    public static int foodItems(Snapshot s) {
+        int total = 0;
+        for (Map.Entry<String, Integer> e : s.items.entrySet()) if (foodUnits(e.getKey()) > 0) total += e.getValue();
+        return total;
+    }
+
     public static boolean isLog(String id) {
         return id.endsWith("_log") || id.endsWith("_stem") || id.endsWith("_wood") || id.endsWith("_hyphae");
     }

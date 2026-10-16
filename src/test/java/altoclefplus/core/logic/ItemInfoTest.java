@@ -71,4 +71,10 @@ class ItemInfoTest {
         assertTrue(ItemInfo.isBed("red_bed"));
         assertFalse(ItemInfo.isBed("bedrock"));
     }
+
+    @Test
+    void countsFoodAsItemsNotHungerPoints() {
+        Snapshot s = Snapshot.builder().item("bread", 16).item("cooked_beef", 4).item("dirt", 64).build();
+        assertEquals(20, ItemInfo.foodItems(s), "16 bread + 4 steak, not 120 hunger points");
+    }
 }

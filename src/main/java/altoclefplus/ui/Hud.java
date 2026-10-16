@@ -66,7 +66,7 @@ public final class Hud {
             for (Milestone mi : Milestone.values()) {
                 if (cur == null || mi.ordinal() < cur.ordinal() || shown >= 3) continue;
                 String prefix = mi == cur ? "▶ " : "○ ";
-                String extra = mi == Milestone.FOOD ? " (" + Math.min(20, ItemInfo.totalFoodUnits(s)) + "/20)" : "";
+                String extra = mi == Milestone.FOOD ? " (" + ItemInfo.foodItems(s) + " items)" : "";
                 tr.drawWithShadow(m, prefix + mi.label + extra, x, y, mi == cur ? 0xFFFFFF55 : 0xFFAAAAAA);
                 y += line;
                 shown++;
@@ -84,7 +84,7 @@ public final class Hud {
             StringBuilder sb = new StringBuilder();
             for (String id : cfg.hudResourceItems) {
                 int n = switch (id) {
-                    case "food" -> ItemInfo.totalFoodUnits(s);
+                    case "food" -> ItemInfo.foodItems(s);
                     case "bed" -> ItemInfo.countMatching(s, ItemInfo::isBed);
                     default -> s.count(id);
                 };

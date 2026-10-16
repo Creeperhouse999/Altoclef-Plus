@@ -8,6 +8,11 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.9.4] - 2026-10-16
+
+Tested in-game: picking up its own crafting table after a task, placing a bed where it is instead of
+walking to a far one. The rest is unit-tested.
+
 ### Added
 - Settings search: a search box on the Settings tab finds settings by name.
 - New setting "Wait while this panel is open" (on): the bot holds still while the AltoClef Plus panel is open,

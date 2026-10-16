@@ -113,6 +113,8 @@ public final class InventoryModule implements Module {
         List<altoclefplus.inventory.logic.PickupPlanner.Drop> drops = new ArrayList<>();
         for (var e : nearby) {
             if (e.distanceTo(p) < 1.5) continue; // already being picked up
+            // Never walk into an avoided area for a drop (it ran from pillagers, came back for the drop, ran again).
+            if (altoclefplus.zones.Zones.avoided(e.getBlockPos())) continue;
             drops.add(new altoclefplus.inventory.logic.PickupPlanner.Drop(e.getId(), StateSampler.id(e.getStack()),
                     e.distanceTo(p), e.isOnGround() || e.isTouchingWater()));
         }

@@ -43,6 +43,12 @@ public final class Zones {
      * state: AltoClef rewrites Baritone's avoid lists from its state stack on every push/pop, so rules added
      * to AltoClefSettings directly were wiped as soon as the first task started.
      */
+    /** The bot should not go to this block: a danger area (repeated deaths, pillagers) or a no-enter zone. */
+    public static boolean avoided(net.minecraft.util.math.BlockPos p) {
+        if (!DANGER.isEmpty() && DANGER.avoidHere(p.getX(), p.getY(), p.getZ(), System.currentTimeMillis())) return true;
+        return enabled() && current.forbids(ZoneSet.Action.ENTER, p.getX(), p.getY(), p.getZ());
+    }
+
     public static void registerWithBaritone(adris.altoclef.AltoClef mod) {
         var b = mod.getBehaviour();
         // AltoClef adds its protected areas straight to Baritone (wiped by the state stack): keep them here too.

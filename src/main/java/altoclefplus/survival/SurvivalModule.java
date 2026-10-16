@@ -281,6 +281,7 @@ public final class SurvivalModule implements Module {
             nextFleeMs = System.currentTimeMillis() + 5_000;
             if (fleeChain.startUrgent(new RunAwayFromHostilesTask(24, true), why + ": running away")) {
                 Plus.log().add("survival", why + ": running away");
+                if (pillagers > 0 && !armored) avoidPillagers(p);
             }
         } else if (!run && fleeChain.isActive()) {
             fleeChain.cancelJob();
@@ -305,6 +306,20 @@ public final class SurvivalModule implements Module {
         if (shelterChain.startJob(new NightShelterTask(), "Night without armor: sheltering", null)) {
             Plus.log().add("survival", "Night without armor or bed: sheltering until dawn");
         }
+    }
+
+    /**
+     * After running from pillagers, stay away from where they are for 3 minutes: otherwise the task (wood, a
+     * dropped item) led straight back to them and the bot ran again, over and over.
+     */
+    private void avoidPillagers(net.minecraft.client.network.ClientPlayerEntity p) {
+        p.world.getEntitiesByClass(net.minecraft.entity.mob.PillagerEntity.class, p.getBoundingBox().expand(24), e -> e.isAlive())
+                .stream().min(java.util.Comparator.comparingDouble(p::distanceTo)).ifPresent(pl -> {
+                    String dim = p.world.getRegistryKey().getValue().getPath();
+                    altoclefplus.zones.Zones.DANGER.add(dim, pl.getBlockX(), pl.getBlockY(), pl.getBlockZ(), 32, 3 * 60_000L,
+                            System.currentTimeMillis());
+                    Plus.log().add("survival", "Avoiding the pillagers' area for 3 minutes");
+                });
     }
 
     private void fightChasingCreeper(Snapshot s) {

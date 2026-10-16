@@ -62,7 +62,7 @@ public final class Plus {
         altoclefplus.core.BasicsApplier.apply(mod);
         sampler = new StateSampler(control::lastCommand);
         registerModules();
-        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard", "steady-mining", "weapon-choice", "cave-water", "visible-inventory", "user-screen-pause", "keep-user-screen", "background-smelt", "chest-rules", "craft-grid-screen", "recipe-book-fallback"}) {
+        for (String hook : new String[]{"chat-block", "altoclef-log", "altoclef-overlay", "keep-panel-open", "camera", "fair-combat", "craft-grid-fix", "table-distance", "furnace-cost", "hotbar-fix", "tool-fix", "stronghold-estimate", "fast-travel", "obsidian-cast", "enderman-hunt", "door-path", "door-eat", "zone-guard", "steady-mining", "weapon-choice", "cave-water", "visible-inventory", "user-screen-pause", "keep-user-screen", "background-smelt", "chest-rules", "craft-grid-screen", "recipe-book-fallback", "swim-like-player"}) {
             Hooks.expect(hook);
         }
         EventBus.subscribe(ClientTickEvent.class, evt -> {

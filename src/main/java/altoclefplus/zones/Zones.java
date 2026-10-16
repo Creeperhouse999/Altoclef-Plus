@@ -54,6 +54,14 @@ public final class Zones {
         b.avoidBlockPlacing(pos -> enabled() && current.forbids(ZoneSet.Action.PLACE, pos.getX(), pos.getY(), pos.getZ()));
         b.avoidWalkingThrough(pos -> enabled()
                 && current.forbids(ZoneSet.Action.ENTER, pos.getX(), pos.getY(), pos.getZ()));
+        // Powder snow and wither roses: Baritone doesn't know them (sinking into powder snow freezes you).
+        b.avoidWalkingThrough(pos -> {
+            var world = mod.getWorld();
+            if (world == null) return false;
+            String at = net.minecraft.util.registry.Registry.BLOCK.getId(world.getBlockState(pos).getBlock()).toString();
+            String below = net.minecraft.util.registry.Registry.BLOCK.getId(world.getBlockState(pos.down()).getBlock()).toString();
+            return altoclefplus.survival.logic.Hazards.avoidCell(at, below);
+        });
     }
 
     /** Rebuild the zone set when the world or the zone list changed. Cheap; called every tick. */

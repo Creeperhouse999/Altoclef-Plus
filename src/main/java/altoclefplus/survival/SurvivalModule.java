@@ -246,6 +246,13 @@ public final class SurvivalModule implements Module {
                 && !(e instanceof net.minecraft.entity.mob.EndermanEntity) && !(e instanceof net.minecraft.entity.mob.ZombifiedPiglinEntity);
         int close = p.world.getEntitiesByClass(HostileEntity.class, p.getBoundingBox().expand(8), chasing).size();
         int around = p.world.getEntitiesByClass(HostileEntity.class, p.getBoundingBox().expand(16), chasing).size();
+        int pillagers = p.world.getEntitiesByClass(net.minecraft.entity.mob.PillagerEntity.class, p.getBoundingBox().expand(24),
+                e -> e.isAlive()).size();
+        var chest = p.getInventory().getArmorStack(2).getItem();
+        boolean armored = chest == net.minecraft.item.Items.IRON_CHESTPLATE || chest == net.minecraft.item.Items.DIAMOND_CHESTPLATE
+                || chest == net.minecraft.item.Items.NETHERITE_CHESTPLATE;
+        close = altoclefplus.survival.logic.Outnumbered.effectiveClose(close, pillagers, armored, cfg.runWhenOutnumbered);
+        around = altoclefplus.survival.logic.Outnumbered.effectiveClose(around, pillagers, armored, 2);
         boolean run = outnumbered.shouldRun(close, around, ticks);
         if (run && !fleeChain.isActive()) {
             if (fleeChain.startUrgent(new RunAwayFromHostilesTask(24, true), "Outnumbered (" + close + " mobs): running away")) {

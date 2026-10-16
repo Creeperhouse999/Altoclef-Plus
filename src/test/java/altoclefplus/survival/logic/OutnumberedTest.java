@@ -25,4 +25,12 @@ class OutnumberedTest {
         assertFalse(o.shouldRun(5, 5, 1500), "no new run during the cooldown");
         assertTrue(o.shouldRun(5, 5, 1802), "cooldown over");
     }
+
+    @Test
+    void anUnarmoredBotCountsAPillagerInRangeAsOutnumbered() {
+        assertEquals(3, Outnumbered.effectiveClose(0, 1, false, 3), "crossbows outrange a sword");
+        assertEquals(1, Outnumbered.effectiveClose(1, 1, true, 3), "with iron armor it may fight");
+        assertEquals(1, Outnumbered.effectiveClose(1, 0, false, 3));
+        assertEquals(5, Outnumbered.effectiveClose(5, 2, false, 3));
+    }
 }

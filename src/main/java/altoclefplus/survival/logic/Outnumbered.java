@@ -23,6 +23,14 @@ public final class Outnumbered {
         this.cooldownTicks = cooldownTicks;
     }
 
+    /**
+     * Pillagers shoot from range, so for a bot without iron armor one pillager nearby is as bad as a crowd:
+     * report at least {@code threshold} so it runs before it is shot down.
+     */
+    public static int effectiveClose(int close, int pillagers, boolean armored, int threshold) {
+        return pillagers > 0 && !armored ? Math.max(close, threshold) : close;
+    }
+
     /** @param close hostiles within 8 blocks; @param around hostiles within 16 blocks */
     public boolean shouldRun(int close, int around, long tick) {
         if (running) {

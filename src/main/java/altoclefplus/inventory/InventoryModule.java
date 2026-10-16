@@ -92,7 +92,7 @@ public final class InventoryModule implements Module {
                 && start(TaskCatalogue.getItemTask("wooden_door", 1), "Making a door for underwater air pockets")) return;
         if (cfg.spareTools) {
             Optional<String> tool = SpareToolPlanner.next(s);
-            if (tool.isPresent()) start(TaskCatalogue.getItemTask(tool.get(), 1), "Making a spare " + pretty(tool.get()));
+            if (tool.isPresent()) start(TaskCatalogue.getItemTask(tool.get(), SpareToolPlanner.targetCount(s, tool.get())), "Making a spare " + pretty(tool.get()));
         }
     }
 

@@ -57,6 +57,11 @@ public final class SpareToolPlanner {
         return Optional.empty();
     }
 
+    /** How many to ask AltoClef for: one more than carried, or a replacement counts as already done. */
+    public static int targetCount(Snapshot s, String id) {
+        return s.count(id) + 1;
+    }
+
     private static String bestOfType(Snapshot s, String type) {
         String best = "";
         for (Map.Entry<String, Integer> e : s.items.entrySet()) {

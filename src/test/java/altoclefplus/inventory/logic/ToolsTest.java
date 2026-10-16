@@ -133,4 +133,11 @@ class ToolsTest {
         Snapshot ironNoIngots = iron.toBuilder().item("iron_ingot", 0).item("cobblestone", 5).build();
         assertEquals(Optional.of("stone_pickaxe"), SpareToolPlanner.next(ironNoIngots), "at least a stone backup");
     }
+
+    @Test
+    void aReplacementAsksForOneMoreThanCarried() {
+        Snapshot worn = Snapshot.builder().item("stone_pickaxe", 1).durability("stone_pickaxe", 0.12f).build();
+        assertEquals(2, SpareToolPlanner.targetCount(worn, "stone_pickaxe"), "1 would be done at once: it already has one");
+        assertEquals(1, SpareToolPlanner.targetCount(worn, "stone_axe"));
+    }
 }

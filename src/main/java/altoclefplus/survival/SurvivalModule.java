@@ -351,7 +351,7 @@ public final class SurvivalModule implements Module {
      * The player is physically holding a movement/attack/use key. KeyBinding.isPressed can't be used: AltoClef
      * presses the same bindings itself (crit jumps, placing doors), which would look like the player playing.
      */
-    private static boolean anyKeyPressed(GameOptions o) {
+    public static boolean anyKeyPressed(GameOptions o) {
         long window = MinecraftClient.getInstance().getWindow().getHandle();
         for (var kb : new net.minecraft.client.option.KeyBinding[]{o.forwardKey, o.backKey, o.leftKey, o.rightKey,
                 o.jumpKey, o.attackKey, o.useKey, o.sneakKey}) {

@@ -98,11 +98,17 @@ public final class InventoryModule implements Module {
     }
 
     private final altoclefplus.inventory.logic.StationTracker stations = new altoclefplus.inventory.logic.StationTracker();
+    private long lastTaskTick = Long.MIN_VALUE / 2;
 
     /** See StationTracker: pick our own crafting table / furnace back up once we're done with it. */
     private void tryCarryStations(Snapshot s) {
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
-        if (p == null || p.world == null || !s.userTaskRunning) return;
+        if (p == null || p.world == null) return;
+        // Also right after a task ends (it often ends with the last craft): pick the table up within 30 s,
+        // unless the player is moving around themselves.
+        if (s.userTaskRunning) lastTaskTick = s.tick;
+        boolean playerActive = altoclefplus.survival.SurvivalModule.anyKeyPressed(MinecraftClient.getInstance().options);
+        if (!s.userTaskRunning && (s.tick - lastTaskTick > 600 || playerActive || s.screenOpen || s.dead)) return;
         java.util.Set<Long> now = new java.util.HashSet<>();
         java.util.Map<Long, Double> dist = new java.util.HashMap<>();
         net.minecraft.util.math.BlockPos c = p.getBlockPos();
@@ -136,9 +142,13 @@ public final class InventoryModule implements Module {
         long key = pick.get();
         var block = furnace ? net.minecraft.block.Blocks.FURNACE : net.minecraft.block.Blocks.CRAFTING_TABLE;
         var item = furnace ? net.minecraft.item.Items.FURNACE : net.minecraft.item.Items.CRAFTING_TABLE;
-        if (chain.startJob(new PickUpStationTask(pos, block, item), "Picking up our " + (furnace ? "furnace" : "crafting table"),
-                () -> stations.collected(key))) {
+        String label = "Picking up our " + (furnace ? "furnace" : "crafting table");
+        boolean started = s.userTaskRunning
+                ? chain.startJob(new PickUpStationTask(pos, block, item), label, () -> stations.collected(key))
+                : chain.startUrgent(new PickUpStationTask(pos, block, item), label);
+        if (started) {
             stations.collected(key);
+            Plus.log().add("inventory", label);
         }
     }
 

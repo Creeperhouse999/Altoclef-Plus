@@ -23,4 +23,15 @@ class DangerAreasTest {
         assertFalse(d.avoid("overworld", 2, 64, 1, 5), "its own cell stays walkable so it can leave");
         assertTrue(d.avoid("overworld", 0, 64, 0, 5));
     }
+
+    @Test
+    void insideAnAreaItCanWalkOutButNotDeeper() {
+        DangerAreas d = new DangerAreas();
+        d.add("overworld", 0, 64, 0, 32, 1000, 0);
+        d.setStandingAt("overworld", 10, 64, 0);
+        assertFalse(d.avoid("overworld", 11, 64, 0, 5), "one step outward is allowed");
+        assertFalse(d.avoid("overworld", 10, 64, 1, 5), "sideways is allowed");
+        assertTrue(d.avoid("overworld", 5, 64, 0, 5), "back towards where it died is not");
+        assertTrue(d.avoid("overworld", 0, 64, 0, 5));
+    }
 }

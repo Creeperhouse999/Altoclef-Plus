@@ -208,15 +208,22 @@ public final class RecoveryModule implements Module {
 
     private void onRespawn(Snapshot s) {
         PlusConfig.Survival cfg = Plus.config().survival;
-        if (!Plus.config().modules.recovery || !botWasRunning || lostItems.isEmpty()) {
+        if (!Plus.config().modules.recovery || !botWasRunning) {
             deathPos = null;
             return;
         }
+        // Checked before "anything to pick up?": a bot that keeps dying with empty pockets (e.g. respawning
+        // next to a pillager outpost) is exactly the case that needs it. Ranged mobs shoot from 16+ blocks,
+        // so the avoided area covers the whole loop radius.
         if (deathLoops.isLoop(Plus.config().recovery, System.currentTimeMillis())) {
-            altoclefplus.zones.Zones.DANGER.add(deathDim, deathPos.getX(), deathPos.getY(), deathPos.getZ(), 10, 10 * 60_000L,
-                    System.currentTimeMillis());
+            altoclefplus.zones.Zones.DANGER.add(deathDim, deathPos.getX(), deathPos.getY(), deathPos.getZ(),
+                    Plus.config().recovery.deathLoopRadius, 10 * 60_000L, System.currentTimeMillis());
             Plus.bus().publish(new Notice("recovery", "Keeps dying near " + deathPos.toShortString()
                     + " - avoiding that area for 10 minutes"));
+            deathPos = null;
+            return;
+        }
+        if (lostItems.isEmpty()) {
             deathPos = null;
             return;
         }

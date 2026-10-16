@@ -36,7 +36,15 @@ public final class DangerAreas {
             }
             if (!a.dimension().equals(dimension)) continue;
             long dx = x - a.x(), dy = y - a.y(), dz = z - a.z();
-            if (dx * dx + dy * dy + dz * dz <= (long) a.radius() * a.radius()) return true;
+            long cell = dx * dx + dy * dy + dz * dz, r2 = (long) a.radius() * a.radius();
+            if (cell > r2) continue;
+            // Already inside (e.g. respawned there): only block steps back towards the centre, so it can leave.
+            if (a.dimension().equals(standDim)) {
+                long bx = sx - a.x(), by = sy - a.y(), bz = sz - a.z();
+                long bot = bx * bx + by * by + bz * bz;
+                if (bot <= r2 && cell >= bot) continue;
+            }
+            return true;
         }
         return false;
     }

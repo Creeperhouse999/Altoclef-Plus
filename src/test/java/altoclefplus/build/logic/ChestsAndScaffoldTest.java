@@ -44,4 +44,12 @@ class ChestsAndScaffoldTest {
         assertEquals(50, ChestRules.cappedTarget(10, 50, 200, 64), "plenty in the chest: AltoClef's own target");
         assertEquals(10, ChestRules.cappedTarget(10, 50, 64, 64), "nothing to spare");
     }
+
+    @Test
+    void chestRulesAreForStorageNotFurnaces() {
+        assertTrue(ChestRules.appliesTo("CHEST"));
+        assertTrue(ChestRules.appliesTo("SHULKER"));
+        assertFalse(ChestRules.appliesTo("FURNACE"), "the bot's own smelting output must always be taken out");
+        assertFalse(ChestRules.appliesTo("BREWING"));
+    }
 }

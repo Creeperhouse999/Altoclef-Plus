@@ -34,6 +34,10 @@ public abstract class ChestTakeRulesMixin {
         if (!b.takeFromChests) return new ArrayList<>();
         List<ContainerCache> out = new ArrayList<>();
         for (ContainerCache c : all) {
+            if (!ChestRules.appliesTo(c.getContainerType().name())) {
+                out.add(c);
+                continue;
+            }
             if (c.getItemCount(items) <= b.chestLeaveAtLeast) continue;
             if (!b.takeFromZoneChests && inLootProtectedZone(c.getBlockPos())) continue;
             out.add(c);
@@ -48,6 +52,8 @@ public abstract class ChestTakeRulesMixin {
         int leave = Plus.config().basics.chestLeaveAtLeast;
         if (mod == null || leave <= 0) return new PickupFromContainerTask(pos, targets);
         var cache = mod.getItemStorage().getContainerAtPosition(pos);
+        // Furnace output (the bot's own smelting) is always taken in full.
+        if (cache.isPresent() && !ChestRules.appliesTo(cache.get().getContainerType().name())) return new PickupFromContainerTask(pos, targets);
         ItemTarget[] capped = new ItemTarget[targets.length];
         for (int i = 0; i < targets.length; i++) {
             ItemTarget t = targets[i];

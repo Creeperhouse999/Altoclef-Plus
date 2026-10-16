@@ -69,4 +69,26 @@ class JunkClassifierTest {
         List<JunkClassifier.Drop> drops = classifier().toDrop(Map.of("cobblestone", 70, "bone", 2), Set.of(), 0);
         assertEquals("bone", drops.get(0).id());
     }
+
+    @Test
+    void stoneVariantsAndOresNobodyNeedsAreJunkWhenFull() {
+        List<JunkClassifier.Drop> drops = classifier().toDrop(Map.of("calcite", 3, "raw_copper", 9, "amethyst_block", 3), Set.of(), 0);
+        assertEquals(3, drops.size());
+        assertTrue(classifier().toDrop(Map.of("raw_copper", 9), Set.of("raw_copper"), 0).isEmpty(), "needed by the task");
+    }
+
+    @Test
+    void armorWorseThanWhatIsWornIsJunkExceptGoldenBoots() {
+        Map<String, String> worn = Map.of("chest", "diamond_chestplate", "feet", "diamond_boots", "head", "diamond_helmet");
+        List<JunkClassifier.Drop> drops = JunkClassifier.outdatedArmor(
+                Map.of("iron_chestplate", 1, "iron_boots", 1, "golden_boots", 1, "iron_leggings", 1), worn, Set.of(), Set.of());
+        assertEquals(List.of(new JunkClassifier.Drop("iron_boots", 1), new JunkClassifier.Drop("iron_chestplate", 1)), drops,
+                "leggings: nothing better worn; golden boots: kept for the Nether");
+    }
+
+    @Test
+    void keepsAtMostTwoOfTheBestTool() {
+        List<JunkClassifier.Drop> drops = JunkClassifier.outdatedTools(Map.of("diamond_pickaxe", 3, "diamond_sword", 1), Set.of(), Set.of());
+        assertEquals(List.of(new JunkClassifier.Drop("diamond_pickaxe", 1)), drops);
+    }
 }

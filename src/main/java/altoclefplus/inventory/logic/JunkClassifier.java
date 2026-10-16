@@ -18,6 +18,15 @@ import java.util.TreeMap;
 public final class JunkClassifier {
     public record Drop(String id, int count) {}
 
+    /**
+     * Picked up while mining and never used by @gamer or crafting it does. Always junk unless protected or
+     * needed by the current task, on top of the configurable list.
+     */
+    public static final Set<String> EXTRA_JUNK = Set.of(
+            "calcite", "smooth_basalt", "amethyst_block", "amethyst_shard", "budding_amethyst", "raw_copper",
+            "copper_ingot", "pointed_dripstone", "dripstone_block", "moss_block", "moss_carpet", "clay_ball",
+            "glow_ink_sac", "glow_berries", "kelp", "lily_pad", "dead_bush", "grass", "fern", "tall_grass", "large_fern");
+
     private final Set<String> protectedIds;
     private final Set<String> junkIds;
     private final Set<String> buildingIds;
@@ -42,7 +51,7 @@ public final class JunkClassifier {
         Map<String, Integer> sorted = new TreeMap<>(items);
         for (Map.Entry<String, Integer> e : sorted.entrySet()) {
             String id = e.getKey();
-            if (!junkIds.contains(id) || !droppable(id, neededByTask)) continue;
+            if (!(junkIds.contains(id) || EXTRA_JUNK.contains(id)) || !droppable(id, neededByTask)) continue;
             if (id.equals("rotten_flesh") && otherFoodUnits(items) == 0) continue;
             drops.add(new Drop(id, e.getValue()));
         }
@@ -89,6 +98,25 @@ public final class JunkClassifier {
             if (type.isEmpty() || neededByTask.contains(id) || protectedIds.contains(id)) continue;
             int top = best.get(type);
             if (top >= ItemInfo.STONE && ItemInfo.tier(id) < top) drops.add(new Drop(id, e.getValue()));
+            // One in use and one spare is plenty.
+            else if (ItemInfo.tier(id) == top && e.getValue() > 2) drops.add(new Drop(id, e.getValue() - 2));
+        }
+        return drops;
+    }
+
+    /**
+     * Carried armor no better than what is worn in its slot (iron chestplate under a diamond one). Golden boots
+     * are kept: they are for the Nether.
+     */
+    public static List<Drop> outdatedArmor(Map<String, Integer> items, Map<String, String> worn, Set<String> neededByTask,
+                                           Set<String> protectedIds) {
+        List<Drop> drops = new ArrayList<>();
+        for (Map.Entry<String, Integer> e : new TreeMap<>(items).entrySet()) {
+            String id = e.getKey();
+            String slot = ItemInfo.armorSlot(id);
+            if (slot.isEmpty() || id.equals("golden_boots") || neededByTask.contains(id) || protectedIds.contains(id)) continue;
+            String on = worn.getOrDefault(slot, "");
+            if (!on.isEmpty() && ItemInfo.armorPoints(id) <= ItemInfo.armorPoints(on)) drops.add(new Drop(id, e.getValue()));
         }
         return drops;
     }

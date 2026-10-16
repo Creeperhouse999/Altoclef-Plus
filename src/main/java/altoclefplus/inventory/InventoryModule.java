@@ -213,7 +213,10 @@ public final class InventoryModule implements Module {
                 new HashSet<>(cfg.buildingBlocks), cfg.buildingBlockCapPerType, cfg.buildingBlockCapTotal, cfg.junkFreeSlotThreshold);
         Set<String> needed = altoclefplus.core.TaskTargets.of(Plus.mod());
         List<JunkClassifier.Drop> drops = new ArrayList<>();
-        if (cfg.dropOutdatedTools) drops.addAll(JunkClassifier.outdatedTools(s.items, needed, keep));
+        if (cfg.dropOutdatedTools) {
+            drops.addAll(JunkClassifier.outdatedTools(s.items, needed, keep));
+            drops.addAll(JunkClassifier.outdatedArmor(s.items, s.armor, needed, keep));
+        }
         if (cfg.dropJunk) drops.addAll(classifier.toDrop(s.items, needed, s.freeSlots));
         if (ArmorPlanner.dropGoldenBoots(s.dimension, s.count("ender_eye"), s.armor.getOrDefault("feet", ""), s.has("golden_boots"))) {
             drops.add(new JunkClassifier.Drop("golden_boots", s.count("golden_boots")));

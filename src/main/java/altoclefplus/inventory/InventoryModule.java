@@ -181,12 +181,24 @@ public final class InventoryModule implements Module {
         List<String> carried = new ArrayList<>();
         for (String id : s.items.keySet()) if (!ItemInfo.armorSlot(id).isEmpty()) carried.add(id);
         if (carried.isEmpty()) return false;
+        boolean nearPortal = "overworld".equals(s.dimension) && carried.contains("golden_boots") && nearNetherPortal();
         for (String slot : ItemInfo.ARMOR_SLOTS) {
-            String wear = ArmorPlanner.bestToWear(slot, s.armor.getOrDefault(slot, ""), carried, s.dimension);
+            String wear = ArmorPlanner.bestToWear(slot, s.armor.getOrDefault(slot, ""), carried, s.dimension, nearPortal);
             if (!wear.isEmpty()) {
                 Item item = Registry.ITEM.get(new Identifier("minecraft", wear));
                 return start(new EquipArmorTask(item), "Putting on " + pretty(wear));
             }
+        }
+        return false;
+    }
+
+    /** A Nether portal block within 3 blocks: the bot is about to go through. */
+    private static boolean nearNetherPortal() {
+        ClientPlayerEntity p = MinecraftClient.getInstance().player;
+        if (p == null || p.world == null) return false;
+        net.minecraft.util.math.BlockPos c = p.getBlockPos();
+        for (net.minecraft.util.math.BlockPos pos : net.minecraft.util.math.BlockPos.iterate(c.add(-3, -2, -3), c.add(3, 3, 3))) {
+            if (p.world.getBlockState(pos).isOf(net.minecraft.block.Blocks.NETHER_PORTAL)) return true;
         }
         return false;
     }
@@ -203,6 +215,9 @@ public final class InventoryModule implements Module {
         List<JunkClassifier.Drop> drops = new ArrayList<>();
         if (cfg.dropOutdatedTools) drops.addAll(JunkClassifier.outdatedTools(s.items, needed, keep));
         if (cfg.dropJunk) drops.addAll(classifier.toDrop(s.items, needed, s.freeSlots));
+        if (ArmorPlanner.dropGoldenBoots(s.dimension, s.count("ender_eye"), s.armor.getOrDefault("feet", ""), s.has("golden_boots"))) {
+            drops.add(new JunkClassifier.Drop("golden_boots", s.count("golden_boots")));
+        }
         List<String> toThrow = new ArrayList<>();
         for (JunkClassifier.Drop d : drops) {
             Item item = Registry.ITEM.get(new Identifier("minecraft", d.id()));

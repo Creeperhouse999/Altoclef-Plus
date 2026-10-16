@@ -74,6 +74,10 @@ public final class GatePlanner {
             if (cfg.endermanBoatHunt && ItemInfo.countMatching(s, id -> id.endsWith("_boat")) == 0) {
                 return need(Gate.NETHER_ENTRY, "oak_boat");
             }
+            // Piglins attack a player without gold armor; the boots go on at the portal.
+            if (!s.has("golden_boots") && !"golden_boots".equals(s.armor.getOrDefault("feet", ""))) {
+                return need(Gate.NETHER_ENTRY, "golden_boots");
+            }
         }
         return Optional.empty();
     }

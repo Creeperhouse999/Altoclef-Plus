@@ -55,12 +55,23 @@ class ArmorPlannerTest {
     }
 
     @Test
-    void equipsBestPieceButKeepsGoldenBootsInNether() {
-        assertEquals("", ArmorPlanner.bestToWear("feet", "golden_boots", java.util.List.of("iron_boots"), "overworld"),
-                "worn golden boots are AltoClef's choice (piglins); taking them off made the two mods swap forever");
-        assertEquals("", ArmorPlanner.bestToWear("feet", "golden_boots", java.util.List.of("iron_boots"), "the_nether"), "keep golden boots on");
-        assertEquals("golden_boots", ArmorPlanner.bestToWear("feet", "iron_boots", java.util.List.of("golden_boots"), "the_nether"));
-        assertEquals("diamond_chestplate", ArmorPlanner.bestToWear("chest", "iron_chestplate", java.util.List.of("diamond_chestplate"), "the_nether"));
-        assertEquals("", ArmorPlanner.bestToWear("head", "diamond_helmet", java.util.List.of("iron_helmet"), "overworld"));
+    void goldenBootsOnlyInTheNetherOrRightBeforeIt() {
+        assertEquals("diamond_boots", ArmorPlanner.bestToWear("feet", "golden_boots", java.util.List.of("diamond_boots"), "overworld", false),
+                "outside the Nether the better boots go back on");
+        assertEquals("golden_boots", ArmorPlanner.bestToWear("feet", "diamond_boots", java.util.List.of("golden_boots"), "overworld", true),
+                "next to a portal: put them on before going through");
+        assertEquals("", ArmorPlanner.bestToWear("feet", "golden_boots", java.util.List.of("diamond_boots"), "the_nether", false), "keep golden boots on");
+        assertEquals("golden_boots", ArmorPlanner.bestToWear("feet", "iron_boots", java.util.List.of("golden_boots"), "the_nether", false));
+        assertEquals("diamond_chestplate", ArmorPlanner.bestToWear("chest", "iron_chestplate", java.util.List.of("diamond_chestplate"), "the_nether", false));
+        assertEquals("", ArmorPlanner.bestToWear("head", "diamond_helmet", java.util.List.of("iron_helmet"), "overworld", false));
+    }
+
+    @Test
+    void goldenBootsAreThrownAwayOnceTheNetherPartIsDone() {
+        assertTrue(ArmorPlanner.dropGoldenBoots("overworld", 3, "diamond_boots", true), "back with ender eyes");
+        assertFalse(ArmorPlanner.dropGoldenBoots("the_nether", 3, "diamond_boots", true), "still in the Nether");
+        assertFalse(ArmorPlanner.dropGoldenBoots("overworld", 0, "diamond_boots", true), "may still need the Nether");
+        assertFalse(ArmorPlanner.dropGoldenBoots("overworld", 3, "golden_boots", true), "not wearing other boots yet");
+        assertFalse(ArmorPlanner.dropGoldenBoots("overworld", 3, "diamond_boots", false));
     }
 }

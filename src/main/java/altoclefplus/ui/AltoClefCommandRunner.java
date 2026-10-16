@@ -75,7 +75,7 @@ public final class AltoClefCommandRunner implements CommandRunner {
         for (String id : s.items.keySet()) if (!ItemInfo.armorSlot(id).isEmpty()) carried.add(id);
         List<String> wear = new ArrayList<>();
         for (String slot : ItemInfo.ARMOR_SLOTS) {
-            String best = ArmorPlanner.bestToWear(slot, s.armor.getOrDefault(slot, ""), carried, s.dimension);
+            String best = ArmorPlanner.bestToWear(slot, s.armor.getOrDefault(slot, ""), carried, s.dimension, false);
             if (!best.isEmpty()) wear.add(best);
         }
         if (wear.isEmpty()) return;

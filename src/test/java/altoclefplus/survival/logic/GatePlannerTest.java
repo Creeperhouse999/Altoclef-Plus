@@ -120,7 +120,7 @@ class GatePlannerTest {
         Snapshot s = Snapshot.builder().item("iron_pickaxe", 1).item("iron_sword", 1).item("stone_axe", 1)
                 .item("stone_shovel", 1).offhand("shield").item("water_bucket", 1)
                 .armor("chest", "iron_chestplate").armor("legs", "iron_leggings").armor("head", "iron_helmet")
-                .armor("feet", "iron_boots").item("cooked_beef", 5)
+                .armor("feet", "iron_boots").item("cooked_beef", 5).item("golden_boots", 1)
                 .taskChain(List.of("<Beat Minecraft> Going to Nether")).build();
         assertEquals("oak_boat", item(next(g, s)));
         assertEquals("none", item(next(g, s.toBuilder().item("birch_boat", 1).build())));
@@ -170,5 +170,17 @@ class GatePlannerTest {
         assertNotEquals("bed", item(g.next(tools, cfg, 0, gamer)), "bed was placed to set spawn: don't fetch it back");
         g.resetRun();
         assertEquals("bed", item(g.next(tools, cfg, 0, gamer)), "new run: ask again");
+    }
+
+    @Test
+    void netherEntryBringsGoldenBootsForPiglins() {
+        GatePlanner g = new GatePlanner();
+        Snapshot.Builder b = Snapshot.builder().item("iron_pickaxe", 1).item("iron_sword", 1).item("stone_axe", 1)
+                .item("stone_shovel", 1).offhand("shield").item("water_bucket", 1).item("oak_boat", 1)
+                .armor("chest", "diamond_chestplate").armor("legs", "diamond_leggings").armor("head", "diamond_helmet")
+                .armor("feet", "diamond_boots").item("cooked_beef", 20)
+                .taskChain(List.of("<Beat Minecraft> Going to Nether"));
+        assertEquals("golden_boots", item(next(g, b.build())));
+        assertTrue(next(g, b.item("golden_boots", 1).build()).isEmpty());
     }
 }

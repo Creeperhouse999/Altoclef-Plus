@@ -68,14 +68,15 @@ public final class ArmorPlanner {
     }
 
     /**
+     * @param nearPortal standing next to a Nether portal (about to go through)
      * @return the carried piece to put on in this slot, or "" to keep what's worn.
      */
-    public static String bestToWear(String slot, String worn, List<String> carried, String dimension) {
-        // Worn golden boots are AltoClef's own choice (@gamer wears them for piglins); never take them off,
-        // or the two mods swap boots back and forth forever.
-        if (slot.equals("feet") && "golden_boots".equals(worn)) return "";
-        if ("the_nether".equals(dimension) && slot.equals("feet") && carried.contains("golden_boots")) {
-            return "golden_boots";
+    public static String bestToWear(String slot, String worn, List<String> carried, String dimension, boolean nearPortal) {
+        // Piglins leave a player in golden boots alone: wear them in the Nether and right before going in,
+        // and the best boots everywhere else.
+        if (slot.equals("feet") && ("the_nether".equals(dimension) || nearPortal)) {
+            if ("golden_boots".equals(worn)) return "";
+            if (carried.contains("golden_boots")) return "golden_boots";
         }
         String best = "";
         int bestPoints = worn == null || worn.isEmpty() ? 0 : ItemInfo.armorPoints(worn);
@@ -88,5 +89,14 @@ public final class ArmorPlanner {
             }
         }
         return best;
+    }
+
+    /**
+     * Golden boots are only for the Nether. Once the bot is out with ender eyes (blaze rods and pearls done)
+     * and wears other boots, they are thrown away.
+     */
+    public static boolean dropGoldenBoots(String dimension, int enderEyes, String wornFeet, boolean carriesGolden) {
+        return carriesGolden && !"the_nether".equals(dimension) && enderEyes > 0
+                && wornFeet != null && !wornFeet.isEmpty() && !"golden_boots".equals(wornFeet);
     }
 }

@@ -80,6 +80,7 @@ public final class Plus {
                 reportOnce("hud", e);
             }
         });
+        altoclefplus.survival.GamerArmor.diamondBootsOutsideNether();
         LOG.add("plus", "AltoClef Plus ready");
     }
 

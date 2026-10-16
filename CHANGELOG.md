@@ -8,10 +8,26 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-10-16
+
+Fixes from an overnight @gamer run in a world with pillagers all around spawn. Tested in-game: the night
+shelter, avoiding pillagers after a death, running from pillagers without iron armor (the bot then got
+out of the area and made iron gear with no more deaths), Plus messages in the game log.
+
 ### Added
 - Night shelter in @gamer: without iron armor and without a bed, the bot digs three blocks down, covers
   the hole and waits for dawn instead of dying to the first night's mobs. It never digs into caves,
   liquids or bedrock. Setting: Survival → "Hide in a hole at night without armor (@gamer)", on by default.
+- Without an iron (or better) chestplate, a pillager within 24 blocks makes the bot run, like being
+  outnumbered: crossbows outrange a sword.
+- AltoClef Plus messages are also written to the game log (latest.log).
+
+### Fixed
+- Dying with pillagers nearby now marks a 48-block area to avoid for 10 minutes after one death.
+- "Keeps dying here" now also works when the bot had nothing to pick up, covers 32 blocks, and a bot that
+  respawns inside such an area can walk out of it.
+- Replacing a worn pickaxe no longer restarts every second and interrupts the main task.
+- The night shelter waits 30 seconds before trying again on an unsafe spot.
 
 ## [0.8.2] - 2026-10-15
 

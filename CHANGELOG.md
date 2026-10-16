@@ -27,7 +27,7 @@ Fixes from playtesting normal tasks. Unit-tested only, except where noted.
 - **Swims like a player:** in deep water with air to spare the bot lets go of jump and sprints, so it swims
   instead of bobbing on the surface. Setting: Swim like a player in deep water.
 - **Food trip on normal tasks:** starving (hunger 6 or less) with nothing to eat, the bot gets food first and
-  then carries on. @gamer already gathers its own food.
+  then carries on. `@gamer` already gathers its own food.
 
 ### Fixed
 - Never steps into or onto powder snow (sinking in freezes you) and walks around wither roses.
@@ -66,11 +66,11 @@ New Presets tab with kits, and blueprint blocks for building. Both are unit-test
 
 ## [0.8.4] - 2026-10-16
 
-Fixes from a morning @gamer run to the Nether portal. Tested in-game: golden boots at the portal, the furnace
+Fixes from a morning `@gamer` run to the Nether portal. Tested in-game: golden boots at the portal, the furnace
 loop fix, throwing away old armor. Unit-tested only: eating while resting, the pillaring fix, flee cooldown.
 
 ### Changed
-- @gamer wears full diamond (boots too) outside the Nether. Golden boots are fetched before the Nether, put on
+- `@gamer` wears full diamond (boots too) outside the Nether. Golden boots are fetched before the Nether, put on
   next to the portal and in the Nether, and thrown away once the bot is back out with ender eyes.
 
 ### Fixed
@@ -78,21 +78,21 @@ loop fix, throwing away old armor. Unit-tested only: eating while resting, the p
   as the crafting grid).
 - Chest take rules ("leave at least ...") no longer apply to furnaces.
 - Junk now includes armor no better than what is worn, more than two of the best tool, and stones and ores
-  @gamer never uses (calcite, raw copper, amethyst, ...), so the inventory doesn't fill up.
+  `@gamer` never uses (calcite, raw copper, amethyst, ...), so the inventory doesn't fill up.
 - Resting eats to full so health can regenerate (it rested at 14 hp for an hour without healing).
 - Undoing a useless pillar no longer digs straight down underground (it dug into lava).
 - Running from mobs restarts at most every 5 seconds; the message says why (pillager, outnumbered, still chased).
 
 ## [0.8.3] - 2026-10-16
 
-Fixes from an overnight @gamer run in a world with pillagers all around spawn. Tested in-game: the night
+Fixes from an overnight `@gamer` run in a world with pillagers all around spawn. Tested in-game: the night
 shelter, avoiding pillagers after a death, running from pillagers without iron armor (the bot then got
 out of the area and made iron gear with no more deaths), Plus messages in the game log.
 
 ### Added
-- Night shelter in @gamer: without iron armor and without a bed, the bot digs three blocks down, covers
+- Night shelter in `@gamer`: without iron armor and without a bed, the bot digs three blocks down, covers
   the hole and waits for dawn instead of dying to the first night's mobs. It never digs into caves,
-  liquids or bedrock. Setting: Survival → "Hide in a hole at night without armor (@gamer)", on by default.
+  liquids or bedrock. Setting: Survival → "Hide in a hole at night without armor (`@gamer`)", on by default.
 - Without an iron (or better) chestplate, a pillager within 24 blocks makes the bot run, like being
   outnumbered: crossbows outrange a sword.
 - AltoClef Plus messages are also written to the game log (latest.log).
@@ -106,12 +106,12 @@ out of the area and made iron gear with no more deaths), Plus messages in the ga
 
 ## [0.8.2] - 2026-10-15
 
-Fixes and additions from a long playtest. Tested in-game: an @gamer run with the new bed step, running when
+Fixes and additions from a long playtest. Tested in-game: an `@gamer` run with the new bed step, running when
 outnumbered, the see-through path, the new HUD text and plan labels, the pickup fix and torch crafting.
 Unit-tested only so far: junk pit / lava, furnace reuse, creeper fights, torch placing, avoiding death spots.
 
 ### Added
-- **Bed early in @gamer**: right after stone tools the bot gets one bed (AltoClef only collected beds at the very
+- **Bed early in `@gamer`**: right after stone tools the bot gets one bed (AltoClef only collected beds at the very
   end), so it can sleep through the first night. Setting, on by default.
 - **Torches (optional, off by default)**: crafts torches from coal it carries (keeps about 16) and places one
   every 7 blocks or so where it's dark, so mobs don't spawn around it and you can see.
@@ -133,7 +133,7 @@ Unit-tested only so far: junk pit / lava, furnace reuse, creeper fights, torch p
 - The path line is drawn through blocks, like Baritone's, so you can follow it behind walls; the next path
   segment is shown too.
 - The HUD says "Hunting sheep" when the bot kills animals for food or wool, instead of "Fighting mobs".
-- The @gamer plan names steps as goals ("Stock up food (4/20)") instead of finished facts ("Food stocked").
+- The `@gamer` plan names steps as goals ("Stock up food (4/20)") instead of finished facts ("Food stocked").
 
 ### Fixed
 - The early bed no longer loops (AltoClef places the bed to set spawn; the bot then fetched it back).
@@ -283,7 +283,7 @@ in-game.
   temples, get pearls by piglin trading instead of hunting, eyes of ender to collect.
 - **Gear up for** setting: gear gates now run only for tasks that need them by default — `@gamer`, deep
   ores (iron kit), Nether items (Nether gear) and End items (everything). Errands like "get dirt" start
-  right away. Choose *@gamer only* or *Every task* if you prefer.
+  right away. Choose *`@gamer` only* or *Every task* if you prefer.
 
 ### Fixed
 - The bot getting stuck in front of doors: diagonal and step up/down moves no longer try to walk through

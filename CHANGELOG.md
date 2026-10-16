@@ -8,6 +8,23 @@ as its notes.
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-10-16
+
+Fixes from playtesting normal tasks. Unit-tested only, except where noted.
+
+### Added
+- **Swims like a player:** in deep water with air to spare the bot lets go of jump and sprints, so it swims
+  instead of bobbing on the surface. Setting: Swim like a player in deep water.
+- **Food trip on normal tasks:** starving (hunger 6 or less) with nothing to eat, the bot gets food first and
+  then carries on. @gamer already gathers its own food.
+
+### Fixed
+- Never steps into or onto powder snow (sinking in freezes you) and walks around wither roses.
+- After running from pillagers, their area (32 blocks) is avoided for 3 minutes, so the task doesn't lead the bot
+  straight back to them. Picking up items skips drops inside avoided areas and no-enter zones.
+- The Defending badge showed for any damage (a fall, hunger); now only hostile mobs count.
+- Junk thrown into the pit landed on its rim; the bot now aims at the opening.
+
 ## [0.9.1] - 2026-10-16
 
 Fixes from playing a Create (Fabric) modpack with JEI. Unit-tested only.

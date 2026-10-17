@@ -320,3 +320,10 @@ The control panel replaces chat commands. If you prefer chat, turn off
 Copyright © 2026 Creeperhouse999. This is **source-available, not open source**: the
 [LICENSE](LICENSE) explicitly allows you to read the code, build it and use it for yourself, and use the
 official releases. Redistributing it or publishing modified versions is not allowed without permission.
+
+
+## How this mod is made
+
+AltoClef Plus is developed with the help of AI coding tools. It is not an AI-generated project: every feature
+is designed and decided by the author, and every change is checked and tested in-game before it is released.
+The code is also covered by hundreds of automated tests.

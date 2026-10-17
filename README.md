@@ -324,6 +324,7 @@ official releases. Redistributing it or publishing modified versions is not allo
 
 ## How this mod is made
 
-AltoClef Plus is developed with the help of AI coding tools. It is not an AI-generated project: every feature
-is designed and decided by the author, and every change is checked and tested in-game before it is released.
-The code is also covered by hundreds of automated tests.
+AltoClef Plus is built with the help of AI coding tools, but it is not AI slop and not a one-click project.
+I put real time into every update: I decide what gets built, play-test each feature in-game, find the bugs
+and have them fixed, and review the work before anything is released. The AI writes much of the code; I direct
+it, check it and test it. The code is also covered by hundreds of automated tests.
